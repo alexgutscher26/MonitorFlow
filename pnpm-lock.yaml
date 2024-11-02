@@ -69,7 +69,7 @@ importers:
         specifier: ^4.5.5
         version: 4.6.4
       json2csv:
-        specifier: 6.0.0-alpha.2
+        specifier: ^6.0.0-alpha.2
         version: 6.0.0-alpha.2
       lucide-react:
         specifier: ^0.453.0
@@ -93,8 +93,8 @@ importers:
         specifier: ^15.5.0
         version: 15.5.0(react@18.3.1)
       stripe:
-        specifier: ^17.2.0
-        version: 17.2.0
+        specifier: ^17.3.1
+        version: 17.3.1
       superjson:
         specifier: ^2.2.1
         version: 2.2.1
@@ -2473,8 +2473,8 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  stripe@17.2.0:
-    resolution: {integrity: sha512-KuDplY9WrNKi07+uEFeguis/Mh+HC+hfEMy8P5snhQzCXUv01o+4KcIJ9auFxpv4Odp2R2krs9rZ9PhQl8+Sdw==}
+  stripe@17.3.1:
+    resolution: {integrity: sha512-E9/u+GFBPkYnTmfFCoKX3+gP4R3SkZoGunHe4cw9J+sqkj5uxpLFf1LscuI9BuEyIQ0PFAgPTHavgQwRtOvnag==}
     engines: {node: '>=12.*'}
 
   styled-jsx@5.1.1:
@@ -5167,7 +5167,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  stripe@17.2.0:
+  stripe@17.3.1:
     dependencies:
       '@types/node': 20.16.11
       qs: 6.13.0
