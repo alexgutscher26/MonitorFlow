@@ -1,7 +1,7 @@
 import Stripe from "stripe"
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
-  apiVersion: "2024-09-30.acacia",
+  apiVersion: "2024-10-28.acacia",
   typescript: true,
 })
 
@@ -15,7 +15,7 @@ export const createCheckoutSession = async ({
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
-        price: "price_1QBHVBA19umTXGu8gzhUCSG7",
+        price: "price_1QGbyDEJDFqyUtP0qurKVsgR",
         quantity: 1,
       },
     ],
