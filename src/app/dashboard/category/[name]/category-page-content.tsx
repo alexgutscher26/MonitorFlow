@@ -223,7 +223,8 @@ export const CategoryPageContent = ({
             accessorFn: (row: { fields: { [x: string]: any } }) =>
               row.fields[field],
             header: field,
-            cell: ({ row }: { row: Row<EventWithFields> }) => row.original.fields[field] || "-",
+            cell: ({ row }: { row: Row<EventWithFields> }) =>
+              row.original.fields[field] || "-",
           }))
         : []),
       {
@@ -347,23 +348,10 @@ export const CategoryPageContent = ({
         </TabsContent>
       </Tabs>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          <Card>
-            <h3 className="text-lg font-semibold mb-4">Event Trend</h3>
-            <EventTrendChart data={eventTrendData} />
-          </Card>
-          <Card>
-            <h3 className="text-lg font-semibold mb-4">Event Distribution</h3>
-            <EventDistributionChart data={eventDistributionData} />
-          </Card>
-        </div>
-      </div>
-
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div className="w-full flex flex-col gap-4">
-            <Heading className="text-3xl">Event overview</Heading>
+            <Heading className="text-3xl">Event Overview</Heading>
           </div>
         </div>
 
@@ -444,6 +432,31 @@ export const CategoryPageContent = ({
         >
           Next
         </Button>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <div className="w-full flex flex-col gap-4">
+            <Heading className="text-3xl">Charts Overview</Heading>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <Card>
+            <h3 className="text-lg font-semibold mb-4">Event Trend</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              This chart shows the number of events per day over time.
+            </p>
+            <EventTrendChart data={eventTrendData} />
+          </Card>
+          <Card>
+            <h3 className="text-lg font-semibold mb-4">Event Distribution</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              This chart shows the distribution of event fields.
+            </p>
+            <EventDistributionChart data={eventDistributionData} />
+          </Card>
+        </div>
       </div>
     </div>
   )
