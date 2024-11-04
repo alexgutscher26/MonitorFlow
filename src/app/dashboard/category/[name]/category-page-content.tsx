@@ -1,5 +1,4 @@
 "use client"
-
 import { Event, EventCategory } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
 import { EmptyCategoryState } from "./empty-category-state"
@@ -7,10 +6,12 @@ import { useEffect, useMemo, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { client } from "@/lib/client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card } from "@/components/ui/card"
 import { ArrowUpDown, BarChart } from "lucide-react"
-import { isAfter, isToday, startOfMonth, startOfWeek } from "date-fns"
-
+import { isAfter, isToday, startOfMonth, startOfWeek, format } from "date-fns"
+import {
+  EventTrendChart,
+  EventDistributionChart,
+} from "@/components/charts/EventCharts"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -34,10 +35,87 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Card } from "@/components/ui/card"
+
+type TimeRange = "today" | "week" | "month"
 
 interface CategoryPageContentProps {
   hasEvents: boolean
   category: EventCategory
+}
+
+interface EventWithFields extends Event {
+  fields: Record<string, any>
+}
+
+interface EventResponse {
+  events: EventWithFields[]
+  eventsCount: number
+}
+
+interface NumericFieldSums {
+  total: number
+  thisWeek: number
+  thisMonth: number
+  today: number
+}
+
+const formatDeliveryStatus = (status: string) => {
+  const statusStyles = {
+    DELIVERED: "bg-green-100 text-green-800",
+    FAILED: "bg-red-100 text-red-800",
+    PENDING: "bg-yellow-100 text-yellow-800",
+  } as const
+
+  return (
+    <span
+      className={cn(
+        "px-2 py-1 rounded-full text-xs font-semibold",
+        statusStyles[status as keyof typeof statusStyles]
+      )}
+    >
+      {status}
+    </span>
+  )
+}
+
+const NumericFieldSumCard = ({
+  field,
+  sums,
+  activeTab,
+}: {
+  field: string
+  sums: NumericFieldSums
+  activeTab: TimeRange
+}) => {
+  const relevantSum =
+    activeTab === "today"
+      ? sums.today
+      : activeTab === "week"
+      ? sums.thisWeek
+      : sums.thisMonth
+
+  const timeLabel =
+    activeTab === "today"
+      ? "today"
+      : activeTab === "week"
+      ? "this week"
+      : "this month"
+
+  return (
+    <Card>
+      <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <p className="text-sm/6 font-medium">
+          {field.charAt(0).toUpperCase() + field.slice(1)}
+        </p>
+        <BarChart className="size-4 text-muted-foreground" />
+      </div>
+      <div>
+        <p className="text-2xl font-bold">{relevantSum.toFixed(2)}</p>
+        <p className="text-xs/5 text-muted-foreground">{timeLabel}</p>
+      </div>
+    </Card>
+  )
 }
 
 export const CategoryPageContent = ({
@@ -45,12 +123,9 @@ export const CategoryPageContent = ({
   category,
 }: CategoryPageContentProps) => {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const [activeTab, setActiveTab] = useState<TimeRange>("today")
 
-  const [activeTab, setActiveTab] = useState<"today" | "week" | "month">(
-    "today"
-  )
-
-  // https://localhost:3000/dashboard/category/sale?page=5&limit=30
   const page = parseInt(searchParams.get("page") || "1", 10)
   const limit = parseInt(searchParams.get("limit") || "30", 10)
 
@@ -59,12 +134,15 @@ export const CategoryPageContent = ({
     pageSize: limit,
   })
 
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
   const { data: pollingData } = useQuery({
     queryKey: ["category", category.name, "hasEvents"],
     initialData: { hasEvents: initialHasEvents },
   })
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching } = useQuery<EventResponse>({
     queryKey: [
       "events",
       category.name,
@@ -79,14 +157,48 @@ export const CategoryPageContent = ({
         limit: pagination.pageSize,
         timeRange: activeTab,
       })
-
-      return await res.json()
+      return res.json()
     },
     refetchOnWindowFocus: false,
     enabled: pollingData.hasEvents,
   })
 
-  const columns: ColumnDef<Event>[] = useMemo(
+  const eventTrendData = useMemo(() => {
+    if (!data?.events) return []
+
+    return data.events.reduce(
+      (acc: { date: string; count: number }[], event) => {
+        const date = format(new Date(event.createdAt), "yyyy-MM-dd")
+        const existingEntry = acc.find((item) => item.date === date)
+
+        if (existingEntry) {
+          existingEntry.count += 1
+        } else {
+          acc.push({ date, count: 1 })
+        }
+        return acc
+      },
+      []
+    )
+  }, [data?.events])
+
+  const eventDistributionData = useMemo(() => {
+    if (!data?.events) return []
+
+    const fieldCounts = data.events.reduce(
+      (acc: Record<string, number>, event) => {
+        Object.keys(event.fields).forEach((field) => {
+          acc[field] = (acc[field] || 0) + 1
+        })
+        return acc
+      },
+      {}
+    )
+
+    return Object.entries(fieldCounts).map(([name, value]) => ({ name, value }))
+  }, [data?.events])
+
+  const columns = useMemo<ColumnDef<EventWithFields>[]>(
     () => [
       {
         accessorKey: "category",
@@ -95,57 +207,71 @@ export const CategoryPageContent = ({
       },
       {
         accessorKey: "createdAt",
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              Date
-              <ArrowUpDown className="ml-2 size-4" />
-            </Button>
-          )
-        },
-        cell: ({ row }) => {
-          return new Date(row.getValue("createdAt")).toLocaleString()
-        },
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Date
+            <ArrowUpDown className="ml-2 size-4" />
+          </Button>
+        ),
+        cell: ({ row }) => new Date(row.getValue("createdAt")).toLocaleString(),
       },
       ...(data?.events[0]
-        ? Object.keys(data.events[0].fields as object).map((field) => ({
-            accessorFn: (row: Event) =>
-              (row.fields as Record<string, any>)[field],
+        ? Object.keys(data.events[0].fields).map((field) => ({
+            accessorFn: (row: { fields: { [x: string]: any } }) =>
+              row.fields[field],
             header: field,
-            cell: ({ row }: { row: Row<Event> }) =>
-              (row.original.fields as Record<string, any>)[field] || "-",
+            cell: ({ row }: { row: Row<EventWithFields> }) => row.original.fields[field] || "-",
           }))
         : []),
       {
         accessorKey: "deliveryStatus",
         header: "Delivery Status",
-        cell: ({ row }) => (
-          <span
-            className={cn("px-2 py-1 rounded-full text-xs font-semibold", {
-              "bg-green-100 text-green-800":
-                row.getValue("deliveryStatus") === "DELIVERED",
-              "bg-red-100 text-red-800":
-                row.getValue("deliveryStatus") === "FAILED",
-              "bg-yellow-100 text-yellow-800":
-                row.getValue("deliveryStatus") === "PENDING",
-            })}
-          >
-            {row.getValue("deliveryStatus")}
-          </span>
-        ),
+        cell: ({ row }) => formatDeliveryStatus(row.getValue("deliveryStatus")),
       },
     ],
-
     [category.name, data?.events]
   )
 
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const numericFieldSums = useMemo(() => {
+    if (!data?.events || data.events.length === 0) return {}
+
+    const sums: Record<string, NumericFieldSums> = {}
+    const now = new Date()
+    const weekStart = startOfWeek(now, { weekStartsOn: 0 })
+    const monthStart = startOfMonth(now)
+
+    data.events.forEach((event) => {
+      const eventDate = new Date(event.createdAt)
+      Object.entries(event.fields).forEach(([field, value]) => {
+        if (typeof value === "number") {
+          if (!sums[field]) {
+            sums[field] = { total: 0, thisWeek: 0, thisMonth: 0, today: 0 }
+          }
+          sums[field].total += value
+          if (
+            isAfter(eventDate, weekStart) ||
+            eventDate.getTime() === weekStart.getTime()
+          ) {
+            sums[field].thisWeek += value
+          }
+          if (
+            isAfter(eventDate, monthStart) ||
+            eventDate.getTime() === monthStart.getTime()
+          ) {
+            sums[field].thisMonth += value
+          }
+          if (isToday(eventDate)) {
+            sums[field].today += value
+          }
+        }
+      })
+    })
+
+    return sums
+  }, [data?.events])
 
   const table = useReactTable({
     data: data?.events || [],
@@ -166,109 +292,12 @@ export const CategoryPageContent = ({
     },
   })
 
-  /**
-   * I FORGOT THIS IN THE VIDEO
-   * Update URL when pagination changes
-   */
-  const router = useRouter()
-
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
     searchParams.set("page", (pagination.pageIndex + 1).toString())
     searchParams.set("limit", pagination.pageSize.toString())
     router.push(`?${searchParams.toString()}`, { scroll: false })
   }, [pagination, router])
-  
-  /**
-   * END OF WHAT I FORGOT IN THE VIDEO
-   */
-
-  const numericFieldSums = useMemo(() => {
-    if (!data?.events || data.events.length === 0) return {}
-
-    const sums: Record<
-      string,
-      {
-        total: number
-        thisWeek: number
-        thisMonth: number
-        today: number
-      }
-    > = {}
-
-    const now = new Date()
-    const weekStart = startOfWeek(now, { weekStartsOn: 0 })
-    const monthStart = startOfMonth(now)
-
-    data.events.forEach((event) => {
-      const eventDate = event.createdAt
-
-      Object.entries(event.fields as object).forEach(([field, value]) => {
-        if (typeof value === "number") {
-          if (!sums[field]) {
-            sums[field] = { total: 0, thisWeek: 0, thisMonth: 0, today: 0 }
-          }
-
-          sums[field].total += value
-
-          if (
-            isAfter(eventDate, weekStart) ||
-            eventDate.getTime() === weekStart.getTime()
-          ) {
-            sums[field].thisWeek += value
-          }
-
-          if (
-            isAfter(eventDate, monthStart) ||
-            eventDate.getTime() === monthStart.getTime()
-          ) {
-            sums[field].thisMonth += value
-          }
-
-          if (isToday(eventDate)) {
-            sums[field].today += value
-          }
-        }
-      })
-    })
-
-    return sums
-  }, [data?.events])
-
-  const NumericFieldSumCards = () => {
-    if (Object.keys(numericFieldSums).length === 0) return null
-
-    return Object.entries(numericFieldSums).map(([field, sums]) => {
-      const relevantSum =
-        activeTab === "today"
-          ? sums.today
-          : activeTab === "week"
-          ? sums.thisWeek
-          : sums.thisMonth
-
-      return (
-        <Card key={field}>
-          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <p className="text-sm/6 font-medium">
-              {field.charAt(0).toUpperCase() + field.slice(1)}
-            </p>
-            <BarChart className="size-4 text-muted-foreground" />
-          </div>
-
-          <div>
-            <p className="text-2xl font-bold">{relevantSum.toFixed(2)}</p>
-            <p className="text-xs/5 text-muted-foreground">
-              {activeTab === "today"
-                ? "today"
-                : activeTab === "week"
-                ? "this week"
-                : "this month"}
-            </p>
-          </div>
-        </Card>
-      )
-    })
-  }
 
   if (!pollingData.hasEvents) {
     return <EmptyCategoryState categoryName={category.name} />
@@ -278,9 +307,7 @@ export const CategoryPageContent = ({
     <div className="space-y-6">
       <Tabs
         value={activeTab}
-        onValueChange={(value) => {
-          setActiveTab(value as "today" | "week" | "month")
-        }}
+        onValueChange={(value) => setActiveTab(value as TimeRange)}
       >
         <TabsList className="mb-2">
           <TabsTrigger value="today">Today</TabsTrigger>
@@ -295,7 +322,6 @@ export const CategoryPageContent = ({
                 <p className="text-sm/6 font-medium">Total Events</p>
                 <BarChart className="size-4 text-muted-foreground" />
               </div>
-
               <div>
                 <p className="text-2xl font-bold">{data?.eventsCount || 0}</p>
                 <p className="text-xs/5 text-muted-foreground">
@@ -309,10 +335,30 @@ export const CategoryPageContent = ({
               </div>
             </Card>
 
-            <NumericFieldSumCards />
+            {Object.entries(numericFieldSums).map(([field, sums]) => (
+              <NumericFieldSumCard
+                key={field}
+                field={field}
+                sums={sums}
+                activeTab={activeTab}
+              />
+            ))}
           </div>
         </TabsContent>
       </Tabs>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <Card>
+            <h3 className="text-lg font-semibold mb-4">Event Trend</h3>
+            <EventTrendChart data={eventTrendData} />
+          </Card>
+          <Card>
+            <h3 className="text-lg font-semibold mb-4">Event Distribution</h3>
+            <EventDistributionChart data={eventDistributionData} />
+          </Card>
+        </div>
+      </div>
 
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
@@ -321,61 +367,63 @@ export const CategoryPageContent = ({
           </div>
         </div>
 
-        <Card contentClassName="px-6 py-4">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
+        <Card>
+          <div className="px-6 py-4">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
 
-            <TableBody>
-              {isFetching ? (
-                [...Array(5)].map((_, rowIndex) => (
-                  <TableRow key={rowIndex}>
-                    {columns.map((_, cellIndex) => (
-                      <TableCell key={cellIndex}>
-                        <div className="h-4 w-full bg-gray-200 animate-pulse rounded" />
-                      </TableCell>
-                    ))}
+              <TableBody>
+                {isFetching ? (
+                  [...Array(5)].map((_, rowIndex) => (
+                    <TableRow key={rowIndex}>
+                      {columns.map((_, cellIndex) => (
+                        <TableCell key={cellIndex}>
+                          <div className="h-4 w-full bg-gray-200 animate-pulse rounded" />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : table.getRowModel().rows.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id}>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      No results.
+                    </TableCell>
                   </TableRow>
-                ))
-              ) : table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </Card>
       </div>
 

@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { LoadingSpinner } from "@/components/loading-spinner"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -8,14 +8,26 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { format, formatDistanceToNow } from "date-fns"
 import { ArrowRight, BarChart2, Clock, Database, Trash2 } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
+import { Key, ReactNode, SetStateAction, useState } from "react"
 import { DashboardEmptyState } from "./dashboard-empty-state"
+
+// Define a Category interface to ensure correct typing
+interface Category {
+  id: Key;
+  color: string | null;
+  emoji: string | null;
+  name: string;
+  createdAt: Date;
+  lastPing: Date | null;
+  uniqueFieldCount: number;
+  eventsCount: number;
+}
 
 export const DashboardPageContent = () => {
   const [deletingCategory, setDeletingCategory] = useState<string | null>(null)
   const queryClient = useQueryClient()
 
-  const { data: categories, isPending: isEventCategoriesLoading } = useQuery({
+  const { data: categories, isPending: isEventCategoriesLoading } = useQuery<Category[]>({
     queryKey: ["user-event-categories"],
     queryFn: async () => {
       const res = await client.category.getEventCategories.$get()
@@ -24,17 +36,15 @@ export const DashboardPageContent = () => {
     },
   })
 
-  const { mutate: deleteCategory, isPending: isDeletingCategory } = useMutation(
-    {
-      mutationFn: async (name: string) => {
-        await client.category.deleteCategory.$post({ name })
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user-event-categories"] })
-        setDeletingCategory(null)
-      },
-    }
-  )
+  const { mutate: deleteCategory, isPending: isDeletingCategory } = useMutation({
+    mutationFn: async (name: string) => {
+      await client.category.deleteCategory.$post({ name })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-event-categories"] })
+      setDeletingCategory(null)
+    },
+  })
 
   if (isEventCategoriesLoading) {
     return (
@@ -57,26 +67,23 @@ export const DashboardPageContent = () => {
             className="relative group z-10 transition-all duration-200 hover:-translate-y-0.5"
           >
             <div className="absolute z-0 inset-px rounded-lg bg-white" />
-
             <div className="pointer-events-none z-0 absolute inset-px rounded-lg shadow-sm transition-all duration-300 group-hover:shadow-md ring-1 ring-black/5" />
-
             <div className="relative p-6 z-10">
               <div className="flex items-center gap-4 mb-6">
                 <div
                   className="size-12 rounded-full"
                   style={{
                     backgroundColor: category.color
-                      ? `#${category.color.toString(16).padStart(6, "0")}`
+                      ? `#${parseInt(category.color, 16).toString(16).padStart(6, "0")}`
                       : "#f3f4f6",
                   }}
                 />
-
                 <div>
                   <h3 className="text-lg/7 font-medium tracking-tight text-gray-950">
                     {category.emoji || "📂"} {category.name}
                   </h3>
                   <p className="text-sm/6 text-gray-600">
-                    {format(category.createdAt, "MMM d, yyyy")}
+                    {format(new Date(category.createdAt), "MMM d, yyyy")}
                   </p>
                 </div>
               </div>
@@ -87,7 +94,7 @@ export const DashboardPageContent = () => {
                   <span className="font-medium">Last ping:</span>
                   <span className="ml-1">
                     {category.lastPing
-                      ? formatDistanceToNow(category.lastPing) + " ago"
+                      ? formatDistanceToNow(new Date(category.lastPing)) + " ago"
                       : "Never"}
                   </span>
                 </div>
