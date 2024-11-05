@@ -9,8 +9,6 @@ import { Progress } from "@/components/ui/progress"
 import { FREE_QUOTA, PRO_QUOTA } from "@/config"
 import { format, startOfMonth, subDays } from "date-fns"
 import { QuickStatCard } from "@/components/dashboard/quick-stat-card"
-import { CategoryDistributionChart } from "./category-distribution-chart"
-import { EventTrendChart } from "./event-trend-chart"
 
 export default async function StatsPage() {
   const auth = await currentUser()
@@ -114,22 +112,6 @@ export default async function StatsPage() {
             trend="0%"
             neutral
           />
-        </div>
-
-        {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Event Trend</h3>
-              <EventTrendChart data={trendData} />
-            </div>
-          </Card>
-          <Card>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Category Distribution</h3>
-              <CategoryDistributionChart data={categoryData} />
-            </div>
-          </Card>
         </div>
 
         {/* Quota Usage */}

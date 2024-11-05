@@ -11,7 +11,6 @@ import Link from "next/link"
 import { Key, ReactNode, SetStateAction, useState } from "react"
 import { DashboardEmptyState } from "./dashboard-empty-state"
 
-// Define a Category interface to ensure correct typing
 interface Category {
   id: Key;
   color: string | null;
@@ -64,14 +63,15 @@ export const DashboardPageContent = () => {
         {categories.map((category) => (
           <li
             key={category.id}
-            className="relative group z-10 transition-all duration-200 hover:-translate-y-0.5"
+            className="relative group z-10 transition-all duration-300 hover:-translate-y-1"
           >
-            <div className="absolute z-0 inset-px rounded-lg bg-white" />
-            <div className="pointer-events-none z-0 absolute inset-px rounded-lg shadow-sm transition-all duration-300 group-hover:shadow-md ring-1 ring-black/5" />
-            <div className="relative p-6 z-10">
+            <div className="absolute z-0 inset-px rounded-xl bg-gradient-to-r from-brand-50 to-white" />
+            <div className="pointer-events-none z-0 absolute inset-px rounded-xl shadow-lg transition-all duration-300 group-hover:shadow-xl ring-1 ring-black/5 group-hover:ring-brand-200" />
+            <div className="relative p-6 z-10 backdrop-blur-sm rounded-xl">
+              {/* Header */}
               <div className="flex items-center gap-4 mb-6">
                 <div
-                  className="size-12 rounded-full"
+                  className="size-12 rounded-full shadow-inner transition-transform duration-300 group-hover:scale-110"
                   style={{
                     backgroundColor: category.color
                       ? `#${parseInt(category.color, 16).toString(16).padStart(6, "0")}`
@@ -79,18 +79,19 @@ export const DashboardPageContent = () => {
                   }}
                 />
                 <div>
-                  <h3 className="text-lg/7 font-medium tracking-tight text-gray-950">
+                  <h3 className="text-lg/7 font-semibold tracking-tight text-gray-950 group-hover:text-brand-600 transition-colors">
                     {category.emoji || "📂"} {category.name}
                   </h3>
-                  <p className="text-sm/6 text-gray-600">
+                  <p className="text-sm/6 text-gray-500">
                     {format(new Date(category.createdAt), "MMM d, yyyy")}
                   </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center text-sm/5 text-gray-600">
-                  <Clock className="size-4 mr-2 text-brand-500" />
+              {/* Stats */}
+              <div className="space-y-4 mb-6 bg-gray-50/50 p-4 rounded-lg">
+                <div className="flex items-center text-sm/5 text-gray-600 group-hover:text-gray-700 transition-colors">
+                  <Clock className="size-4 mr-2 text-brand-500 group-hover:text-brand-600 transition-colors" />
                   <span className="font-medium">Last ping:</span>
                   <span className="ml-1">
                     {category.lastPing
@@ -98,25 +99,26 @@ export const DashboardPageContent = () => {
                       : "Never"}
                   </span>
                 </div>
-                <div className="flex items-center text-sm/5 text-gray-600">
-                  <Database className="size-4 mr-2 text-brand-500" />
+                <div className="flex items-center text-sm/5 text-gray-600 group-hover:text-gray-700 transition-colors">
+                  <Database className="size-4 mr-2 text-brand-500 group-hover:text-brand-600 transition-colors" />
                   <span className="font-medium">Unique fields:</span>
                   <span className="ml-1">{category.uniqueFieldCount || 0}</span>
                 </div>
-                <div className="flex items-center text-sm/5 text-gray-600">
-                  <BarChart2 className="size-4 mr-2 text-brand-500" />
+                <div className="flex items-center text-sm/5 text-gray-600 group-hover:text-gray-700 transition-colors">
+                  <BarChart2 className="size-4 mr-2 text-brand-500 group-hover:text-brand-600 transition-colors" />
                   <span className="font-medium">Events this month:</span>
                   <span className="ml-1">{category.eventsCount || 0}</span>
                 </div>
               </div>
 
+              {/* Actions */}
               <div className="flex items-center justify-between mt-4">
                 <Link
                   href={`/dashboard/category/${category.name}`}
                   className={buttonVariants({
                     variant: "outline",
                     size: "sm",
-                    className: "flex items-center gap-2 text-sm",
+                    className: "flex items-center gap-2 text-sm hover:bg-brand-50 hover:text-brand-600 transition-colors",
                   })}
                 >
                   View all <ArrowRight className="size-4" />
@@ -124,7 +126,7 @@ export const DashboardPageContent = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-500 hover:text-red-600 transition-colors"
+                  className="text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                   aria-label={`Delete ${category.name} category`}
                   onClick={() => setDeletingCategory(category.name)}
                 >

@@ -9,10 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowUpDown, BarChart } from "lucide-react"
 import { isAfter, isToday, startOfMonth, startOfWeek, format } from "date-fns"
 import {
-  EventTrendChart,
-  EventDistributionChart,
-} from "@/components/charts/EventCharts"
-import {
   ColumnDef,
   ColumnFiltersState,
   flexRender,
@@ -432,31 +428,6 @@ export const CategoryPageContent = ({
         >
           Next
         </Button>
-      </div>
-
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <div className="w-full flex flex-col gap-4">
-            <Heading className="text-3xl">Charts Overview</Heading>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          <Card>
-            <h3 className="text-lg font-semibold mb-4">Event Trend</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              This chart shows the number of events per day over time.
-            </p>
-            <EventTrendChart data={eventTrendData} />
-          </Card>
-          <Card>
-            <h3 className="text-lg font-semibold mb-4">Event Distribution</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              This chart shows the distribution of event fields.
-            </p>
-            <EventDistributionChart data={eventDistributionData} />
-          </Card>
-        </div>
       </div>
     </div>
   )
