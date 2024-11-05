@@ -8,6 +8,7 @@ import { Gem, Home, Key, LucideIcon, Menu, Settings, X } from "lucide-react"
 import Link from "next/link"
 import { PropsWithChildren, useState } from "react"
 import { Drawer } from "vaul"
+import { BarChart2 } from "lucide-react" // or whatever icon you prefer
 
 interface SidebarItem {
   href: string
@@ -23,7 +24,14 @@ interface SidebarCategory {
 const SIDEBAR_ITEMS: SidebarCategory[] = [
   {
     category: "Overview",
-    items: [{ href: "/dashboard", icon: Home, text: "Dashboard" }],
+    items: [
+      { href: "/dashboard", icon: Home, text: "Dashboard" },
+      {
+        href: "/dashboard/stats",
+        icon: BarChart2,
+        text: "Statistics",
+      },
+    ],
   },
   {
     category: "Account",

@@ -1,3 +1,4 @@
+// src/app/dashboard/page.tsx
 import { DashboardPage } from "@/components/dashboard-page"
 import { db } from "@/db"
 import { currentUser } from "@clerk/nextjs/server"
@@ -17,7 +18,6 @@ interface PageProps {
 
 const Page = async ({ searchParams }: PageProps) => {
   const auth = await currentUser()
-
   if (!auth) {
     redirect("/sign-in")
   }
@@ -31,13 +31,11 @@ const Page = async ({ searchParams }: PageProps) => {
   }
 
   const intent = searchParams.intent
-
   if (intent === "upgrade") {
     const session = await createCheckoutSession({
       userEmail: user.email,
       userId: user.id,
     })
-
     if (session.url) redirect(session.url)
   }
 
@@ -46,7 +44,6 @@ const Page = async ({ searchParams }: PageProps) => {
   return (
     <>
       {success ? <PaymentSuccessModal /> : null}
-
       <DashboardPage
         cta={
           <CreateEventCategoryModal>

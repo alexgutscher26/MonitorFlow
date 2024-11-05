@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import * as ProgressPrimitive from "@radix-ui/react-progress"
-
+import { cn } from "@/utils" // Make sure this import is correct
 
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
@@ -25,7 +25,3 @@ const Progress = React.forwardRef<
 Progress.displayName = ProgressPrimitive.Root.displayName
 
 export { Progress }
-function cn(arg0: string, className: string | undefined): string | undefined {
-  throw new Error("Function not implemented.")
-}
-
