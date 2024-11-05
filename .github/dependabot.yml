@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"         # Define ecosystem, e.g., npm for Node.js projects
+    directory: "/"                   # Location of package manifests
+    schedule:
+      interval: "weekly"             # Check for updates weekly
+    open-pull-requests-limit: 5      # Max number of open PRs Dependabot creates
+
+  - package-ecosystem: "pip"         # Another ecosystem, e.g., pip for Python projects
+    directory: "/path/to/python-app" # Directory of requirements file
+    schedule:
+      interval: "monthly"            # Check for updates monthly
+    allow:
+      - dependency-type: "all"       # Allow updates for all dependencies
+    ignore:
+      - dependency-name: "ping"    # Ignore updates for specific dependency
+        versions: ["2.x"]            # Specify versions to ignore
