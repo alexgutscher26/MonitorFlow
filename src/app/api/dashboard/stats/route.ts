@@ -1,4 +1,3 @@
-// src/app/api/dashboard/stats/route.ts
 import { db } from "@/db"
 import { currentUser } from "@clerk/nextjs/server"
 
@@ -44,7 +43,6 @@ export async function GET() {
       totalEvents: user._count.events,
       totalCategories: user._count.EventCategories,
       last24HourEvents: user.events.length,
-      // Assuming Discord integration is active if discordId exists
       activeIntegrations: user.discordId ? 1 : 0,
     },
     recentActivity: user.events,

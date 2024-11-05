@@ -1,4 +1,3 @@
-// src/components/dashboard/activity-feed.tsx
 "use client"
 
 import { Card } from "@/components/ui/card"
@@ -10,7 +9,11 @@ interface Activity {
   timestamp: Date
 }
 
-export default function ActivityFeed({ activities }: { activities: Activity[] }) { // Change to default export
+export default function ActivityFeed({
+  activities,
+}: {
+  activities: Activity[]
+}) {
   return (
     <Card>
       <div className="p-6">

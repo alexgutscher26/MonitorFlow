@@ -1,7 +1,6 @@
-// src/components/dashboard/stats-cards.tsx
-"use client" // Add this since we're using client-side components
+"use client"
 
-import { Card } from "@/components/ui/card" // Verify this path is correct
+import { Card } from "@/components/ui/card"
 
 interface StatsProps {
   totalEvents: number
@@ -10,7 +9,7 @@ interface StatsProps {
   activeIntegrations: number
 }
 
-export default function StatsCards({ // Change to default export
+export default function StatsCards({
   totalEvents, 
   totalCategories, 
   last24HourEvents, 
