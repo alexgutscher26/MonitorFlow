@@ -59,23 +59,24 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
 /**
  * Type definition for function signatures used in `getHandler`.
  */
-type ExecutorFunction = (args: { query?: any; json?: any }) => Promise<any>;
+type ExecutorFunction = (args: { query?: unknown; json?: unknown }) => Promise<unknown>;
 
 /**
  * Retrieves a nested handler function from an object using an array of keys.
  *
  * @param obj - The base object containing the function.
  * @param keys - The path of keys to locate the function within `obj`.
- * @returns {ExecutorFunction} - The located function.
+ * @returns {ExecutorFunction | undefined} - The located function.
  */
-function getHandler(obj: Record<string, any>, ...keys: string[]): ExecutorFunction | undefined {
-  let current = obj;
+function getHandler(obj: Record<string, unknown>, ...keys: string[]): ExecutorFunction | undefined {
+  let current: unknown = obj;
   for (const key of keys) {
-    if (!(key in current)) {
+    if (typeof current === "object" && current !== null && key in current) {
+      current = (current as Record<string, unknown>)[key];
+    } else {
       console.error(`Key ${key} not found in object.`);
-      return undefined; // Handle missing keys gracefully
+      return undefined;
     }
-    current = current[key];
   }
   return current as ExecutorFunction;
 }
@@ -86,12 +87,12 @@ function getHandler(obj: Record<string, any>, ...keys: string[]): ExecutorFuncti
  * @param data - The data object to serialize.
  * @returns The serialized data.
  */
-function serializeWithSuperJSON(data: any): any {
+function serializeWithSuperJSON(data: unknown): unknown {
   if (typeof data !== "object" || data === null) {
     return data;
   }
   return Object.fromEntries(
-    Object.entries(data).map(([key, value]) => [
+    Object.entries(data as Record<string, unknown>).map(([key, value]) => [
       key,
       superjson.stringify(value),
     ])
@@ -103,7 +104,7 @@ function serializeWithSuperJSON(data: any): any {
  *
  * @param target - The target client object to proxy.
  * @param path - An array representing the path of properties accessed.
- * @returns {any} A proxied client object with `$get` and `$post` methods.
+ * @returns A proxied client object with `$get` and `$post` methods.
  */
 function createProxy<T extends object>(target: T, path: string[] = []): T {
   return new Proxy(target, {
@@ -112,24 +113,24 @@ function createProxy<T extends object>(target: T, path: string[] = []): T {
         const newPath = [...path, prop];
 
         if (prop === "$get") {
-          return async (...args: any[]) => {
+          return async (args?: unknown) => {
             const executor = getHandler(baseClient, ...newPath);
             if (!executor) throw new Error(`Executor not found at path: ${newPath.join(".")}`);
-            const serializedQuery = serializeWithSuperJSON(args[0]);
+            const serializedQuery = serializeWithSuperJSON(args);
             return await executor({ query: serializedQuery });
           };
         }
 
         if (prop === "$post") {
-          return async (...args: any[]) => {
+          return async (args?: unknown) => {
             const executor = getHandler(baseClient, ...newPath);
             if (!executor) throw new Error(`Executor not found at path: ${newPath.join(".")}`);
-            const serializedJson = serializeWithSuperJSON(args[0]);
+            const serializedJson = serializeWithSuperJSON(args);
             return await executor({ json: serializedJson });
           };
         }
 
-        return createProxy((target as Record<string, any>)[prop], newPath);
+        return createProxy((target as Record<string, unknown>)[prop] as T, newPath);
       }
       return Reflect.get(target, prop, receiver);
     },
