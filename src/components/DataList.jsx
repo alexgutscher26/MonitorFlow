@@ -3,12 +3,8 @@ import { useState, useEffect } from 'react';
 import { CardSkeleton } from './Skeleton';
 
 const DataList = () => {
-  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const [data, setData] = useState(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -17,11 +13,15 @@ const DataList = () => {
       const result = await response.json();
       setData(result);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to fetch data:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   if (loading) {
     return (
@@ -40,9 +40,11 @@ const DataList = () => {
           key={item.id}
           className="p-4 border rounded-lg transition-all hover:shadow-lg"
         >
-          {/* Your content */}
+          {/* Render item details here */}
         </div>
       ))}
     </div>
   );
 };
+
+export default DataList;
