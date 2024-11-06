@@ -80,7 +80,7 @@ export const UpgradePageContent = ({ plan }: { plan: Plan }) => {
         {usageData?.resetDate ? (
           format(usageData.resetDate, "MMM d, yyyy")
         ) : (
-          <span className="animate-pulse w-8 h-4 bg-gray-200"></span>
+          <span className="animate-pulse w-8 h-4 bg-gray-200" />
         )}
         {plan !== "PRO" ? (
           <span
