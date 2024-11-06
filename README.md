@@ -2,7 +2,7 @@
 
 Built with the Next.js App Router, Postgres, TypeScript, Tailwind & Clerk
 
-![Project Image](https://github.com/joschan21/pingpanda/blob/main/public/thumbnail.png)
+<!-- ![Project Image](https://github.com/joschan21/pingpanda/blob/main/public/thumbnail.png) -->
 
 ## Features
 
@@ -36,3 +36,5 @@ and copy the .env.example variables into a separate .env file, fill them out & a
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+[![CodeFactor](https://www.codefactor.io/repository/github/alexgutscher26/pingpanda/badge)](https://www.codefactor.io/repository/github/alexgutscher26/pingpanda)
