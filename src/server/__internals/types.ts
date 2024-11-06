@@ -1,32 +1,42 @@
-import { Context, TypedResponse } from "hono"
-import { z } from "zod"
+import { Context, TypedResponse } from "hono";
+import { z } from "zod";
 
-import { httpHandler } from "@/server"
-import { Variables } from "hono/types"
-import { Bindings } from "../env"
+import { httpHandler } from "@/server";
+import { Variables } from "hono/types";
+import { Bindings } from "../env";
 
-export type Middleware<I> = ({
-  ctx,
-  next,
-  c,
-}: {
-  ctx: I
-  next: <B>(args?: B) => B & I
-  c: Context<{ Bindings: Bindings; Variables: Variables }>
-}) => Promise<any>
+// Middleware type, with a generic for better type inference
+export type Middleware<I> = (args: {
+  ctx: I;
+  next: <B>(args?: B) => B & I;
+  c: Context<{ Bindings: Bindings; Variables: Variables }>;
+}) => Promise<unknown>;
 
-export type QueryOperation<Schema extends Record<string, unknown>, ZodInput = never> = {
-  type: "query"
-  schema?: z.ZodType<Schema>
-  handler: <Ctx, Output>({ ctx, c, input }: { ctx: Ctx; c: Context; input: ZodInput }) => Promise<TypedResponse<Output>>
-  middlewares: Middleware<any>[]
-}
+// Query operation type, with improved generics and type inference for handler and middleware
+export type QueryOperation<
+  Schema extends Record<string, unknown>,
+  ZodInput = never,
+  Ctx = unknown,
+  Output = unknown
+> = {
+  type: "query";
+  schema?: z.ZodType<Schema>;
+  handler: (args: { ctx: Ctx; c: Context; input: ZodInput }) => Promise<TypedResponse<Output>>;
+  middlewares: Middleware<Ctx>[];
+};
 
-export type MutationOperation<Schema extends Record<string, unknown>, ZodInput = never> = {
-  type: "mutation"
-  schema?: z.ZodType<Schema>
-  handler: <Input, Output>({ ctx, c }: { ctx: Input; c: Context; input: ZodInput }) => Promise<TypedResponse<Output>>
-  middlewares: Middleware<any>[]
-}
+// Mutation operation type, with improved generics and type inference for handler and middleware
+export type MutationOperation<
+  Schema extends Record<string, unknown>,
+  ZodInput = never,
+  Input = unknown,
+  Output = unknown
+> = {
+  type: "mutation";
+  schema?: z.ZodType<Schema>;
+  handler: (args: { ctx: Input; c: Context; input: ZodInput }) => Promise<TypedResponse<Output>>;
+  middlewares: Middleware<Input>[];
+};
 
-export { httpHandler as GET, httpHandler as POST }
+// Export HTTP methods
+export { httpHandler as GET, httpHandler as POST };
