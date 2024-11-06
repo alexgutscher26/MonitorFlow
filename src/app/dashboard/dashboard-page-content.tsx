@@ -139,7 +139,7 @@ export const DashboardPageContent = () => {
       </ul>
 
       <Modal
-        showModal={!!deletingCategory}
+        showModal={Boolean(deletingCategory)}
         setShowModal={() => setDeletingCategory(null)}
         className="max-w-md p-8"
       >
