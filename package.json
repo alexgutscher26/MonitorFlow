@@ -61,7 +61,7 @@
     "lucide-react": "^0.453.0",
     "next": "^14.2.8",
     "next-themes": "^0.3.0",
-    "prisma": "^5.18.0",
+    "prisma": "^5.21.1",
     "react": "^18",
     "react-day-picker": "8.10.1",
     "react-dom": "^18",
