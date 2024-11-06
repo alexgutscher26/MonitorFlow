@@ -1,105 +1,105 @@
-import { AppType } from "@/server"
-import { hc } from "hono/client"
-import { HTTPException } from "hono/http-exception"
-import { StatusCode } from "hono/utils/http-status"
-import superjson from "superjson"
+import { AppType } from "@/server";
+import { hc } from "hono/client";
+import { HTTPException } from "hono/http-exception";
+import { StatusCode } from "hono/utils/http-status";
+import superjson from "superjson";
 
 const getBaseUrl = () => {
-  // browser should use relative path
   if (typeof window !== "undefined") {
-    return ""
+    return "";
   }
 
   return process.env.NODE_ENV === "development"
     ? "http://localhost:3000/"
     : process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
-    : "https://<YOUR_DEPLOYED_WORKER_URL>/"
-}
+    : "https://<YOUR_DEPLOYED_WORKER_URL>/";
+};
 
 export const baseClient = hc<AppType>(getBaseUrl(), {
   fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
-    const response = await fetch(input, { ...init, cache: "no-store" })
+    const response = await fetch(input, { ...init, cache: "no-store" });
 
     if (!response.ok) {
       throw new HTTPException(response.status as StatusCode, {
         message: response.statusText,
         res: response,
-      })
+      });
     }
 
-    const contentType = response.headers.get("Content-Type")
+    const contentType = response.headers.get("Content-Type");
 
     response.json = async () => {
-      const text = await response.text()
+      const text = await response.text();
 
       if (contentType === "application/superjson") {
-        return superjson.parse(text)
+        return superjson.parse(text);
       }
 
       try {
-        return JSON.parse(text)
+        return JSON.parse(text);
       } catch (error) {
-        console.error("Failed to parse response as JSON:", error)
-        throw new Error("Invalid JSON response")
+        console.error("Failed to parse response as JSON:", error);
+        throw new Error("Invalid JSON response");
       }
-    }
+    };
 
-    return response
+    return response;
   },
-})["api"]
+})["api"];
 
-function getHandler(obj: Object, ...keys: string[]) {
-  let current = obj
+// Updated to Record<string, any> for dynamic object access
+function getHandler(obj: Record<string, any>, ...keys: string[]) {
+  let current = obj;
   for (const key of keys) {
-    current = current[key as keyof typeof current]
+    current = current[key];
   }
-  return current as Function
+  return current as Function;
 }
 
 function serializeWithSuperJSON(data: any): any {
   if (typeof data !== "object" || data === null) {
-    return data
+    return data;
   }
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => [
       key,
       superjson.stringify(value),
     ])
-  )
+  );
 }
 
 /**
- * This is an optional convenience proxy to pass data directly to your API
+ * Optional convenience proxy to pass data directly to your API
  * instead of using nested objects as hono does by default
  */
 function createProxy(target: any, path: string[] = []): any {
   return new Proxy(target, {
-    get(target, prop, receiver) {
+    get(target, prop: string | symbol, receiver) {
       if (typeof prop === "string") {
-        const newPath = [...path, prop]
+        const newPath = [...path, prop];
 
         if (prop === "$get") {
           return async (...args: any[]) => {
-            const executor = getHandler(baseClient, ...newPath)
-            const serializedQuery = serializeWithSuperJSON(args[0])
-            return executor({ query: serializedQuery })
-          }
+            const executor = getHandler(baseClient, ...newPath);
+            const serializedQuery = serializeWithSuperJSON(args[0]);
+            return await executor({ query: serializedQuery });
+          };
         }
 
         if (prop === "$post") {
           return async (...args: any[]) => {
-            const executor = getHandler(baseClient, ...newPath)
-            const serializedJson = serializeWithSuperJSON(args[0])
-            return executor({ json: serializedJson })
-          }
+            const executor = getHandler(baseClient, ...newPath);
+            const serializedJson = serializeWithSuperJSON(args[0]);
+            return await executor({ json: serializedJson });
+          };
         }
 
-        return createProxy(target[prop], newPath)
+        return createProxy((target as Record<string, any>)[prop], newPath);
       }
-      return Reflect.get(target, prop, receiver)
+      return Reflect.get(target, prop, receiver);
     },
-  })
+  });
 }
 
-export const client: typeof baseClient = createProxy(baseClient)
+export const client: typeof baseClient = createProxy(baseClient);
