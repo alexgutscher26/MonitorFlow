@@ -4,10 +4,14 @@ import { HTTPException } from "hono/http-exception";
 import { StatusCode } from "hono/utils/http-status";
 import superjson from "superjson";
 
-// Function to get the base URL depending on the environment
+/**
+ * Gets the base URL depending on the environment (development, production, or client-side).
+ *
+ * @returns {string} The base URL for API requests.
+ */
 const getBaseUrl = (): string => {
   if (typeof window !== "undefined") {
-    return "";
+    return "";  // Use relative URL on client-side
   }
 
   return process.env.NODE_ENV === "development"
@@ -17,7 +21,9 @@ const getBaseUrl = (): string => {
     : "https://<YOUR_DEPLOYED_WORKER_URL>/";
 };
 
-// Base client with a custom fetch implementation
+/**
+ * Base client with a custom fetch implementation for handling responses.
+ */
 export const baseClient = hc<AppType>(getBaseUrl(), {
   fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
     const response = await fetch(input, { ...init, cache: "no-store" });
@@ -50,19 +56,36 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
   },
 })["api"];
 
-// Type definition for function signatures used in getHandler
+/**
+ * Type definition for function signatures used in `getHandler`.
+ */
 type ExecutorFunction = (args: { query?: any; json?: any }) => Promise<any>;
 
-// Updated getHandler with proper type
-function getHandler(obj: Record<string, any>, ...keys: string[]): ExecutorFunction {
+/**
+ * Retrieves a nested handler function from an object using an array of keys.
+ *
+ * @param obj - The base object containing the function.
+ * @param keys - The path of keys to locate the function within `obj`.
+ * @returns {ExecutorFunction} - The located function.
+ */
+function getHandler(obj: Record<string, any>, ...keys: string[]): ExecutorFunction | undefined {
   let current = obj;
   for (const key of keys) {
+    if (!(key in current)) {
+      console.error(`Key ${key} not found in object.`);
+      return undefined; // Handle missing keys gracefully
+    }
     current = current[key];
   }
   return current as ExecutorFunction;
 }
 
-// Serializes data with SuperJSON
+/**
+ * Serializes data using SuperJSON to ensure compatibility with the API.
+ *
+ * @param data - The data object to serialize.
+ * @returns The serialized data.
+ */
 function serializeWithSuperJSON(data: any): any {
   if (typeof data !== "object" || data === null) {
     return data;
@@ -76,9 +99,13 @@ function serializeWithSuperJSON(data: any): any {
 }
 
 /**
- * Proxy to pass data directly to your API instead of nested objects as hono does by default.
+ * Creates a proxy object to dynamically route API calls and serialize data.
+ *
+ * @param target - The target client object to proxy.
+ * @param path - An array representing the path of properties accessed.
+ * @returns {any} A proxied client object with `$get` and `$post` methods.
  */
-function createProxy(target: any, path: string[] = []): any {
+function createProxy<T extends object>(target: T, path: string[] = []): T {
   return new Proxy(target, {
     get(target, prop: string | symbol, receiver) {
       if (typeof prop === "string") {
@@ -87,6 +114,7 @@ function createProxy(target: any, path: string[] = []): any {
         if (prop === "$get") {
           return async (...args: any[]) => {
             const executor = getHandler(baseClient, ...newPath);
+            if (!executor) throw new Error(`Executor not found at path: ${newPath.join(".")}`);
             const serializedQuery = serializeWithSuperJSON(args[0]);
             return await executor({ query: serializedQuery });
           };
@@ -95,6 +123,7 @@ function createProxy(target: any, path: string[] = []): any {
         if (prop === "$post") {
           return async (...args: any[]) => {
             const executor = getHandler(baseClient, ...newPath);
+            if (!executor) throw new Error(`Executor not found at path: ${newPath.join(".")}`);
             const serializedJson = serializeWithSuperJSON(args[0]);
             return await executor({ json: serializedJson });
           };
@@ -104,8 +133,8 @@ function createProxy(target: any, path: string[] = []): any {
       }
       return Reflect.get(target, prop, receiver);
     },
-  });
+  }) as T;
 }
 
-// Export the client with improved types
+// Export the client with improved types.
 export const client: typeof baseClient = createProxy(baseClient);
