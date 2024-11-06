@@ -1,13 +1,14 @@
-"use client"
-import { Event, EventCategory } from "@prisma/client"
-import { useQuery } from "@tanstack/react-query"
-import { EmptyCategoryState } from "./empty-category-state"
-import { useEffect, useMemo, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { client } from "@/lib/client"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowUpDown, BarChart } from "lucide-react"
-import { isAfter, isToday, startOfMonth, startOfWeek, format } from "date-fns"
+"use client";
+
+import { Event, EventCategory } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import { EmptyCategoryState } from "./empty-category-state";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { client } from "@/lib/client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowUpDown, BarChart } from "lucide-react";
+import { isAfter, isToday, startOfMonth, startOfWeek, format } from "date-fns";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -19,10 +20,10 @@ import {
   Row,
   SortingState,
   useReactTable,
-} from "@tanstack/react-table"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/utils"
-import { Heading } from "@/components/heading"
+} from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/utils";
+import { Heading } from "@/components/heading";
 import {
   Table,
   TableBody,
@@ -30,30 +31,30 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Card } from "@/components/ui/card"
+} from "@/components/ui/table";
+import { Card } from "@/components/ui/card";
 
-type TimeRange = "today" | "week" | "month"
+type TimeRange = "today" | "week" | "month";
 
 interface CategoryPageContentProps {
-  hasEvents: boolean
-  category: EventCategory
+  hasEvents: boolean;
+  category: EventCategory;
 }
 
 interface EventWithFields extends Event {
-  fields: Record<string, any>
+  fields: Record<string, any>;
 }
 
 interface EventResponse {
-  events: EventWithFields[]
-  eventsCount: number
+  events: EventWithFields[];
+  eventsCount: number;
 }
 
 interface NumericFieldSums {
-  total: number
-  thisWeek: number
-  thisMonth: number
-  today: number
+  total: number;
+  thisWeek: number;
+  thisMonth: number;
+  today: number;
 }
 
 const formatDeliveryStatus = (status: string) => {
@@ -61,7 +62,7 @@ const formatDeliveryStatus = (status: string) => {
     DELIVERED: "bg-green-100 text-green-800",
     FAILED: "bg-red-100 text-red-800",
     PENDING: "bg-yellow-100 text-yellow-800",
-  } as const
+  } as const;
 
   return (
     <span
@@ -72,31 +73,31 @@ const formatDeliveryStatus = (status: string) => {
     >
       {status}
     </span>
-  )
-}
+  );
+};
 
 const NumericFieldSumCard = ({
   field,
   sums,
   activeTab,
 }: {
-  field: string
-  sums: NumericFieldSums
-  activeTab: TimeRange
+  field: string;
+  sums: NumericFieldSums;
+  activeTab: TimeRange;
 }) => {
   const relevantSum =
     activeTab === "today"
       ? sums.today
       : activeTab === "week"
       ? sums.thisWeek
-      : sums.thisMonth
+      : sums.thisMonth;
 
   const timeLabel =
     activeTab === "today"
       ? "today"
       : activeTab === "week"
       ? "this week"
-      : "this month"
+      : "this month";
 
   return (
     <Card>
@@ -111,32 +112,32 @@ const NumericFieldSumCard = ({
         <p className="text-xs/5 text-muted-foreground">{timeLabel}</p>
       </div>
     </Card>
-  )
-}
+  );
+};
 
 export const CategoryPageContent = ({
   hasEvents: initialHasEvents,
   category,
 }: CategoryPageContentProps) => {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const [activeTab, setActiveTab] = useState<TimeRange>("today")
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<TimeRange>("today");
 
-  const page = parseInt(searchParams.get("page") || "1", 10)
-  const limit = parseInt(searchParams.get("limit") || "30", 10)
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const limit = parseInt(searchParams.get("limit") || "30", 10);
 
   const [pagination, setPagination] = useState({
     pageIndex: page - 1,
     pageSize: limit,
-  })
+  });
 
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const { data: pollingData } = useQuery({
     queryKey: ["category", category.name, "hasEvents"],
     initialData: { hasEvents: initialHasEvents },
-  })
+  });
 
   const { data, isFetching } = useQuery<EventResponse>({
     queryKey: [
@@ -152,50 +153,50 @@ export const CategoryPageContent = ({
         page: pagination.pageIndex + 1,
         limit: pagination.pageSize,
         timeRange: activeTab,
-      })
-      return res.json()
+      });
+      return res.json();
     },
     refetchOnWindowFocus: false,
     enabled: pollingData.hasEvents,
-  })
+  });
 
   const eventTrendData = useMemo(() => {
-    if (!data?.events) return []
+    if (!data?.events) return [];
 
     return data.events.reduce(
       (acc: { date: string; count: number }[], event) => {
-        const date = format(new Date(event.createdAt), "yyyy-MM-dd")
-        const existingEntry = acc.find((item) => item.date === date)
+        const date = format(new Date(event.createdAt), "yyyy-MM-dd");
+        const existingEntry = acc.find((item) => item.date === date);
 
         if (existingEntry) {
-          existingEntry.count += 1
+          existingEntry.count += 1;
         } else {
-          acc.push({ date, count: 1 })
+          acc.push({ date, count: 1 });
         }
-        return acc
+        return acc;
       },
       []
-    )
-  }, [data?.events])
+    );
+  }, [data?.events]);
 
   const eventDistributionData = useMemo(() => {
-    if (!data?.events) return []
+    if (!data?.events) return [];
 
     const fieldCounts = data.events.reduce(
       (acc: Record<string, number>, event) => {
         Object.keys(event.fields).forEach((field) => {
-          acc[field] = (acc[field] || 0) + 1
-        })
-        return acc
+          acc[field] = (acc[field] || 0) + 1;
+        });
+        return acc;
       },
       {}
-    )
+    );
 
-    return Object.entries(fieldCounts).map(([name, value]) => ({ name, value }))
-  }, [data?.events])
+    return Object.entries(fieldCounts).map(([name, value]) => ({ name, value }));
+  }, [data?.events]);
 
-  const columns = useMemo<ColumnDef<EventWithFields>[]>(
-    () => [
+  const columns = useMemo<ColumnDef<EventWithFields>[]>(() => {
+    return [
       {
         accessorKey: "category",
         header: "Category",
@@ -206,13 +207,16 @@ export const CategoryPageContent = ({
         header: ({ column }) => (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() =>
+              column.toggleSorting(column.getIsSorted() === "asc")
+            }
           >
             Date
             <ArrowUpDown className="ml-2 size-4" />
           </Button>
         ),
-        cell: ({ row }) => new Date(row.getValue("createdAt")).toLocaleString(),
+        cell: ({ row }) =>
+          new Date(row.getValue("createdAt")).toLocaleString(),
       },
       ...(data?.events[0]
         ? Object.keys(data.events[0].fields).map((field) => ({
@@ -226,49 +230,49 @@ export const CategoryPageContent = ({
       {
         accessorKey: "deliveryStatus",
         header: "Delivery Status",
-        cell: ({ row }) => formatDeliveryStatus(row.getValue("deliveryStatus")),
+        cell: ({ row }) =>
+          formatDeliveryStatus(row.getValue("deliveryStatus")),
       },
-    ],
-    [category.name, data?.events]
-  )
+    ];
+  }, [category.name, data?.events]);
 
   const numericFieldSums = useMemo(() => {
-    if (!data?.events || data.events.length === 0) return {}
+    if (!data?.events || data.events.length === 0) return {};
 
-    const sums: Record<string, NumericFieldSums> = {}
-    const now = new Date()
-    const weekStart = startOfWeek(now, { weekStartsOn: 0 })
-    const monthStart = startOfMonth(now)
+    const sums: Record<string, NumericFieldSums> = {};
+    const now = new Date();
+    const weekStart = startOfWeek(now, { weekStartsOn: 0 });
+    const monthStart = startOfMonth(now);
 
     data.events.forEach((event) => {
-      const eventDate = new Date(event.createdAt)
+      const eventDate = new Date(event.createdAt);
       Object.entries(event.fields).forEach(([field, value]) => {
         if (typeof value === "number") {
           if (!sums[field]) {
-            sums[field] = { total: 0, thisWeek: 0, thisMonth: 0, today: 0 }
+            sums[field] = { total: 0, thisWeek: 0, thisMonth: 0, today: 0 };
           }
-          sums[field].total += value
+          sums[field].total += value;
           if (
             isAfter(eventDate, weekStart) ||
             eventDate.getTime() === weekStart.getTime()
           ) {
-            sums[field].thisWeek += value
+            sums[field].thisWeek += value;
           }
           if (
             isAfter(eventDate, monthStart) ||
             eventDate.getTime() === monthStart.getTime()
           ) {
-            sums[field].thisMonth += value
+            sums[field].thisMonth += value;
           }
           if (isToday(eventDate)) {
-            sums[field].today += value
+            sums[field].today += value;
           }
         }
-      })
-    })
+      });
+    });
 
-    return sums
-  }, [data?.events])
+    return sums;
+  }, [data?.events]);
 
   const table = useReactTable({
     data: data?.events || [],
@@ -287,17 +291,17 @@ export const CategoryPageContent = ({
       columnFilters,
       pagination,
     },
-  })
+  });
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search)
-    searchParams.set("page", (pagination.pageIndex + 1).toString())
-    searchParams.set("limit", pagination.pageSize.toString())
-    router.push(`?${searchParams.toString()}`, { scroll: false })
-  }, [pagination, router])
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("page", (pagination.pageIndex + 1).toString());
+    searchParams.set("limit", pagination.pageSize.toString());
+    router.push(`?${searchParams.toString()}`, { scroll: false });
+  }, [pagination, router]);
 
   if (!pollingData.hasEvents) {
-    return <EmptyCategoryState categoryName={category.name} />
+    return <EmptyCategoryState categoryName={category.name} />;
   }
 
   return (
@@ -374,9 +378,9 @@ export const CategoryPageContent = ({
               <TableBody>
                 {isFetching ? (
                   [...Array(5)].map((_, rowIndex) => (
-                    <TableRow key={rowIndex}>
-                      {columns.map((_, cellIndex) => (
-                        <TableCell key={cellIndex}>
+                    <TableRow key={`skeleton-${rowIndex}`}>
+                      {columns.map((column, cellIndex) => (
+                        <TableCell key={`${column.id}-${cellIndex}`}>
                           <div className="h-4 w-full bg-gray-200 animate-pulse rounded" />
                         </TableCell>
                       ))}
@@ -430,5 +434,5 @@ export const CategoryPageContent = ({
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};

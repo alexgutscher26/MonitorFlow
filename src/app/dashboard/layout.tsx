@@ -1,22 +1,22 @@
-"use client"
+'use client'
 
-import { buttonVariants } from "@/components/ui/button"
-import { Modal } from "@/components/ui/modal"
-import { cn } from "@/utils"
-import { UserButton } from "@clerk/nextjs"
-import { Gem, Home, Key, LucideIcon, Menu, Settings, X, BarChart2 } from "lucide-react"
-import Link from "next/link"
-import { PropsWithChildren, useState } from "react"
+import { buttonVariants } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
+import { cn } from "@/utils";
+import { UserButton } from "@clerk/nextjs";
+import { Gem, Home, Key, LucideIcon, Menu, Settings, X, BarChart2 } from "lucide-react";
+import Link from "next/link";
+import { PropsWithChildren, useState } from "react";
 
 interface SidebarItem {
-  href: string
-  icon: LucideIcon
-  text: string
+  href: string;
+  icon: LucideIcon;
+  text: string;
 }
 
 interface SidebarCategory {
-  category: string
-  items: SidebarItem[]
+  category: string;
+  items: SidebarItem[];
 }
 
 const SIDEBAR_ITEMS: SidebarCategory[] = [
@@ -46,7 +46,7 @@ const SIDEBAR_ITEMS: SidebarCategory[] = [
       },
     ],
   },
-]
+];
 
 const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   return (
@@ -65,9 +65,9 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
                 {category}
               </p>
               <div className="-mx-2 flex flex-1 flex-col">
-                {items.map((item, i) => (
+                {items.map((item) => (
                   <Link
-                    key={i}
+                    key={item.href} // Use a unique key based on the href property
                     href={item.href}
                     className={cn(
                       buttonVariants({ variant: "ghost" }),
@@ -98,11 +98,11 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 const Layout = ({ children }: PropsWithChildren) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   return (
     <div className="relative h-screen flex flex-col md:flex-row bg-white overflow-hidden">
@@ -151,11 +151,11 @@ const Layout = ({ children }: PropsWithChildren) => {
             </button>
           </div>
 
-          <Sidebar />
+          <Sidebar onClose={() => setIsDrawerOpen(false)} />
         </Modal>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

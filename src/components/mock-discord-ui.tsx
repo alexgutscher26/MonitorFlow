@@ -1,5 +1,5 @@
-import { PropsWithChildren } from "react"
-import { Icons } from "./icons"
+import { PropsWithChildren } from "react";
+import { Icons } from "./icons";
 import {
   Cog,
   Gift,
@@ -16,8 +16,8 @@ import {
   Sticker,
   UserCircle,
   Video,
-} from "lucide-react"
-import Image from "next/image"
+} from "lucide-react";
+import Image from "next/image";
 
 export const MockDiscordUI = ({ children }: PropsWithChildren) => {
   return (
@@ -32,7 +32,7 @@ export const MockDiscordUI = ({ children }: PropsWithChildren) => {
 
         {[...Array(5)].map((_, i) => (
           <div
-            key={i}
+            key={`server-${i}`} // Replaced `i` with `server-${i}`
             className="size-12 bg-discord-background rounded-3xl flex items-center justify-center mb-3 hover:rounded-xl transition-all duration-200 hover:bg-discord-brand-color cursor-not-allowed"
           >
             <span className="text-lg font-semibold text-gray-400">
@@ -85,7 +85,7 @@ export const MockDiscordUI = ({ children }: PropsWithChildren) => {
             <div className="my-1 space-y-px">
               {[...Array(4)].map((_, i) => (
                 <div
-                  key={i}
+                  key={`user-${i}`} // Replaced `i` with `user-${i}`
                   className="flex items-center px-2 py-1.5 rounded text-gray-600 cursor-not-allowed"
                 >
                   <div className="size-8 rounded-full bg-discord-background mr-3" />
@@ -171,5 +171,5 @@ export const MockDiscordUI = ({ children }: PropsWithChildren) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
