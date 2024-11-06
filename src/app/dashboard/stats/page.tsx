@@ -92,13 +92,13 @@ export default async function StatsPage() {
             title="Total Events"
             value={user._count.events}
             trend="+12.5%"
-            trendUp={true}
+            trendUp
           />
           <QuickStatCard
             title="Success Rate"
             value={`${successRate.toFixed(1)}%`}
             trend="+5.2%"
-            trendUp={true}
+            trendUp
           />
           <QuickStatCard
             title="Error Events"
