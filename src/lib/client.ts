@@ -4,7 +4,8 @@ import { HTTPException } from "hono/http-exception";
 import { StatusCode } from "hono/utils/http-status";
 import superjson from "superjson";
 
-const getBaseUrl = () => {
+// Function to get the base URL depending on the environment
+const getBaseUrl = (): string => {
   if (typeof window !== "undefined") {
     return "";
   }
@@ -16,6 +17,7 @@ const getBaseUrl = () => {
     : "https://<YOUR_DEPLOYED_WORKER_URL>/";
 };
 
+// Base client with a custom fetch implementation
 export const baseClient = hc<AppType>(getBaseUrl(), {
   fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
     const response = await fetch(input, { ...init, cache: "no-store" });
@@ -48,15 +50,19 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
   },
 })["api"];
 
-// Updated to Record<string, any> for dynamic object access
-function getHandler(obj: Record<string, any>, ...keys: string[]) {
+// Type definition for function signatures used in getHandler
+type ExecutorFunction = (args: { query?: any; json?: any }) => Promise<any>;
+
+// Updated getHandler with proper type
+function getHandler(obj: Record<string, any>, ...keys: string[]): ExecutorFunction {
   let current = obj;
   for (const key of keys) {
     current = current[key];
   }
-  return current as Function;
+  return current as ExecutorFunction;
 }
 
+// Serializes data with SuperJSON
 function serializeWithSuperJSON(data: any): any {
   if (typeof data !== "object" || data === null) {
     return data;
@@ -70,8 +76,7 @@ function serializeWithSuperJSON(data: any): any {
 }
 
 /**
- * Optional convenience proxy to pass data directly to your API
- * instead of using nested objects as hono does by default
+ * Proxy to pass data directly to your API instead of nested objects as hono does by default.
  */
 function createProxy(target: any, path: string[] = []): any {
   return new Proxy(target, {
@@ -102,4 +107,5 @@ function createProxy(target: any, path: string[] = []): any {
   });
 }
 
+// Export the client with improved types
 export const client: typeof baseClient = createProxy(baseClient);
