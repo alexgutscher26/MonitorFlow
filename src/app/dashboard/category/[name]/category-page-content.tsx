@@ -42,7 +42,7 @@ interface CategoryPageContentProps {
 }
 
 interface EventWithFields extends Event {
-  fields: Record<string, any>;
+  fields: Record<string, number | string | boolean>;
 }
 
 interface EventResponse {
@@ -220,11 +220,10 @@ export const CategoryPageContent = ({
       },
       ...(data?.events[0]
         ? Object.keys(data.events[0].fields).map((field) => ({
-            accessorFn: (row: { fields: { [x: string]: any } }) =>
-              row.fields[field],
+            accessorFn: (row: { fields: { [x: string]: string | number | boolean; }; }) => row.fields[field] as string | number | boolean,
             header: field,
             cell: ({ row }: { row: Row<EventWithFields> }) =>
-              row.original.fields[field] || "-",
+              String(row.original.fields[field] ?? "-"),
           }))
         : []),
       {
