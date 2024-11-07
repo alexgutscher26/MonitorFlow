@@ -14,7 +14,7 @@
     "@clerk/nextjs": "^5.7.3",
     "@discordjs/rest": "^2.4.0",
     "@hookform/resolvers": "^3.9.0",
-    "@neondatabase/serverless": "^0.10.2",
+    "@neondatabase/serverless": "^0.10.3",
     "@prisma/adapter-neon": "^5.18.0",
     "@prisma/client": "^5.18.0",
     "@radix-ui/react-accordion": "^1.2.1",
