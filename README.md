@@ -1,37 +1,114 @@
 # PingPanda - A Modern Fullstack Event Monitoring SaaS
 
-Built with the Next.js App Router, Postgres, TypeScript, Tailwind & Clerk
-
 <!-- ![Project Image](https://github.com/joschan21/pingpanda/blob/main/public/thumbnail.png) -->
 
-## Features
+PingPanda is a fully-featured, modern SaaS solution designed for event monitoring. Built with the Next.js App Router, Postgres, TypeScript, Tailwind CSS, and Clerk, PingPanda provides an intuitive dashboard, real-time notifications, and secure payments for your users. Whether you're a developer or a business owner, PingPanda makes event tracking seamless and efficient.
 
-- 🛠️ Complete SaaS built in modern Next.js
-- 💻 Beautiful landing page included
-- 🎨 Custom artworks made by a professional illustrator
-- ✉️ Real-time event messages via Discord
-- 🖥️ Clean & intuitive event monitoring dashboard
-- 💳 Secure payments using Stripe
-- 🛍️ Customers can purchase your PRO plan
-- 🌟 Clean, modern UI on top of shadcn-ui
-- 🔑 Authentication using Clerk
-- ⌨️ 100% written in TypeScript
-- 🎁 ...much more
+## Key Features
+🛠️ Fully-Featured SaaS built with Next.js, offering a complete event monitoring solution.
+💻 Custom Landing Page with a beautiful, high-conversion design.
+🎨 Professionally Designed Artwork created by a talented illustrator to give your project a unique and polished look.
+✉️ Real-Time Event Notifications sent directly to your Discord channel, keeping you informed instantly.
+🖥️ Intuitive Event Dashboard for easy monitoring and management of events, all built with a user-friendly interface.
+💳 Secure Payments integrated with Stripe for a smooth and safe user experience.
+🛍️ PRO Plan Purchases allow customers to upgrade and access premium features.
+🌟 Modern UI leveraging Shadcn UI for a clean and consistent design system.
+🔑 Authentication with Clerk for secure user sign-ups, logins, and session management.
+⌨️ 100% Written in TypeScript, ensuring type safety and better developer experience.
+🎁 Additional Features coming soon! Keep an eye on updates.
 
-## Getting started
+## To-Do Features
+Here are some planned features for PingPanda:
 
-To get started with this project, run
+- [x] Complete User Authentication System using Clerk (Sign-up, Login, Session Management).
+- [x] Basic Event Dashboard with a real-time feed of events.
+- [x] Discord Notifications for real-time updates.
+- [x] Stripe Integration for handling payments and PRO plan purchases.
+- [x] User Profiles for storing and managing user-specific event data.
+- [] API for External Event Integrations (e.g., integrate with external services to send event data).
+- [] Dark Mode for better user experience.
+- [] Event Logs that allow users to review and manage historical event data.
+- [] Customizable Event Alerts where users can set up personalized event triggers.
+- [] User Roles (e.g., Admin, User, Guest) with permission-based access.
+- [] Analytics Dashboard with graphs and stats for event trends.
+- [] Multi-language Support to reach a global audience.
 
-```bash
-  git clone https://github.com/joschan21/pingpanda.git
+## Project Overview
+
+PingPanda is designed for developers and businesses who want to monitor events in real time and engage with their users effectively. With features like a real-time dashboard, Discord notifications, and seamless Stripe payments, PingPanda provides a complete solution for event tracking and user management.
+
+This project is ideal for SaaS applications, web-based dashboards, or any service that requires real-time event monitoring.
+
+## Getting Started
+
+To get started with PingPanda, follow the steps below:
+
+Clone the Repository
+First, clone this repository to your local machine using the command:
+
+```
+git clone https://github.com/joschan21/pingpanda.git
 ```
 
-and copy the .env.example variables into a separate .env file, fill them out & and that's all you need to get started!
+## Set Up Environment Variables
 
+Copy the .env.example file to .env and configure the necessary variables. You'll need to fill in values for things like database credentials, Clerk API keys, and Stripe API keys.
+
+```
+cp .env.example .env
+```
+
+## Install Dependencies
+
+Run the following command to install the necessary dependencies:
+
+```
+npm install
+```
+
+##Run the Development Server
+
+Start the application in development mode:
+
+```
+npm run dev
+```
+
+## Enjoy!
+
+You should now have a fully functional instance of PingPanda running locally.
+
+## Technologies Used
+
+-- Next.js - Full-stack framework for building the app with modern React.
+-- PostgreSQL - A robust, scalable database for managing events and user data.
+-- Tailwind CSS - Utility-first CSS framework for building responsive, modern designs.
+-- Clerk - Provides authentication, including sign-up, sign-in, and session management.
+-- Stripe - Secure payment processing for upgrading to the PRO plan.
+-- Shadcn UI - Component library for building a consistent and beautiful UI.
+-- TypeScript - A statically typed superset of JavaScript for better development experience.
+
+## Contributing
+Contributions are welcome! If you'd like to contribute to the project, please fork the repository, create a new branch, and submit a pull request.
+
+Before contributing, please make sure your code adheres to the following guidelines:
+
+Write clean, readable code with proper indentation.
+Ensure all code is type-safe and written in TypeScript.
+Add unit tests for any new features or bug fixes.
+Ensure the app is fully functional by running npm run dev.
+
+## Issues
+
+If you find any bugs or have feature requests, please open an issue in the GitHub repository.
 
 ## Acknowledgements
 
-- [Clerk](https://link.joshtriedcoding.com/clerk) for making this project possible
+-- Clerk: For providing an excellent authentication solution.
+-- Shadcn UI: For the UI components that power PingPanda’s sleek and modern design.
+-- Stripe: For secure and easy payment processing.
+-- Tailwind CSS: For the utility-first CSS framework.
+-- Next.js: For being the powerful framework that makes this project possible.
 
 ## License
 
