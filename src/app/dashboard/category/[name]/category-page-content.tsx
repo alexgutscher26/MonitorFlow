@@ -160,6 +160,11 @@ export const CategoryPageContent = ({
     enabled: pollingData.hasEvents,
   });
 
+  const handleTabChange = (value: string) => setActiveTab(value as TimeRange);
+  const handleSortingChange = (column: any) => column.toggleSorting(column.getIsSorted() === "asc");
+  const handlePreviousPage = () => table.previousPage();
+  const handleNextPage = () => table.nextPage();
+
   const eventTrendData = useMemo(() => {
     if (!data?.events) return [];
 
@@ -205,12 +210,7 @@ export const CategoryPageContent = ({
       {
         accessorKey: "createdAt",
         header: ({ column }) => (
-          <Button
-            variant="ghost"
-            onClick={() =>
-              column.toggleSorting(column.getIsSorted() === "asc")
-            }
-          >
+          <Button variant="ghost" onClick={() => handleSortingChange(column)}>
             Date
             <ArrowUpDown className="ml-2 size-4" />
           </Button>
@@ -307,7 +307,7 @@ export const CategoryPageContent = ({
     <div className="space-y-6">
       <Tabs
         value={activeTab}
-        onValueChange={(value) => setActiveTab(value as TimeRange)}
+        onValueChange={handleTabChange}
       >
         <TabsList className="mb-2">
           <TabsTrigger value="today">Today</TabsTrigger>
@@ -418,7 +418,7 @@ export const CategoryPageContent = ({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.previousPage()}
+          onClick={handlePreviousPage}
           disabled={!table.getCanPreviousPage() || isFetching}
         >
           Previous
@@ -426,7 +426,7 @@ export const CategoryPageContent = ({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
+          onClick={handleNextPage}
           disabled={!table.getCanNextPage() || isFetching}
         >
           Next
