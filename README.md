@@ -6,17 +6,17 @@ PingPanda is a fully-featured, modern SaaS solution designed for event monitorin
 
 ## Key Features
 
-**🛠️ Fully-Featured SaaS built with Next.js, offering a complete event monitoring solution.**
-**💻 Custom Landing Page with a beautiful, high-conversion design.**
-🎨 Professionally Designed Artwork created by a talented illustrator to give your project a unique and polished look.
-✉️ Real-Time Event Notifications sent directly to your Discord channel, keeping you informed instantly.
-🖥️ Intuitive Event Dashboard for easy monitoring and management of events, all built with a user-friendly interface.
-💳 Secure Payments integrated with Stripe for a smooth and safe user experience.
-🛍️ PRO Plan Purchases allow customers to upgrade and access premium features.
-🌟 Modern UI leveraging Shadcn UI for a clean and consistent design system.
-🔑 Authentication with Clerk for secure user sign-ups, logins, and session management.
-⌨️ 100% Written in TypeScript, ensuring type safety and better developer experience.
-🎁 Additional Features coming soon! Keep an eye on updates.
+- 🛠️ Fully-Featured SaaS built with Next.js, offering a complete event monitoring solution.
+- 💻 Custom Landing Page with a beautiful, high-conversion design.
+- 🎨 Professionally Designed Artwork created by a talented illustrator to give your project a unique and polished look.
+- ✉️ Real-Time Event Notifications sent directly to your Discord channel, keeping you informed instantly.
+- 🖥️ Intuitive Event Dashboard for easy monitoring and management of events, all built with a user-friendly interface.
+- 💳 Secure Payments integrated with Stripe for a smooth and safe user experience.
+- 🛍️ PRO Plan Purchases allow customers to upgrade and access premium features.
+- 🌟 Modern UI leveraging Shadcn UI for a clean and consistent design system.
+- 🔑 Authentication with Clerk for secure user sign-ups, logins, and session management.
+- ⌨️ 100% Written in TypeScript, ensuring type safety and better developer experience.
+- 🎁 Additional Features coming soon! Keep an eye on updates.
 
 ## To-Do Features
 
@@ -82,13 +82,13 @@ You should now have a fully functional instance of PingPanda running locally.
 
 ## Technologies Used
 
--- Next.js - Full-stack framework for building the app with modern React.
--- PostgreSQL - A robust, scalable database for managing events and user data.
--- Tailwind CSS - Utility-first CSS framework for building responsive, modern designs.
--- Clerk - Provides authentication, including sign-up, sign-in, and session management.
--- Stripe - Secure payment processing for upgrading to the PRO plan.
--- Shadcn UI - Component library for building a consistent and beautiful UI.
--- TypeScript - A statically typed superset of JavaScript for better development experience.
+- Next.js - Full-stack framework for building the app with modern React.
+- PostgreSQL - A robust, scalable database for managing events and user data.
+- Tailwind CSS - Utility-first CSS framework for building responsive, modern designs.
+- Clerk - Provides authentication, including sign-up, sign-in, and session management.
+- Stripe - Secure payment processing for upgrading to the PRO plan.
+- Shadcn UI - Component library for building a consistent and beautiful UI.
+- TypeScript - A statically typed superset of JavaScript for better development experience.
 
 ## Contributing
 
