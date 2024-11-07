@@ -107,11 +107,11 @@ If you find any bugs or have feature requests, please open an issue in the GitHu
 
 ## Acknowledgements
 
--- Clerk: For providing an excellent authentication solution.
--- Shadcn UI: For the UI components that power PingPanda’s sleek and modern design.
--- Stripe: For secure and easy payment processing.
--- Tailwind CSS: For the utility-first CSS framework.
--- Next.js: For being the powerful framework that makes this project possible.
+- Clerk: For providing an excellent authentication solution.
+- Shadcn UI: For the UI components that power PingPanda’s sleek and modern design.
+- Stripe: For secure and easy payment processing.
+- Tailwind CSS: For the utility-first CSS framework.
+- Next.js: For being the powerful framework that makes this project possible.
 
 ## License
 
