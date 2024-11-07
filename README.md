@@ -68,7 +68,7 @@ Run the following command to install the necessary dependencies:
 npm install
 ```
 
-##Run the Development Server
+## Run the Development Server
 
 Start the application in development mode:
 
