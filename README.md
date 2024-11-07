@@ -5,8 +5,9 @@
 PingPanda is a fully-featured, modern SaaS solution designed for event monitoring. Built with the Next.js App Router, Postgres, TypeScript, Tailwind CSS, and Clerk, PingPanda provides an intuitive dashboard, real-time notifications, and secure payments for your users. Whether you're a developer or a business owner, PingPanda makes event tracking seamless and efficient.
 
 ## Key Features
-🛠️ Fully-Featured SaaS built with Next.js, offering a complete event monitoring solution.
-💻 Custom Landing Page with a beautiful, high-conversion design.
+
+**🛠️ Fully-Featured SaaS built with Next.js, offering a complete event monitoring solution.**
+**💻 Custom Landing Page with a beautiful, high-conversion design.**
 🎨 Professionally Designed Artwork created by a talented illustrator to give your project a unique and polished look.
 ✉️ Real-Time Event Notifications sent directly to your Discord channel, keeping you informed instantly.
 🖥️ Intuitive Event Dashboard for easy monitoring and management of events, all built with a user-friendly interface.
@@ -18,20 +19,21 @@ PingPanda is a fully-featured, modern SaaS solution designed for event monitorin
 🎁 Additional Features coming soon! Keep an eye on updates.
 
 ## To-Do Features
+
 Here are some planned features for PingPanda:
 
-- [x] Complete User Authentication System using Clerk (Sign-up, Login, Session Management).
-- [x] Basic Event Dashboard with a real-time feed of events.
-- [x] Discord Notifications for real-time updates.
-- [x] Stripe Integration for handling payments and PRO plan purchases.
-- [x] User Profiles for storing and managing user-specific event data.
-- [] API for External Event Integrations (e.g., integrate with external services to send event data).
-- [] Dark Mode for better user experience.
-- [] Event Logs that allow users to review and manage historical event data.
-- [] Customizable Event Alerts where users can set up personalized event triggers.
-- [] User Roles (e.g., Admin, User, Guest) with permission-based access.
-- [] Analytics Dashboard with graphs and stats for event trends.
-- [] Multi-language Support to reach a global audience.
+- [✅] Complete User Authentication System using Clerk (Sign-up, Login, Session Management).
+- [✅] Basic Event Dashboard with a real-time feed of events.
+- [✅] Discord Notifications for real-time updates.
+- [✅] Stripe Integration for handling payments and PRO plan purchases.
+- [✅] User Profiles for storing and managing user-specific event data.
+- [ ] API for External Event Integrations (e.g., integrate with external services to send event data).
+- [ ] Dark Mode for better user experience.
+- [ ] Event Logs that allow users to review and manage historical event data.
+- [ ] Customizable Event Alerts where users can set up personalized event triggers.
+- [ ] User Roles (e.g., Admin, User, Guest) with permission-based access.
+- [ ] Analytics Dashboard with graphs and stats for event trends.
+- [ ] Multi-language Support to reach a global audience.
 
 ## Project Overview
 
@@ -89,6 +91,7 @@ You should now have a fully functional instance of PingPanda running locally.
 -- TypeScript - A statically typed superset of JavaScript for better development experience.
 
 ## Contributing
+
 Contributions are welcome! If you'd like to contribute to the project, please fork the repository, create a new branch, and submit a pull request.
 
 Before contributing, please make sure your code adheres to the following guidelines:
