@@ -8,18 +8,13 @@ import { CheckIcon, ClipboardIcon } from "lucide-react"
 import { useState } from "react"
 
 export const ApiKeySettings = ({ apiKey }: { apiKey: string }) => {
-  const [copySuccess, setCopySuccess] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false)
 
-  const copyApiKey = async () => {
-    try {
-      await navigator.clipboard.writeText(apiKey);
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
-    } catch (error) {
-      console.error("Failed to copy API key:", error);
-    }
-  };
-  
+  const copyApiKey = () => {
+    navigator.clipboard.writeText(apiKey)
+    setCopySuccess(true)
+    setTimeout(() => setCopySuccess(false), 2000)
+  }
 
   return (
     <Card className="max-w-xl w-full">

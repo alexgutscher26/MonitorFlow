@@ -1,31 +1,26 @@
-// src/server/index.ts
+import { Hono } from "hono"
+import { cors } from "hono/cors"
+import { handle } from "hono/vercel"
+import { authRouter } from "./routers/auth-router"
+import { categoryRouter } from "./routers/category-router"
+import { paymentRouter } from "./routers/payment-router"
+import { projectRouter } from "./routers/project-router"
 
-// Importing Hono modules and middlewares
-import { Hono } from "hono";
-import { cors } from "hono/cors";
-import { handle } from "hono/vercel";
-
-// Importing routers
-import { categoryRouter } from "./routers/category-router";
-import { projectRouter } from "./routers/project-router";
-import { authRouter } from "./routers/auth-router";
-import { paymentRouter } from "./routers/payment-router";
-
-// Initializing the Hono app with base path and CORS middleware
-const app = new Hono().basePath("/api").use(cors());
+const app = new Hono().basePath("/api").use(cors())
 
 /**
- * Primary application router setup for Hono
- * Including all routes
+ * This is the primary router for your server.
+ *
+ * All routers added in /server/routers should be manually added here.
  */
-app
+const appRouter = app
   .route("/auth", authRouter)
   .route("/category", categoryRouter)
   .route("/payment", paymentRouter)
   .route("/project", projectRouter)
 
 // The handler Next.js uses to answer API requests
-export const httpHandler = handle(app);
+export const httpHandler = handle(app)
 
 /**
  * (Optional)
@@ -33,7 +28,7 @@ export const httpHandler = handle(app);
  *
  * Run `npm run deploy` for one-click API deployment to Cloudflare's edge network
  */
-export default app;
+export default app
 
-// Export type definition of API
-export type AppType = typeof app;
+// export type definition of API
+export type AppType = typeof appRouter

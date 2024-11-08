@@ -34,15 +34,6 @@ export const Navbar = async () => {
                 >
                   Dashboard <ArrowRight className="ml-1.5 size-4" />
                 </Link>
-                {/* <Link
-                  href="/pricing"
-                  className={buttonVariants({
-                    size: "sm",
-                    className: "flex items-center gap-1",
-                  })}
-                >
-                  Pricing <ArrowRight className="ml-1.5 size-4" />
-                </Link> */}
               </>
             ) : (
               <>

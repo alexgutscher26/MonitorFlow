@@ -1,22 +1,21 @@
-import { createCheckoutSession } from "@/lib/stripe";
-import { router } from "../__internals/router";
-import { privateProcedure } from "../procedures";
+import { createCheckoutSession } from "@/lib/stripe"
+import { router } from "../__internals/router"
+import { privateProcedure } from "../procedures"
 
 export const paymentRouter = router({
   createCheckoutSession: privateProcedure.mutation(async ({ c, ctx }) => {
-    const { user } = ctx;
+    const { user } = ctx
 
     const session = await createCheckoutSession({
       userEmail: user.email,
       userId: user.id,
-    });
+    })
 
-    return c.json({ url: session.url });
+    return c.json({ url: session.url })
   }),
 
-  // Removed async since no await is used
-  getUserPlan: privateProcedure.query(({ c, ctx }) => {
-    const { user } = ctx;
-    return c.json({ plan: user.plan });
+  getUserPlan: privateProcedure.query(async ({ c, ctx }) => {
+    const { user } = ctx
+    return c.json({ plan: user.plan })
   }),
-});
+})

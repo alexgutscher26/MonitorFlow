@@ -1,35 +1,29 @@
-'use client'
+"use client"
 
-import { buttonVariants } from "@/components/ui/button";
-import { Modal } from "@/components/ui/modal";
-import { cn } from "@/utils";
-import { UserButton } from "@clerk/nextjs";
-import { Gem, Home, Key, LucideIcon, Menu, Settings, X, BarChart2 } from "lucide-react";
-import Link from "next/link";
-import { PropsWithChildren, useState } from "react";
+import { buttonVariants } from "@/components/ui/button"
+import { Modal } from "@/components/ui/modal"
+import { cn } from "@/utils"
+import { UserButton } from "@clerk/nextjs"
+import { Gem, Home, Key, LucideIcon, Menu, Settings, X } from "lucide-react"
+import Link from "next/link"
+import { PropsWithChildren, useState } from "react"
+import { Drawer } from "vaul"
 
 interface SidebarItem {
-  href: string;
-  icon: LucideIcon;
-  text: string;
+  href: string
+  icon: LucideIcon
+  text: string
 }
 
 interface SidebarCategory {
-  category: string;
-  items: SidebarItem[];
+  category: string
+  items: SidebarItem[]
 }
 
 const SIDEBAR_ITEMS: SidebarCategory[] = [
   {
     category: "Overview",
-    items: [
-      { href: "/dashboard", icon: Home, text: "Dashboard" },
-      {
-        href: "/dashboard/stats",
-        icon: BarChart2,
-        text: "Statistics",
-      },
-    ],
+    items: [{ href: "/dashboard", icon: Home, text: "Dashboard" }],
   },
   {
     category: "Account",
@@ -46,7 +40,7 @@ const SIDEBAR_ITEMS: SidebarCategory[] = [
       },
     ],
   },
-];
+]
 
 const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   return (
@@ -65,9 +59,9 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
                 {category}
               </p>
               <div className="-mx-2 flex flex-1 flex-col">
-                {items.map((item) => (
+                {items.map((item, i) => (
                   <Link
-                    key={item.href} // Use a unique key based on the href property
+                    key={i}
                     href={item.href}
                     className={cn(
                       buttonVariants({ variant: "ghost" }),
@@ -98,11 +92,11 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
 const Layout = ({ children }: PropsWithChildren) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   return (
     <div className="relative h-screen flex flex-col md:flex-row bg-white overflow-hidden">
@@ -151,11 +145,11 @@ const Layout = ({ children }: PropsWithChildren) => {
             </button>
           </div>
 
-          <Sidebar onClose={() => setIsDrawerOpen(false)} />
+          <Sidebar />
         </Modal>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout

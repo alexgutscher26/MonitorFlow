@@ -95,171 +95,101 @@ export const CreateEventCategoryModal = ({
       </div>
 
       <Modal
-        className="max-w-xl bg-white rounded-xl shadow-2xl overflow-hidden"
+        className="max-w-xl p-8"
         showModal={isOpen}
         setShowModal={setIsOpen}
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Header */}
-          <div className="relative px-6 py-4 bg-gradient-to-br from-brand-50/80 via-white to-gray-50">
-            <div className="absolute inset-0 bg-grid-black/[0.02] bg-[size:16px]" />
-            <div className="relative">
-              <h2 className="text-xl font-semibold text-gray-800">
-                New Category
-              </h2>
-              <p className="text-sm text-gray-600 mt-0.5">
-                Create a category to organize your events
-              </p>
-            </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div>
+            <h2 className="text-lg/7 font-medium tracking-tight text-gray-950">
+              New Event Category
+            </h2>
+            <p className="text-sm/6 text-gray-600">
+              Create a new category to organize your events.
+            </p>
           </div>
 
-          {/* Content */}
-          <div className="p-6 space-y-6">
-            {/* Name Input */}
-            <div className="space-y-1.5">
-              <Label
-                htmlFor="name"
-                className="text-sm font-medium text-gray-700"
-              >
-                Name
-              </Label>
-              <div className="relative">
-                <Input
-                  
-                  id="name"
-                  {...register("name")}
-                  placeholder="e.g. user-signup"
-                  className="w-full px-4 py-2 bg-white border border-gray-200 
-                           rounded-lg shadow-sm transition duration-200
-                           placeholder:text-gray-400
-                           focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
-                />
-                {errors.name && (
-                  <div className="absolute right-0 top-0 h-full pr-3 flex items-center pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-red-500"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                )}
-              </div>
-              {errors.name && (
-                <p className="text-sm text-red-500 animate-fadeIn">
+          <div className="space-y-5">
+            <div>
+              <Label htmlFor="name">Name</Label>
+              <Input
+                autoFocus
+                id="name"
+                {...register("name")}
+                placeholder="e.g. user-signup"
+                className="w-full"
+              />
+              {errors.name ? (
+                <p className="mt-1 text-sm text-red-500">
                   {errors.name.message}
                 </p>
-              )}
+              ) : null}
             </div>
 
-            {/* Color Selection */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-gray-700">Color</Label>
-              <div className="grid grid-cols-5 gap-2">
+            <div>
+              <Label>Color</Label>
+              <div className="flex flex-wrap gap-3">
                 {COLOR_OPTIONS.map((premadeColor) => (
                   <button
                     key={premadeColor}
                     type="button"
                     className={cn(
-                      "aspect-square rounded-lg transition-all duration-200",
-                      "hover:shadow-lg hover:scale-105",
-                      color === premadeColor &&
-                        "ring-2 ring-brand-500 ring-offset-2 scale-105"
+                      `bg-[${premadeColor}]`,
+                      "size-10 rounded-full ring-2 ring-offset-2 transition-all",
+                      color === premadeColor
+                        ? "ring-brand-700 scale-110"
+                        : "ring-transparent hover:scale-105"
                     )}
-                    style={{ backgroundColor: premadeColor }}
                     onClick={() => setValue("color", premadeColor)}
-                  />
+                  ></button>
                 ))}
               </div>
+
+              {errors.color ? (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.color.message}
+                </p>
+              ) : null}
             </div>
 
-            {/* Emoji Selection */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-gray-700">Icon</Label>
-              <div className="grid grid-cols-5 gap-2">
+            <div>
+              <Label>Emoji</Label>
+              <div className="flex flex-wrap gap-3">
                 {EMOJI_OPTIONS.map(({ emoji, label }) => (
                   <button
                     key={emoji}
                     type="button"
-                    title={label}
                     className={cn(
-                      "group relative aspect-square flex items-center justify-center",
-                      "text-xl rounded-lg transition-all duration-200",
-                      "hover:bg-gray-50",
+                      "size-10 flex items-center justify-center text-xl rounded-md transition-all",
                       selectedEmoji === emoji
-                        ? "bg-brand-50 ring-2 ring-brand-500"
-                        : "bg-gray-100/50"
+                        ? "bg-brand-100 ring-2 ring-brand-700 scale-110"
+                        : "bg-brand-100 hover:bg-brand-200"
                     )}
                     onClick={() => setValue("emoji", emoji)}
                   >
-                    <span className="transform transition-transform group-hover:scale-110">
-                      {emoji}
-                    </span>
-                    <span
-                      className="absolute -bottom-8 left-1/2 -translate-x-1/2 
-                                   px-2 py-1 bg-gray-900 text-white text-xs rounded
-                                   opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap"
-                    >
-                      {label}
-                    </span>
+                    {emoji}
                   </button>
                 ))}
               </div>
+
+              {errors.emoji ? (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.emoji.message}
+                </p>
+              ) : null}
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+          <div className="flex justify-end space-x-3 pt-4 border-t">
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               onClick={() => setIsOpen(false)}
-              className="text-gray-600 hover:text-gray-700 hover:bg-gray-100/50"
             >
               Cancel
             </Button>
-            <Button
-              disabled={isPending}
-              type="submit"
-              className={cn(
-                "bg-brand-500 text-white",
-                "hover:bg-brand-600 active:bg-brand-700",
-                "shadow-sm hover:shadow",
-                "transition duration-200",
-                "disabled:opacity-50"
-              )}
-            >
-              {isPending ? (
-                <>
-                  <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                    />
-                  </svg>
-                  Creating...
-                </>
-              ) : (
-                "Create Category"
-              )}
+            <Button disabled={isPending} type="submit">
+              {isPending ? "Creating..." : "Create Category"}{" "}
             </Button>
           </div>
         </form>

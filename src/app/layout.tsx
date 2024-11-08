@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
-import  { Inter, EB_Garamond } from "next/font/google"
+import { Inter } from "next/font/google"
 import { Providers } from "@/components/providers"
+import { EB_Garamond } from "next/font/google"
 import { cn } from "@/utils"
 
 import "./globals.css"
