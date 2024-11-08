@@ -7,15 +7,32 @@ import { Bindings } from "../env"
 import { bodyParsingMiddleware, queryParsingMiddleware } from "./middleware"
 import { MutationOperation, QueryOperation } from "./types"
 
+/**
+ * Type representing an operation, which could be a query or mutation.
+ *
+ * @template I - The input data type for the operation.
+ * @template O - The output data type for the operation.
+ */
 type OperationType<I extends Record<string, unknown>, O> =
   | QueryOperation<I, O>
   | MutationOperation<I, O>
 
+/**
+ * Creates a router based on the specified operations.
+ *
+ * - This router adds query and mutation routes, with support for optional schema validation.
+ * - Automatically includes error handling and middleware execution.
+ *
+ * @template T - The operations for the router, mapping operation names to query/mutation definitions.
+ * @param {Record<string, OperationType<any, any>>} obj - The operations to create routes for.
+ * @returns {Hono} A configured Hono router instance.
+ */
 export const router = <T extends Record<string, OperationType<any, any>>>(
   obj: T
 ) => {
   const route = new Hono<{ Bindings: Bindings; Variables: any }>().onError(
     (err, c) => {
+      // Custom error handling for HTTP and unknown exceptions
       if (err instanceof HTTPException) {
         return c.json(
           {
@@ -38,14 +55,17 @@ export const router = <T extends Record<string, OperationType<any, any>>>(
     }
   )
 
+  // Iterate over each operation to set up routes
   Object.entries(obj).forEach(([key, operation]) => {
     const path = `/${key}` as const
 
+    // Apply middlewares for the operation
     const operationMiddlewares: MiddlewareHandler[] = operation.middlewares.map(
       (middleware) => {
         const wrapperFunction = async (c: Context, next: Next) => {
           const ctx = c.get("__middleware_output") ?? {}
 
+          // Wrapper for middleware to manage output context
           const nextWrapper = <B>(args: B) => {
             c.set("__middleware_output", { ...ctx, ...args })
             return { ...ctx, ...args }
@@ -61,6 +81,7 @@ export const router = <T extends Record<string, OperationType<any, any>>>(
       }
     )
 
+    // Define routes based on operation type (query or mutation)
     if (operation.type === "query") {
       if (operation.schema) {
         route.get(
@@ -132,9 +153,17 @@ export const router = <T extends Record<string, OperationType<any, any>>>(
     }
   })
 
+  /**
+   * Helper type to infer the input type of an operation.
+   */
   type InferInput<T> = T extends OperationType<infer I, any> ? I : {}
+
+  /**
+   * Helper type to infer the output type of an operation.
+   */
   type InferOutput<T> = T extends OperationType<any, infer I> ? I : {}
 
+  // Return the configured route with inferred typings for GET and POST operations
   return route as Hono<
     { Bindings: Bindings; Variables: Variables },
     {

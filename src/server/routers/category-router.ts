@@ -7,7 +7,15 @@ import { CATEGORY_NAME_VALIDATOR } from "@/lib/validators/category-validator"
 import { parseColor } from "@/utils"
 import { HTTPException } from "hono/http-exception"
 
+/**
+ * Router for handling event categories, including creation, deletion, and querying.
+ */
 export const categoryRouter = router({
+  /**
+   * Fetches the user's event categories for the current month, including event counts.
+   *
+   * @returns {object} - An object containing event categories with event counts and metadata.
+   */
   getEventCategories: privateProcedure.query(async ({ c, ctx }) => {
     const now = new Date()
     const firstDayOfMonth = startOfMonth(now)
@@ -68,6 +76,12 @@ export const categoryRouter = router({
     return c.superjson({ categories: categoriesWithCounts })
   }),
 
+  /**
+   * Deletes a category by its name.
+   *
+   * @param {object} input - The category name to delete.
+   * @returns {object} - Success message.
+   */
   deleteCategory: privateProcedure
     .input(z.object({ name: z.string() }))
     .mutation(async ({ c, input, ctx }) => {
@@ -80,6 +94,12 @@ export const categoryRouter = router({
       return c.json({ success: true })
     }),
 
+  /**
+   * Creates a new event category for the user.
+   *
+   * @param {object} input - Contains category details such as name, color, and emoji.
+   * @returns {object} - The newly created event category.
+   */
   createEventCategory: privateProcedure
     .input(
       z.object({
@@ -109,6 +129,11 @@ export const categoryRouter = router({
       return c.json({ eventCategory })
     }),
 
+  /**
+   * Inserts a set of quickstart categories for the user.
+   *
+   * @returns {object} - Success message with the count of categories inserted.
+   */
   insertQuickstartCategories: privateProcedure.mutation(async ({ ctx, c }) => {
     const categories = await db.eventCategory.createMany({
       data: [
@@ -124,6 +149,12 @@ export const categoryRouter = router({
     return c.json({ success: true, count: categories.count })
   }),
 
+  /**
+   * Checks if a specific category has any associated events.
+   *
+   * @param {object} input - Contains the category name to check.
+   * @returns {object} - An object indicating if events are associated with the category.
+   */
   pollCategory: privateProcedure
     .input(z.object({ name: CATEGORY_NAME_VALIDATOR }))
     .query(async ({ c, ctx, input }) => {
@@ -151,6 +182,12 @@ export const categoryRouter = router({
       return c.json({ hasEvents })
     }),
 
+  /**
+   * Fetches events by category name, with pagination and time range filtering.
+   *
+   * @param {object} input - Contains category name, page, limit, and time range.
+   * @returns {object} - Events data with count and unique field count.
+   */
   getEventsByCategoryName: privateProcedure
     .input(
       z.object({

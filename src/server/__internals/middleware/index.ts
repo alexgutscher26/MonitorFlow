@@ -7,7 +7,13 @@ import { MiddlewareHandler } from "hono"
 import { parseSuperJSON } from "./utils"
 
 /**
- * Middleware to parse GET-request using SuperJSON
+ * Middleware to parse GET request query parameters using SuperJSON.
+ *
+ * - Iterates over each query parameter and attempts to parse it using SuperJSON.
+ * - Stores the parsed query parameters in the context under the key `parsedQuery`.
+ *
+ * @param c - The context object provided by Hono.
+ * @param next - The next middleware function in the Hono pipeline.
  */
 export const queryParsingMiddleware: MiddlewareHandler = async (c, next) => {
   const rawQuery = c.req.query()
@@ -22,7 +28,14 @@ export const queryParsingMiddleware: MiddlewareHandler = async (c, next) => {
 }
 
 /**
- * Middleware to parse POST-requests using SuperJSON
+ * Middleware to parse POST request body using SuperJSON.
+ *
+ * - Reads and parses the JSON body of the request.
+ * - Attempts to parse each body parameter using SuperJSON for advanced data types.
+ * - Stores the parsed body in the context under the key `parsedBody`.
+ *
+ * @param c - The context object provided by Hono.
+ * @param next - The next middleware function in the Hono pipeline.
  */
 export const bodyParsingMiddleware: MiddlewareHandler = async (c, next) => {
   const rawBody = await c.req.json()
