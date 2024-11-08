@@ -1,4 +1,17 @@
+# Project name - Replace with the name of your project
 name = "<YOUR_PROJECT_NAME>"
+
+# Entry point for the project
+# Path to the main file where the application or server logic starts.
 main = "src/server/index.ts"
+
+# Compatibility date - Specifies the release date for runtime compatibility.
+# Used to ensure the project runs with specific runtime behaviors from this date.
+# Format: YYYY-MM-DD
 compatibility_date = "2024-03-29"
+
+# Compatibility flags - Optional flags to set specific runtime compatibility options.
+# Here, "nodejs_compat" enables Node.js compatibility mode for using Node APIs.
 compatibility_flags = ["nodejs_compat"]
+
+# Additional options can be added here as required.
