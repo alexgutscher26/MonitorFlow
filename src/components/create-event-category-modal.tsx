@@ -113,7 +113,7 @@ export const CreateEventCategoryModal = ({
             <div>
               <Label htmlFor="name">Name</Label>
               <Input
-                autoFocus
+                
                 id="name"
                 {...register("name")}
                 placeholder="e.g. user-signup"
