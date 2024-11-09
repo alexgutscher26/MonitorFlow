@@ -34,6 +34,45 @@ Here are some planned features for PingPanda:
 - [ ] User Roles (e.g., Admin, User, Guest) with permission-based access.
 - [ ] Analytics Dashboard with graphs and stats for event trends.
 - [ ] Multi-language Support to reach a global audience.
+- [ ] Add a search functionality to quickly find categories or specific events
+- [ ] Add support for customizable event categories.
+- [ ] Add support for customizable event tags.
+- [ ] Add support for customizable event fields (e.g., location, date/time).
+- [ ] Add support for customizable event forms (e.g., contact form).
+- [ ] Add support for customizable event integrations (e.g., Google Calendar).
+- [ ] Implement a notifications system for important alerts (e.g., high event volumes, errors).
+- [ ] Add a bell icon in the header for quick access to notifications.
+- [ ] Create a page showcasing different integrations (e.g., Slack, Email, Webhooks).
+- [ ] Provide easy setup guides for each integration.
+- [ ] Include options for custom date ranges and comparisons.
+- [ ] Add the ability to add notes or tags to events for better organization.
+- [ ] Implement a page for managing API keys, including creation, rotation, and revocation.
+- [ ] Add an in-app feedback mechanism for users to report issues or suggest features Add features for inviting team members and managing roles/permissions.
+- [ ] Implement shared dashboards and reports, Allow users to customize dashboard layouts.
+- [ ] Implement custom color themes for better brand alignment.
+- [ ] Add functionality to export data in various formats (CSV, PDF).
+- [ ] Create a scheduled reporting feature for automated insights.
+- [ ] Develop an interactive onboarding process for new users.
+- [ ] Include tooltips and guided tours for key features.
+- [ ] Create a public-facing status page that users can share with their customers.
+- [ ] Implement basic uptime monitoring features to complement event tracking.
+- [ ] Develop a comprehensive documentation section within the app.
+- [ ] Include a searchable FAQ and troubleshooting guide.
+- [ ] Add an in-app feedback mechanism for users to report issues or suggest features.
+- [ ] Add date range filters and Add basic sorting and filtering.
+- [ ] Email notifications (using services like SendGrid/Resend).
+- [ ] Slack integration (well-documented API).
+- [ ] SMS alerts via Twilio.
+- [ ] Microsoft Teams (similar to Discord implementation).
+- [ ] Webhooks (for integrating with third party services).
+- [ ] Add i18n support with next-intl.
+- [ ] Add Time zone selection, add ability to set custom timezone, add Currency display options, Language switcher.
+- [ ] Simple comment system.
+- [ ] Activity logs.
+- [ ] Feature flags based on plan.
+- [ ] Basic white-labeling.
+- [ ] Simple CLI tool.
+
 
 ## Project Overview
 
