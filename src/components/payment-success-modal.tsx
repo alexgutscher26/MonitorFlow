@@ -9,21 +9,31 @@ import { LoadingSpinner } from "./loading-spinner"
 import { Button } from "./ui/button"
 import { CheckIcon } from "lucide-react"
 
+/**
+ * PaymentSuccessModal component
+ * - Displays a modal indicating the success of a payment upgrade to the "PRO" plan.
+ * - Polls the user's plan status until an upgrade is confirmed, after which it stops polling.
+ * - Allows users to close the modal and navigate to the dashboard once the payment upgrade is successful.
+ *
+ * @returns A modal component indicating loading or success based on the payment status.
+ */
 export const PaymentSuccessModal = () => {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(true)
 
+  // Fetches the user's current plan status, polling until upgraded to "PRO"
   const { data, isPending } = useQuery({
     queryKey: ["user-plan"],
     queryFn: async () => {
       const res = await client.payment.getUserPlan.$get()
       return await res.json()
     },
-    refetchInterval: (query) => {
-      return query.state.data?.plan === "PRO" ? false : 1000
-    },
+    refetchInterval: (query) => query.state.data?.plan === "PRO" ? false : 10000,
   })
 
+  /**
+   * Handles closing the modal and redirects to the dashboard.
+   */
   const handleClose = () => {
     setIsOpen(false)
     router.push("/dashboard")
@@ -40,6 +50,7 @@ export const PaymentSuccessModal = () => {
       preventDefaultClose={!isPaymentSuccessful}
     >
       <div className="flex flex-col items-center">
+        {/* Displays loading state until the payment upgrade is confirmed */}
         {isPending || !isPaymentSuccessful ? (
           <div className="flex flex-col items-center justify-center h-64">
             <LoadingSpinner className="mb-4" />
@@ -51,6 +62,7 @@ export const PaymentSuccessModal = () => {
             </p>
           </div>
         ) : (
+          // Displays success message once the upgrade is successful
           <>
             <div className="relative aspect-video border border-gray-200 w-full overflow-hidden rounded-lg bg-gray-50">
               <img

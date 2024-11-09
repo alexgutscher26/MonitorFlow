@@ -4,21 +4,37 @@ import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-qu
 import { HTTPException } from "hono/http-exception"
 import { PropsWithChildren, useState } from "react"
 
+/**
+ * Wrapper component that provides a React Query client with error handling.
+ * 
+ * - Initializes a `QueryClient` with a custom `QueryCache` to handle errors globally.
+ * - Catches and logs errors from queries, distinguishing between `HTTPException` and generic errors.
+ *
+ * @param {PropsWithChildren} props - Component props containing children.
+ * @returns A provider wrapping `children` with `QueryClientProvider`.
+ */
 export const Providers = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(
     () =>
       new QueryClient({
         queryCache: new QueryCache({
+          /**
+           * Global error handler for React Query.
+           *
+           * @param err - The error object caught by the query.
+           */
           onError: (err) => {
             let errorMessage: string
+
             if (err instanceof HTTPException) {
-              errorMessage = err.message
+              errorMessage = `HTTP Error: ${err.message}`
             } else if (err instanceof Error) {
-              errorMessage = err.message
+              errorMessage = `Error: ${err.message}`
             } else {
               errorMessage = "An unknown error occurred."
             }
-            // toast notify user, log as an example
+
+            // Log error or replace with toast notification as needed
             console.log(errorMessage)
           },
         }),
