@@ -13,6 +13,7 @@ import { cn } from "@/utils"
 import { Button } from "./ui/button"
 import { client } from "@/lib/client"
 
+// Validation schema for event category form
 const EVENT_CATEGORY_VALIDATOR = z.object({
   name: CATEGORY_NAME_VALIDATOR,
   color: z
@@ -25,16 +26,16 @@ const EVENT_CATEGORY_VALIDATOR = z.object({
 type EventCategoryForm = z.infer<typeof EVENT_CATEGORY_VALIDATOR>
 
 const COLOR_OPTIONS = [
-  "#FF6B6B", // bg-[#FF6B6B] ring-[#FF6B6B] Bright Red
-  "#4ECDC4", // bg-[#4ECDC4] ring-[#4ECDC4] Teal
-  "#45B7D1", // bg-[#45B7D1] ring-[#45B7D1] Sky Blue
-  "#FFA07A", // bg-[#FFA07A] ring-[#FFA07A] Light Salmon
-  "#98D8C8", // bg-[#98D8C8] ring-[#98D8C8] Seafoam Green
-  "#FDCB6E", // bg-[#FDCB6E] ring-[#FDCB6E] Mustard Yellow
-  "#6C5CE7", // bg-[#6C5CE7] ring-[#6C5CE7] Soft Purple
-  "#FF85A2", // bg-[#FF85A2] ring-[#FF85A2] Pink
-  "#2ECC71", // bg-[#2ECC71] ring-[#2ECC71] Emerald Green
-  "#E17055", // bg-[#E17055] ring-[#E17055] Terracotta
+  "#FF6B6B", // Bright Red
+  "#4ECDC4", // Teal
+  "#45B7D1", // Sky Blue
+  "#FFA07A", // Light Salmon
+  "#98D8C8", // Seafoam Green
+  "#FDCB6E", // Mustard Yellow
+  "#6C5CE7", // Soft Purple
+  "#FF85A2", // Pink
+  "#2ECC71", // Emerald Green
+  "#E17055", // Terracotta
 ]
 
 const EMOJI_OPTIONS = [
@@ -50,17 +51,29 @@ const EMOJI_OPTIONS = [
   { emoji: "🔔", label: "Notification" },
 ]
 
-interface CreateEventCategoryModel extends PropsWithChildren {
+/**
+ * Props for CreateEventCategoryModal component
+ */
+interface CreateEventCategoryModalProps extends PropsWithChildren {
   containerClassName?: string
 }
 
+/**
+ * A modal component that allows users to create a new event category with a specified
+ * name, color, and optional emoji.
+ *
+ * @param containerClassName - CSS class for the container div.
+ * @param children - Components to render that trigger the modal.
+ * @returns A modal component for creating a new event category.
+ */
 export const CreateEventCategoryModal = ({
   children,
   containerClassName,
-}: CreateEventCategoryModel) => {
+}: CreateEventCategoryModalProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
 
+  // Mutation for creating a new event category
   const { mutate: createEventCategory, isPending } = useMutation({
     mutationFn: async (data: EventCategoryForm) => {
       await client.category.createEventCategory.$post(data)
@@ -71,6 +84,7 @@ export const CreateEventCategoryModal = ({
     },
   })
 
+  // Form setup with validation using Zod
   const {
     register,
     handleSubmit,
@@ -84,6 +98,10 @@ export const CreateEventCategoryModal = ({
   const color = watch("color")
   const selectedEmoji = watch("emoji")
 
+  /**
+   * Handles form submission to create a new category
+   * @param data - The validated form data.
+   */
   const onSubmit = (data: EventCategoryForm) => {
     createEventCategory(data)
   }
@@ -113,17 +131,14 @@ export const CreateEventCategoryModal = ({
             <div>
               <Label htmlFor="name">Name</Label>
               <Input
-                
                 id="name"
                 {...register("name")}
                 placeholder="e.g. user-signup"
                 className="w-full"
               />
-              {errors.name ? (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.name.message}
-                </p>
-              ) : null}
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
+              )}
             </div>
 
             <div>
@@ -141,15 +156,12 @@ export const CreateEventCategoryModal = ({
                         : "ring-transparent hover:scale-105"
                     )}
                     onClick={() => setValue("color", premadeColor)}
-                  ></button>
+                  />
                 ))}
               </div>
-
-              {errors.color ? (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.color.message}
-                </p>
-              ) : null}
+              {errors.color && (
+                <p className="mt-1 text-sm text-red-500">{errors.color.message}</p>
+              )}
             </div>
 
             <div>
@@ -166,17 +178,15 @@ export const CreateEventCategoryModal = ({
                         : "bg-brand-100 hover:bg-brand-200"
                     )}
                     onClick={() => setValue("emoji", emoji)}
+                    aria-label={label}
                   >
                     {emoji}
                   </button>
                 ))}
               </div>
-
-              {errors.emoji ? (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.emoji.message}
-                </p>
-              ) : null}
+              {errors.emoji && (
+                <p className="mt-1 text-sm text-red-500">{errors.emoji.message}</p>
+              )}
             </div>
           </div>
 
@@ -189,7 +199,7 @@ export const CreateEventCategoryModal = ({
               Cancel
             </Button>
             <Button disabled={isPending} type="submit">
-              {isPending ? "Creating..." : "Create Category"}{" "}
+              {isPending ? "Creating..." : "Create Category"}
             </Button>
           </div>
         </form>

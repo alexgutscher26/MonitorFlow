@@ -19,10 +19,21 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 
+/**
+ * MockDiscordUI component
+ * 
+ * - Mimics the Discord UI layout with a server list, direct messages list, main content area,
+ *   and message input field.
+ * - Accepts `children` prop to render any custom content within the message history area.
+ * 
+ * @param children - The content to render in the message history section.
+ * @returns A JSX element rendering the mock Discord UI layout.
+ */
 export const MockDiscordUI = ({ children }: PropsWithChildren) => {
   return (
     <div className="flex min-h-[800px] w-full max-w-[1200px] bg-discord-background text-white rounded-lg overflow-hidden shadow-xl">
-      {/* server list */}
+      
+      {/* Server List */}
       <div className="hidden sm:flex w-[72px] bg-[#202225] py-3 flex-col items-center">
         <div className="size-12 bg-discord-brand-color rounded-2xl flex items-center justify-center mb-2 hover:rounded-xl transition-all duration-200">
           <Icons.discord className="size-3/5 text-white" />
@@ -46,7 +57,7 @@ export const MockDiscordUI = ({ children }: PropsWithChildren) => {
         </div>
       </div>
 
-      {/* dm list */}
+      {/* Direct Messages (DM) List */}
       <div className="hidden md:flex w-60 bg-[#2f3136] flex-col">
         <div className="px-4 h-16 border-b border-[#202225] flex items-center shadow-sm">
           <div className="w-full bg-[#202225] text-sm rounded px-2 h-8 flex items-center justify-center text-gray-500 cursor-not-allowed">
@@ -113,9 +124,10 @@ export const MockDiscordUI = ({ children }: PropsWithChildren) => {
         </div>
       </div>
 
-      {/* main content */}
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
-        {/* dm header */}
+        
+        {/* DM Header */}
         <div className="h-16 bg-[#36393f] flex items-center px-4 shadow-sm border-b border-[#202225]">
           <div className="md:hidden mr-4">
             <Menu className="size-6 text-[#b9bbbe] hover:text-white cursor-pointer" />
@@ -147,12 +159,12 @@ export const MockDiscordUI = ({ children }: PropsWithChildren) => {
           </div>
         </div>
 
-        {/* message history */}
+        {/* Message History */}
         <div className="flex-1 overflow-y-auto p-4 bg-discord-background flex flex-col-reverse">
           {children}
         </div>
 
-        {/* message input */}
+        {/* Message Input */}
         <div className="p-4">
           <div className="flex items-center bg-[#40444b] rounded-lg p-1">
             <PlusCircle className="mx-3 text-[#b9bbbe] hover:text-white cursor-not-allowed" />
