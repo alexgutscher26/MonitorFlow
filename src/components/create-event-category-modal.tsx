@@ -89,26 +89,6 @@ const EMOJI_OPTIONS = [
   { emoji: "🎥", label: "Media" },
 ]
 
-const TAG_OPTIONS = [
-  "Bug",
-  "Question",
-  "Feature Request",
-  "New User",
-  "Getting Started",
-  "Feedback",
-  "Troubleshooting",
-  "Documentation",
-  "Account Setup",
-  "Integration Help",
-  "API Issue",
-  "Payment Inquiry",
-  "Usage Tips",
-  "Product Update",
-  "Dashboard Help",
-  "Onboarding",
-  "Event Setup",
-]
-
 interface CreateEventCategoryModalProps extends PropsWithChildren {
   containerClassName?: string
 }
@@ -151,7 +131,6 @@ export const CreateEventCategoryModal = ({
 
   const color = watch("color")
   const selectedEmoji = watch("emoji")
-  const tags = watch("tags") || []
 
   const onSubmit = (data: EventCategoryForm) => {
     createEventCategory(data)
@@ -186,14 +165,14 @@ export const CreateEventCategoryModal = ({
                     type="button"
                     variant="outline"
                     onClick={() => setIsOpen(false)}
-                    className="text-gray-500"
+                    className="text-gray-500 hover:scale-105 transition-transform"
                   >
                     Cancel
                   </Button>
                   <Button
                     disabled={isPending}
                     type="submit"
-                    className="bg-blue-600 text-white hover:bg-blue-700"
+                    className="bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 transition-transform"
                   >
                     {isPending ? "Creating..." : "Create"}
                   </Button>
@@ -212,11 +191,13 @@ export const CreateEventCategoryModal = ({
                       placeholder="e.g. user-signup"
                       className={cn(
                         "w-full",
+                        "transition-all duration-200",
+                        "hover:border-blue-400 focus:border-blue-500",
                         errors.name && "border-red-500 focus:ring-red-500"
                       )}
                     />
                     {errors.name && (
-                      <div className="flex items-center gap-2 mt-2 text-red-500">
+                      <div className="flex items-center gap-2 mt-2 text-red-500 animate-in slide-in-from-left duration-200">
                         <AlertCircle size={16} />
                         <p className="text-sm">{errors.name.message}</p>
                       </div>
@@ -234,10 +215,11 @@ export const CreateEventCategoryModal = ({
                             type="button"
                             aria-label={`Select emoji ${label}`}
                             className={cn(
-                              "w-10 h-10 flex items-center justify-center text-lg rounded-lg transition-all",
+                              "w-10 h-10 flex items-center justify-center text-lg rounded-lg",
+                              "transition-all duration-200",
                               selectedEmoji === emoji
                                 ? "bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-600 scale-105"
-                                : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-105"
                             )}
                             onClick={() => setValue("emoji", emoji)}
                           >
@@ -255,81 +237,56 @@ export const CreateEventCategoryModal = ({
               <div className="space-y-2">
                 <Label className="text-sm font-medium">Choose Color</Label>
                 <div className="space-y-6">
-                  {Object.entries(COLOR_PALETTES).map(
-                    ([paletteName, colors]) => (
-                      <div key={paletteName} className="space-y-2">
-                        <p className="text-xs font-medium text-gray-500">
-                          {paletteName}
-                        </p>
-                        <div className="grid grid-cols-5 gap-2">
-                          {colors.map((hex) => (
-                            <Tooltip key={hex}>
-                              <TooltipTrigger asChild>
-                                <button
-                                  type="button"
-                                  aria-label={`Select color ${hex}`}
-                                  style={{ backgroundColor: hex }}
-                                  className={cn(
-                                    "w-10 h-10 rounded-lg transition-transform",
-                                    color === hex
-                                      ? "ring-2 ring-blue-600 scale-110"
-                                      : "ring-1 ring-gray-200 dark:ring-gray-700 hover:scale-105"
-                                  )}
-                                  onClick={() => setValue("color", hex)}
-                                />
-                              </TooltipTrigger>
-                              <TooltipContent>{hex}</TooltipContent>
-                            </Tooltip>
-                          ))}
-                        </div>
+                  {Object.entries(COLOR_PALETTES).map(([paletteName, colors]) => (
+                    <div key={paletteName} className="space-y-2">
+                      <p className="text-xs font-medium text-gray-500">
+                        {paletteName}
+                      </p>
+                      <div className="grid grid-cols-5 gap-2">
+                        {colors.map((hex) => (
+                          <Tooltip key={hex}>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                aria-label={`Select color ${hex}`}
+                                style={{ backgroundColor: hex }}
+                                className={cn(
+                                  "w-10 h-10 rounded-lg",
+                                  "transition-all duration-200",
+                                  "hover:scale-110",
+                                  color === hex
+                                    ? "ring-2 ring-blue-600 scale-110"
+                                    : "ring-1 ring-gray-200 dark:ring-gray-700"
+                                )}
+                                onClick={() => setValue("color", hex)}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>{hex}</TooltipContent>
+                          </Tooltip>
+                        ))}
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Right Column - Tags */}
+              {/* Right Column - Custom Tags */}
               <div className="space-y-4">
-                <Label className="text-sm font-medium">Tags</Label>
+                <Label className="text-sm font-medium">Custom Tags</Label>
                 <div className="space-y-4">
-                  <div className="flex flex-wrap gap-2">
-                    {TAG_OPTIONS.map((tag) => (
-                      <button
-                        key={tag}
-                        type="button"
-                        className={cn(
-                          "px-3 py-1.5 rounded-lg text-sm transition-colors",
-                          tags?.includes(tag)
-                            ? "bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
-                            : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        )}
-                        onClick={() => {
-                          setValue(
-                            "tags",
-                            tags?.includes(tag)
-                              ? tags.filter((t) => t !== tag)
-                              : [...(tags || []), tag]
-                          )
-                        }}
-                      >
-                        {tag}
-                      </button>
-                    ))}
-                  </div>
-
                   <div className="space-y-2">
                     {fields.map((field, index) => (
                       <div key={field.id} className="flex items-center gap-2">
                         <Input
                           {...register(`tags.${index}`)}
                           placeholder="Add custom tag"
-                          className="w-full"
+                          className="w-full transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
                         />
                         <Button
                           type="button"
                           variant="destructive"
                           onClick={() => remove(index)}
-                          className="px-3"
+                          className="px-3 hover:scale-105 transition-transform"
                           aria-label="Remove tag"
                         >
                           ×
@@ -340,7 +297,7 @@ export const CreateEventCategoryModal = ({
                       type="button"
                       variant="outline"
                       onClick={() => append("")}
-                      className="w-full text-blue-600 dark:text-blue-400"
+                      className="w-full text-blue-600 dark:text-blue-400 hover:scale-105 transition-transform"
                     >
                       Add Custom Tag
                     </Button>
