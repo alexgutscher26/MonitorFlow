@@ -1,10 +1,18 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as SliderPrimitive from "@radix-ui/react-slider"
-import { cn } from "@/utils"
+import * as React from "react";
+import * as SliderPrimitive from "@radix-ui/react-slider";
+import { cn } from "@/utils";
 
-
+/**
+ * Slider component providing a customizable range input with a draggable thumb.
+ * Uses Radix UI's Slider as the base with styling for consistent design.
+ *
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes for styling
+ * @param {React.Ref<HTMLDivElement>} ref - Reference to the slider root element
+ * @returns {JSX.Element} Rendered Slider component with track, range, and thumb elements
+ */
 const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
@@ -22,7 +30,7 @@ const Slider = React.forwardRef<
     </SliderPrimitive.Track>
     <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
   </SliderPrimitive.Root>
-))
-Slider.displayName = SliderPrimitive.Root.displayName
+));
+Slider.displayName = SliderPrimitive.Root.displayName;
 
-export { Slider }
+export { Slider };

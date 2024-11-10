@@ -1,10 +1,27 @@
-"use client"
+"use client";
 
-import { DragHandleDots2Icon } from "@radix-ui/react-icons"
-import React from "react"
-import * as ResizablePrimitive from "react-resizable-panels"
+import { DragHandleDots2Icon } from "@radix-ui/react-icons";
+import React from "react";
+import * as ResizablePrimitive from "react-resizable-panels";
 
+/**
+ * Utility function to concatenate class names conditionally.
+ * 
+ * @param {string} baseClass - Required base class name.
+ * @param {string | undefined} additionalClass - Additional class name if provided.
+ * @returns {string} Combined class name.
+ */
+function cn(baseClass: string, additionalClass?: string): string {
+  return additionalClass ? `${baseClass} ${additionalClass}` : baseClass;
+}
 
+/**
+ * ResizablePanelGroup component for grouping resizable panels with optional direction handling.
+ * 
+ * @param {object} props - Component props.
+ * @param {string} [props.className] - Additional classes for styling.
+ * @returns {JSX.Element} Rendered ResizablePanelGroup component.
+ */
 const ResizablePanelGroup = ({
   className,
   ...props
@@ -16,16 +33,22 @@ const ResizablePanelGroup = ({
     )}
     {...props}
   />
-)
+);
 
-const ResizablePanel = ResizablePrimitive.Panel
-
+/**
+ * ResizableHandle component providing a handle to resize panels, with optional icon.
+ * 
+ * @param {object} props - Component props.
+ * @param {string} [props.className] - Additional classes for styling.
+ * @param {boolean} [props.withHandle] - If true, shows a draggable handle icon.
+ * @returns {JSX.Element} Rendered ResizableHandle component.
+ */
 const ResizableHandle = ({
   withHandle,
   className,
   ...props
 }: React.ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & {
-  withHandle?: boolean
+  withHandle?: boolean;
 }) => (
   <ResizablePrimitive.PanelResizeHandle
     className={cn(
@@ -40,10 +63,8 @@ const ResizableHandle = ({
       </div>
     )}
   </ResizablePrimitive.PanelResizeHandle>
-)
+);
 
-export { ResizablePanelGroup, ResizablePanel, ResizableHandle }
-function cn(arg0: string, className: string | undefined): string | undefined {
-  throw new Error("Function not implemented.")
-}
+const ResizablePanel = ResizablePrimitive.Panel;
 
+export { ResizablePanelGroup, ResizablePanel, ResizableHandle };

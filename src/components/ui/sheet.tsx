@@ -1,34 +1,52 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as SheetPrimitive from "@radix-ui/react-dialog"
-import { Cross2Icon } from "@radix-ui/react-icons"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import * as SheetPrimitive from "@radix-ui/react-dialog";
+import { Cross2Icon } from "@radix-ui/react-icons";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/utils";
 
-import { cn } from "@/lib/utils"
+/**
+ * Root component for the Sheet, acting as the main container.
+ */
+const Sheet = SheetPrimitive.Root;
 
-const Sheet = SheetPrimitive.Root
+/**
+ * Trigger component for opening the Sheet.
+ */
+const SheetTrigger = SheetPrimitive.Trigger;
 
-const SheetTrigger = SheetPrimitive.Trigger
+/**
+ * Close button component for closing the Sheet.
+ */
+const SheetClose = SheetPrimitive.Close;
 
-const SheetClose = SheetPrimitive.Close
+/**
+ * Portal component for rendering Sheet content outside of the root DOM tree.
+ */
+const SheetPortal = SheetPrimitive.Portal;
 
-const SheetPortal = SheetPrimitive.Portal
-
+/**
+ * Overlay component that provides a dimmed background when the Sheet is open.
+ *
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes for styling
+ * @returns {JSX.Element} Rendered Overlay component
+ */
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
+    ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
-    ref={ref}
   />
-))
-SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
+));
+SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva(
   "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out",
@@ -47,8 +65,14 @@ const sheetVariants = cva(
       side: "right",
     },
   }
-)
+);
 
+/**
+ * Content component that serves as the main content area of the Sheet.
+ *
+ * @param {SheetContentProps} props - Props including side positioning and additional styling
+ * @returns {JSX.Element} Rendered SheetContent component with overlay and close functionality
+ */
 interface SheetContentProps
   extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {}
@@ -71,9 +95,16 @@ const SheetContent = React.forwardRef<
       {children}
     </SheetPrimitive.Content>
   </SheetPortal>
-))
-SheetContent.displayName = SheetPrimitive.Content.displayName
+));
+SheetContent.displayName = SheetPrimitive.Content.displayName;
 
+/**
+ * Header component for the Sheet, often containing the title and subtitle.
+ *
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes for styling
+ * @returns {JSX.Element} Rendered SheetHeader component
+ */
 const SheetHeader = ({
   className,
   ...props
@@ -85,9 +116,16 @@ const SheetHeader = ({
     )}
     {...props}
   />
-)
-SheetHeader.displayName = "SheetHeader"
+);
+SheetHeader.displayName = "SheetHeader";
 
+/**
+ * Footer component for the Sheet, often containing action buttons.
+ *
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes for styling
+ * @returns {JSX.Element} Rendered SheetFooter component
+ */
 const SheetFooter = ({
   className,
   ...props
@@ -99,9 +137,16 @@ const SheetFooter = ({
     )}
     {...props}
   />
-)
-SheetFooter.displayName = "SheetFooter"
+);
+SheetFooter.displayName = "SheetFooter";
 
+/**
+ * Title component for displaying the title text within the Sheet.
+ *
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes for styling
+ * @returns {JSX.Element} Rendered SheetTitle component
+ */
 const SheetTitle = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
@@ -111,9 +156,16 @@ const SheetTitle = React.forwardRef<
     className={cn("text-lg font-semibold text-foreground", className)}
     {...props}
   />
-))
-SheetTitle.displayName = SheetPrimitive.Title.displayName
+));
+SheetTitle.displayName = SheetPrimitive.Title.displayName;
 
+/**
+ * Description component for displaying subtitle or description text in the Sheet.
+ *
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes for styling
+ * @returns {JSX.Element} Rendered SheetDescription component
+ */
 const SheetDescription = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>
@@ -123,8 +175,8 @@ const SheetDescription = React.forwardRef<
     className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />
-))
-SheetDescription.displayName = SheetPrimitive.Description.displayName
+));
+SheetDescription.displayName = SheetPrimitive.Description.displayName;
 
 export {
   Sheet,
@@ -137,4 +189,4 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
-}
+};

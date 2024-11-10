@@ -1,22 +1,38 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   CaretSortIcon,
   CheckIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-} from "@radix-ui/react-icons"
-import * as SelectPrimitive from "@radix-ui/react-select"
-import { cn } from "@/utils"
+} from "@radix-ui/react-icons";
+import * as SelectPrimitive from "@radix-ui/react-select";
+import { cn } from "@/utils";
 
+/**
+ * Root component for the Select dropdown.
+ */
+const Select = SelectPrimitive.Root;
 
-const Select = SelectPrimitive.Root
+/**
+ * Group component for grouping items within the Select dropdown.
+ */
+const SelectGroup = SelectPrimitive.Group;
 
-const SelectGroup = SelectPrimitive.Group
+/**
+ * Value component to display the selected item.
+ */
+const SelectValue = SelectPrimitive.Value;
 
-const SelectValue = SelectPrimitive.Value
-
+/**
+ * Trigger component for the Select dropdown, providing the interactive button.
+ *
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes for styling
+ * @param {React.ReactNode} [props.children] - Child elements within the trigger
+ * @returns {JSX.Element} Rendered SelectTrigger component
+ */
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
@@ -34,44 +50,52 @@ const SelectTrigger = React.forwardRef<
       <CaretSortIcon className="h-4 w-4 opacity-50" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
-))
-SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
+));
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
+/**
+ * Scroll up button for the Select dropdown.
+ */
 const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollUpButton
     ref={ref}
-    className={cn(
-      "flex cursor-default items-center justify-center py-1",
-      className
-    )}
+    className={cn("flex cursor-default items-center justify-center py-1", className)}
     {...props}
   >
     <ChevronUpIcon />
   </SelectPrimitive.ScrollUpButton>
-))
-SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
+));
+SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
 
+/**
+ * Scroll down button for the Select dropdown.
+ */
 const SelectScrollDownButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollDownButton
     ref={ref}
-    className={cn(
-      "flex cursor-default items-center justify-center py-1",
-      className
-    )}
+    className={cn("flex cursor-default items-center justify-center py-1", className)}
     {...props}
   >
     <ChevronDownIcon />
   </SelectPrimitive.ScrollDownButton>
-))
-SelectScrollDownButton.displayName =
-  SelectPrimitive.ScrollDownButton.displayName
+));
+SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
 
+/**
+ * Content component that displays the dropdown content of the Select component.
+ *
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes for styling
+ * @param {"popper" | "position"} [props.position="popper"] - Positioning mode of the dropdown content
+ * @param {React.ReactNode} [props.children] - Children elements within the dropdown
+ * @returns {JSX.Element} Rendered SelectContent component
+ */
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
@@ -101,9 +125,12 @@ const SelectContent = React.forwardRef<
       <SelectScrollDownButton />
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
-))
-SelectContent.displayName = SelectPrimitive.Content.displayName
+));
+SelectContent.displayName = SelectPrimitive.Content.displayName;
 
+/**
+ * Label component for labeling groups within the Select dropdown.
+ */
 const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
@@ -113,9 +140,17 @@ const SelectLabel = React.forwardRef<
     className={cn("px-2 py-1.5 text-sm font-semibold", className)}
     {...props}
   />
-))
-SelectLabel.displayName = SelectPrimitive.Label.displayName
+));
+SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
+/**
+ * Item component representing a selectable item within the dropdown.
+ *
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes for styling
+ * @param {React.ReactNode} [props.children] - Children within the selectable item
+ * @returns {JSX.Element} Rendered SelectItem component
+ */
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
@@ -135,9 +170,12 @@ const SelectItem = React.forwardRef<
     </span>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
-))
-SelectItem.displayName = SelectPrimitive.Item.displayName
+));
+SelectItem.displayName = SelectPrimitive.Item.displayName;
 
+/**
+ * Separator component for visually separating items in the Select dropdown.
+ */
 const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
@@ -147,8 +185,8 @@ const SelectSeparator = React.forwardRef<
     className={cn("-mx-1 my-1 h-px bg-muted", className)}
     {...props}
   />
-))
-SelectSeparator.displayName = SelectPrimitive.Separator.displayName
+));
+SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 export {
   Select,
@@ -161,4 +199,4 @@ export {
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
-}
+};
