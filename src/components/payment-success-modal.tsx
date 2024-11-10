@@ -77,7 +77,7 @@ export const PaymentSuccessModal = () => {
                 Upgrade successful! 🎉
               </p>
               <p className="text-gray-600 text-sm/6 text-pretty">
-                Thank you for upgrading to Pro and supporting PingPanda. Your
+                Thank you for upgrading to Pro and supporting MonitorFlow. Your
                 account has been upgraded.
               </p>
             </div>

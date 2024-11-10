@@ -1,8 +1,8 @@
-# PingPanda - A Modern Fullstack Event Monitoring SaaS
+# MonitorFlow - A Modern Fullstack Event Monitoring SaaS
 
 <!-- ![Project Image](https://github.com/joschan21/pingpanda/blob/main/public/thumbnail.png) -->
 
-PingPanda is a fully-featured, modern SaaS solution designed for event monitoring. Built with the Next.js App Router, Postgres, TypeScript, Tailwind CSS, and Clerk, PingPanda provides an intuitive dashboard, real-time notifications, and secure payments for your users. Whether you're a developer or a business owner, PingPanda makes event tracking seamless and efficient.
+MonitorFlow is a fully-featured, modern SaaS solution designed for event monitoring. Built with the Next.js App Router, Postgres, TypeScript, Tailwind CSS, and Clerk, MonitorFlow provides an intuitive dashboard, real-time notifications, and secure payments for your users. Whether you're a developer or a business owner, MonitorFlow makes event tracking seamless and efficient.
 
 ## Key Features
 
@@ -20,7 +20,7 @@ PingPanda is a fully-featured, modern SaaS solution designed for event monitorin
 
 ## To-Do Features
 
-Here are some planned features for PingPanda:
+Here are some planned features for MonitorFlow:
 
 - [✅] Complete User Authentication System using Clerk (Sign-up, Login, Session Management).
 - [✅] Basic Event Dashboard with a real-time feed of events.
@@ -76,19 +76,19 @@ Here are some planned features for PingPanda:
 
 ## Project Overview
 
-PingPanda is designed for developers and businesses who want to monitor events in real time and engage with their users effectively. With features like a real-time dashboard, Discord notifications, and seamless Stripe payments, PingPanda provides a complete solution for event tracking and user management.
+MonitorFlow is designed for developers and businesses who want to monitor events in real time and engage with their users effectively. With features like a real-time dashboard, Discord notifications, and seamless Stripe payments, MonitorFlow provides a complete solution for event tracking and user management.
 
 This project is ideal for SaaS applications, web-based dashboards, or any service that requires real-time event monitoring.
 
 ## Getting Started
 
-To get started with PingPanda, follow the steps below:
+To get started with MonitorFlow, follow the steps below:
 
 Clone the Repository
 First, clone this repository to your local machine using the command:
 
 ```
-git clone https://github.com/joschan21/pingpanda.git
+git clone https://github.com/alexgutscher26/MonitorFlow
 ```
 
 ## Set Up Environment Variables
@@ -117,7 +117,7 @@ npm run dev
 
 ## Enjoy!
 
-You should now have a fully functional instance of PingPanda running locally.
+You should now have a fully functional instance of MonitorFlow running locally.
 
 ## Technologies Used
 
@@ -147,7 +147,7 @@ If you find any bugs or have feature requests, please open an issue in the GitHu
 ## Acknowledgements
 
 - Clerk: For providing an excellent authentication solution.
-- Shadcn UI: For the UI components that power PingPanda’s sleek and modern design.
+- Shadcn UI: For the UI components that power MonitorFlow sleek and modern design.
 - Stripe: For secure and easy payment processing.
 - Tailwind CSS: For the utility-first CSS framework.
 - Next.js: For being the powerful framework that makes this project possible.
@@ -156,4 +156,4 @@ If you find any bugs or have feature requests, please open an issue in the GitHu
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
-[![CodeFactor](https://www.codefactor.io/repository/github/alexgutscher26/pingpanda/badge)](https://www.codefactor.io/repository/github/alexgutscher26/pingpanda)
+[![CodeFactor](https://www.codefactor.io/repository/github/alexgutscher26/MonitorFlow/badge)](https://www.codefactor.io/repository/github/alexgutscher26/MonitorFlow)

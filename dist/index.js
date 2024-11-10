@@ -199,7 +199,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\madaj\\OneDrive\\Desktop\\pingpanda\\node_modules\\@prisma\\client",
+      "value": "C:\\Users\\madaj\\OneDrive\\Desktop\\MonitorFlow\\node_modules\\@prisma\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -215,7 +215,7 @@ const config = {
     "previewFeatures": [
       "driverAdapters"
     ],
-    "sourceFilePath": "C:\\Users\\madaj\\OneDrive\\Desktop\\pingpanda\\prisma\\schema.prisma"
+    "sourceFilePath": "C:\\Users\\madaj\\OneDrive\\Desktop\\MonitorFlow\\prisma\\schema.prisma"
   },
   "relativeEnvPaths": {
     "rootEnvPath": null,
