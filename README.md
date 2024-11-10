@@ -156,4 +156,4 @@ If you find any bugs or have feature requests, please open an issue in the GitHu
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
-[![CodeFactor](https://www.codefactor.io/repository/github/alexgutscher26/MonitorFlow/badge)](https://www.codefactor.io/repository/github/alexgutscher26/MonitorFlow)
+[![CodeFactor](https://www.codefactor.io/repository/github/alexgutscher26/monitorflow/badge)](https://www.codefactor.io/repository/github/alexgutscher26/monitorflow)
