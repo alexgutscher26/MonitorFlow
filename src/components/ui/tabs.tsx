@@ -1,12 +1,23 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { cn } from "@/utils";
 
-import { cn } from "@/utils"
+/**
+ * Tabs root component to wrap tab items.
+ * @type {React.ElementType}
+ */
+const Tabs = TabsPrimitive.Root;
 
-const Tabs = TabsPrimitive.Root
-
+/**
+ * A forward-ref component that renders a list of tab items.
+ * 
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes to style the component
+ * @param {React.Ref<HTMLDivElement>} ref - Reference to the underlying DOM element
+ * @returns {JSX.Element} - Rendered TabsList component
+ */
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
@@ -19,9 +30,17 @@ const TabsList = React.forwardRef<
     )}
     {...props}
   />
-))
-TabsList.displayName = TabsPrimitive.List.displayName
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
 
+/**
+ * A forward-ref component that renders an individual tab trigger.
+ * 
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes to style the component
+ * @param {React.Ref<HTMLButtonElement>} ref - Reference to the underlying DOM element
+ * @returns {JSX.Element} - Rendered TabsTrigger component
+ */
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
@@ -34,9 +53,17 @@ const TabsTrigger = React.forwardRef<
     )}
     {...props}
   />
-))
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
+));
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
+/**
+ * A forward-ref component that renders the content for a tab.
+ * 
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional classes to style the component
+ * @param {React.Ref<HTMLDivElement>} ref - Reference to the underlying DOM element
+ * @returns {JSX.Element} - Rendered TabsContent component
+ */
 const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
@@ -49,7 +76,7 @@ const TabsContent = React.forwardRef<
     )}
     {...props}
   />
-))
-TabsContent.displayName = TabsPrimitive.Content.displayName
+));
+TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+export { Tabs, TabsList, TabsTrigger, TabsContent };

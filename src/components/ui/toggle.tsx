@@ -5,7 +5,11 @@ import * as TogglePrimitive from "@radix-ui/react-toggle"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/utils"
 
-
+/**
+ * Variants for the toggle component using CVA
+ * 
+ * - Defines size and variant styling options.
+ */
 const toggleVariants = cva(
   "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
   {
@@ -28,6 +32,18 @@ const toggleVariants = cva(
   }
 )
 
+/**
+ * Toggle component
+ * 
+ * - A customizable toggle button built with Radix UI's TogglePrimitive.
+ * - Provides styling options with `variant` and `size` props.
+ *
+ * @param variant - The style variant of the toggle (`default` or `outline`).
+ * @param size - The size of the toggle (`default`, `sm`, or `lg`).
+ * @param className - Additional CSS classes for custom styling.
+ * @param props - Additional properties from TogglePrimitive.Root.
+ * @returns A JSX element representing a toggle button.
+ */
 const Toggle = React.forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> &
@@ -35,7 +51,7 @@ const Toggle = React.forwardRef<
 >(({ className, variant, size, ...props }, ref) => (
   <TogglePrimitive.Root
     ref={ref}
-    className={cn(toggleVariants({ variant, size, className }))}
+    className={cn(toggleVariants({ variant, size }), className)}
     {...props}
   />
 ))

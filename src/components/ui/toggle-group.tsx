@@ -3,22 +3,35 @@
 import * as React from "react"
 import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group"
 import { type VariantProps } from "class-variance-authority"
-
 import { toggleVariants } from "@/components/ui/toggle"
 import { cn } from "@/utils"
 
-const ToggleGroupContext = React.createContext<
-  VariantProps<typeof toggleVariants>
->({
+/**
+ * Context to provide variant and size options to `ToggleGroupItem` components within `ToggleGroup`.
+ */
+const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants>>({
   size: "default",
   variant: "default",
 })
 
+/**
+ * ToggleGroup component
+ * 
+ * - A grouping component for multiple toggle buttons that allows selection of one or more options.
+ * - Accepts `variant` and `size` props for consistent styling of child `ToggleGroupItem` components.
+ * 
+ * @param variant - The styling variant for toggles within the group (default or outline).
+ * @param size - The size of toggles within the group (default, sm, or lg).
+ * @param className - Additional CSS classes for custom styling.
+ * @param children - The toggle items within the group.
+ * @param props - Additional properties from ToggleGroupPrimitive.Root.
+ * @returns A JSX element representing a toggle button group.
+ */
 const ToggleGroup = React.forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> &
     VariantProps<typeof toggleVariants>
->(({ className, variant, size, children, ...props }, ref) => (
+>(({ className, variant = "default", size = "default", children, ...props }, ref) => (
   <ToggleGroupPrimitive.Root
     ref={ref}
     className={cn("flex items-center justify-center gap-1", className)}
@@ -29,9 +42,21 @@ const ToggleGroup = React.forwardRef<
     </ToggleGroupContext.Provider>
   </ToggleGroupPrimitive.Root>
 ))
-
 ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName
 
+/**
+ * ToggleGroupItem component
+ * 
+ * - An individual toggle button within a `ToggleGroup`.
+ * - Inherits `variant` and `size` values from `ToggleGroupContext` if not explicitly provided.
+ * 
+ * @param variant - Optional variant to override inherited variant style.
+ * @param size - Optional size to override inherited size style.
+ * @param className - Additional CSS classes for custom styling.
+ * @param children - The content inside the toggle item.
+ * @param props - Additional properties from ToggleGroupPrimitive.Item.
+ * @returns A JSX element representing a toggle button within the group.
+ */
 const ToggleGroupItem = React.forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> &
@@ -44,8 +69,8 @@ const ToggleGroupItem = React.forwardRef<
       ref={ref}
       className={cn(
         toggleVariants({
-          variant: context.variant || variant,
-          size: context.size || size,
+          variant: variant || context.variant,
+          size: size || context.size,
         }),
         className
       )}
@@ -55,7 +80,6 @@ const ToggleGroupItem = React.forwardRef<
     </ToggleGroupPrimitive.Item>
   )
 })
-
 ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName
 
 export { ToggleGroup, ToggleGroupItem }

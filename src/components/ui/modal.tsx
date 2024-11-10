@@ -51,7 +51,7 @@ export const Modal = ({
         <Drawer.Portal>
           <Drawer.Content
             className={cn(
-              "fixed !max-w-none bottom-0 left-0 right-0 z-50 mt-24 rounded-t-[10px] border-t border-gray-200 bg-white",
+              "fixed !max-w-[95%] md:!max-w-[80%] lg:!max-w-[70%] h-[90vh] left-0 right-0 z-50 mt-24 rounded-t-[10px] border-t border-gray-200 bg-white",
               className
             )}
           >
@@ -76,7 +76,9 @@ export const Modal = ({
       }}
     >
       <DialogTitle className="sr-only">Dialog</DialogTitle>
-      <DialogContent>{children}</DialogContent>
+      <DialogContent className="!max-w-[95%] md:!max-w-[80%] lg:!max-w-[70%] h-[80vh] pb-10">
+        {children}
+      </DialogContent>
     </Dialog>
   )
 }

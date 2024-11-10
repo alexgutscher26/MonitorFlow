@@ -10,25 +10,30 @@ import {
   ToastViewport,
 } from "@/components/ui/toast"
 
+/**
+ * Toaster component
+ * 
+ * - Renders a list of toast notifications.
+ * - Each toast can display a title, description, action, and close button.
+ * - Utilizes `ToastProvider` to manage the state and context for toast notifications.
+ * 
+ * @returns A JSX element that maps over the `toasts` array and displays each toast notification.
+ */
 export function Toaster() {
   const { toasts } = useToast()
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        )
-      })}
+      {toasts.map(({ id, title, description, action, ...props }) => (
+        <Toast key={id} {...props}>
+          <div className="grid gap-1">
+            {title && <ToastTitle>{title}</ToastTitle>}
+            {description && <ToastDescription>{description}</ToastDescription>}
+          </div>
+          {action}
+          <ToastClose />
+        </Toast>
+      ))}
       <ToastViewport />
     </ToastProvider>
   )
