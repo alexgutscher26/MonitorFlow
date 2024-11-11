@@ -1,43 +1,57 @@
-"use client"
+"use client";
 
-import { Heading } from "@/components/heading"
-import { MaxWidthWrapper } from "@/components/max-width-wrapper"
-import { Button } from "@/components/ui/button"
-import { client } from "@/lib/client"
-import { createCheckoutSession } from "@/lib/stripe"
-import { useUser } from "@clerk/nextjs"
-import { useMutation } from "@tanstack/react-query"
-import { CheckIcon } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { Heading } from "@/components/heading";
+import { MaxWidthWrapper } from "@/components/max-width-wrapper";
+import { Button } from "@/components/ui/button";
+import { client } from "@/lib/client";
+import { useUser } from "@clerk/nextjs";
+import { useMutation } from "@tanstack/react-query";
+import { CheckIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
+/**
+ * Page Component
+ *
+ * Renders the pricing page with a lifetime access option for MonitorFlow.
+ * Allows logged-in users to initiate the checkout session, or redirects
+ * unauthenticated users to the sign-in page with an intent to upgrade.
+ *
+ * @returns {JSX.Element} The pricing page component.
+ */
 const Page = () => {
-  const { user } = useUser()
-  const router = useRouter()
+  const { user } = useUser();
+  const router = useRouter();
 
   const INCLUDED_FEATURES = [
-    "10.000 real-time events per month",
+    "10,000 real-time events per month",
     "10 event categories",
     "Advanced analytics and insights",
     "Priority support",
-  ]
+  ];
 
+  // Mutation for creating a checkout session
   const { mutate: createCheckoutSession } = useMutation({
     mutationFn: async () => {
-      const res = await client.payment.createCheckoutSession.$post()
-      return await res.json()
+      const res = await client.payment.createCheckoutSession.$post();
+      return await res.json();
     },
     onSuccess: ({ url }) => {
-      if (url) router.push(url)
+      if (url) router.push(url); // Redirects to the checkout URL on success
     },
-  })
+  });
 
+  /**
+   * Handles access button click.
+   * Initiates the checkout session if the user is authenticated;
+   * otherwise redirects to the sign-in page.
+   */
   const handleGetAccess = () => {
     if (user) {
-      createCheckoutSession()
+      createCheckoutSession();
     } else {
-      router.push("/sign-in?intent=upgrade")
+      router.push("/sign-in?intent=upgrade");
     }
-  }
+  };
 
   return (
     <div className="bg-brand-25 py-24 sm:py-32">
@@ -58,9 +72,10 @@ const Page = () => {
 
             <p className="mt-6 text-base/7 text-gray-600">
               Invest once in MonitorFlow and transform how you monitor your SaaS
-              forever. Get instant alerts, track critical metrics and never miss
+              forever. Get instant alerts, track critical metrics, and never miss
               a beat in your business growth.
             </p>
+
             <div className="mt-10 flex items-center gap-x-4">
               <h4 className="flex-none text-sm font-semibold leading-6 text-brand-600">
                 What's included
@@ -105,7 +120,7 @@ const Page = () => {
         </div>
       </MaxWidthWrapper>
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

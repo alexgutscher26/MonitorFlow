@@ -1,32 +1,39 @@
-"use client"
+"use client";
 
-// synchronize auth status to database
+import { Heading } from "@/components/heading";
+import { LoadingSpinner } from "@/components/loading-spinner";
+import { client } from "@/lib/client";
+import { useQuery } from "@tanstack/react-query";
+import { LucideProps } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-import { Heading } from "@/components/heading"
-import { LoadingSpinner } from "@/components/loading-spinner"
-import { client } from "@/lib/client"
-import { useQuery } from "@tanstack/react-query"
-import { LucideProps } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
-
+/**
+ * Page Component
+ *
+ * Renders a loading page that checks and waits for user account synchronization.
+ * Once synchronization is complete, it redirects the user to the dashboard.
+ *
+ * @returns {JSX.Element} The rendered loading and synchronization status page.
+ */
 const Page = () => {
-  const router = useRouter()
+  const router = useRouter();
 
+  // Fetches the database sync status at regular intervals
   const { data } = useQuery({
-    queryFn: async () => {
-      const res = await client.auth.getDatabaseSyncStatus.$get()
-      return await res.json()
-    },
     queryKey: ["get-database-sync-status"],
-    refetchInterval: (query) => {
-      return query.state.data?.isSynced ? false : 1000
+    queryFn: async () => {
+      const res = await client.auth.getDatabaseSyncStatus.$get();
+      return await res.json();
     },
-  })
+    // Refetch every second if sync isn't complete; stops when synced
+    refetchInterval: (query) => query.state.data?.isSynced ? false : 1000,
+  });
 
+  // Redirect to the dashboard once data synchronization is complete
   useEffect(() => {
-    if (data?.isSynced) router.push("/dashboard")
-  }, [data, router])
+    if (data?.isSynced) router.push("/dashboard");
+  }, [data, router]);
 
   return (
     <div className="flex w-full flex-1 items-center justify-center px-4">
@@ -40,9 +47,17 @@ const Page = () => {
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
+/**
+ * BackgroundPattern Component
+ *
+ * Renders a background pattern SVG to enhance the visual appearance of the page.
+ *
+ * @param {LucideProps} props - Properties for customizing the SVG, such as `className`.
+ * @returns {JSX.Element} The background SVG element.
+ */
 const BackgroundPattern = (props: LucideProps) => {
   return (
     <svg
@@ -70,46 +85,28 @@ const BackgroundPattern = (props: LucideProps) => {
         />
       </mask>
       <g mask="url(#mask0_5036_374506)">
-        <g clipPath="url(#clip0_5036_374506)">
-          <g clipPath="url(#clip1_5036_374506)">
-            <line x1="0.5" y1="-32" x2="0.5" y2="736" stroke="#E4E7EC" />
-            <line x1="48.5" y1="-32" x2="48.5" y2="736" stroke="#E4E7EC" />
-            <line x1="96.5" y1="-32" x2="96.5" y2="736" stroke="#E4E7EC" />
-            <line x1="144.5" y1="-32" x2="144.5" y2="736" stroke="#E4E7EC" />
-            <line x1="192.5" y1="-32" x2="192.5" y2="736" stroke="#E4E7EC" />
-            <line x1="240.5" y1="-32" x2="240.5" y2="736" stroke="#E4E7EC" />
-            <line x1="288.5" y1="-32" x2="288.5" y2="736" stroke="#E4E7EC" />
-            <line x1="336.5" y1="-32" x2="336.5" y2="736" stroke="#E4E7EC" />
-            <line x1="384.5" y1="-32" x2="384.5" y2="736" stroke="#E4E7EC" />
-            <line x1="432.5" y1="-32" x2="432.5" y2="736" stroke="#E4E7EC" />
-            <line x1="480.5" y1="-32" x2="480.5" y2="736" stroke="#E4E7EC" />
-            <line x1="528.5" y1="-32" x2="528.5" y2="736" stroke="#E4E7EC" />
-            <line x1="576.5" y1="-32" x2="576.5" y2="736" stroke="#E4E7EC" />
-            <line x1="624.5" y1="-32" x2="624.5" y2="736" stroke="#E4E7EC" />
-            <line x1="672.5" y1="-32" x2="672.5" y2="736" stroke="#E4E7EC" />
-            <line x1="720.5" y1="-32" x2="720.5" y2="736" stroke="#E4E7EC" />
-          </g>
-          <rect x="0.5" y="-31.5" width="767" height="767" stroke="#E4E7EC" />
-          <g clipPath="url(#clip2_5036_374506)">
-            <line y1="15.5" x2="768" y2="15.5" stroke="#E4E7EC" />
-            <line y1="63.5" x2="768" y2="63.5" stroke="#E4E7EC" />
-            <line y1="111.5" x2="768" y2="111.5" stroke="#E4E7EC" />
-            <line y1="159.5" x2="768" y2="159.5" stroke="#E4E7EC" />
-            <line y1="207.5" x2="768" y2="207.5" stroke="#E4E7EC" />
-            <line y1="255.5" x2="768" y2="255.5" stroke="#E4E7EC" />
-            <line y1="303.5" x2="768" y2="303.5" stroke="#E4E7EC" />
-            <line y1="351.5" x2="768" y2="351.5" stroke="#E4E7EC" />
-            <line y1="399.5" x2="768" y2="399.5" stroke="#E4E7EC" />
-            <line y1="447.5" x2="768" y2="447.5" stroke="#E4E7EC" />
-            <line y1="495.5" x2="768" y2="495.5" stroke="#E4E7EC" />
-            <line y1="543.5" x2="768" y2="543.5" stroke="#E4E7EC" />
-            <line y1="591.5" x2="768" y2="591.5" stroke="#E4E7EC" />
-            <line y1="639.5" x2="768" y2="639.5" stroke="#E4E7EC" />
-            <line y1="687.5" x2="768" y2="687.5" stroke="#E4E7EC" />
-            <line y1="735.5" x2="768" y2="735.5" stroke="#E4E7EC" />
-          </g>
-          <rect x="0.5" y="-31.5" width="767" height="767" stroke="#E4E7EC" />
-        </g>
+        {/* Render vertical grid lines */}
+        {[...Array(16)].map((_, index) => (
+          <line
+            key={`vertical-line-${index}`}
+            x1={`${index * 48 + 0.5}`}
+            y1="-32"
+            x2={`${index * 48 + 0.5}`}
+            y2="736"
+            stroke="#E4E7EC"
+          />
+        ))}
+        <rect x="0.5" y="-31.5" width="767" height="767" stroke="#E4E7EC" />
+        {/* Render horizontal grid lines */}
+        {[...Array(16)].map((_, index) => (
+          <line
+            key={`horizontal-line-${index}`}
+            y1={`${index * 48 + 15.5}`}
+            x2="768"
+            y2={`${index * 48 + 15.5}`}
+            stroke="#E4E7EC"
+          />
+        ))}
       </g>
       <defs>
         <radialGradient
@@ -123,23 +120,9 @@ const BackgroundPattern = (props: LucideProps) => {
           <stop />
           <stop offset="1" stopOpacity="0" />
         </radialGradient>
-        <clipPath id="clip0_5036_374506">
-          <rect
-            width="768"
-            height="768"
-            fill="white"
-            transform="translate(0 -32)"
-          />
-        </clipPath>
-        <clipPath id="clip1_5036_374506">
-          <rect y="-32" width="768" height="768" fill="white" />
-        </clipPath>
-        <clipPath id="clip2_5036_374506">
-          <rect y="-32" width="768" height="768" fill="white" />
-        </clipPath>
       </defs>
     </svg>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
