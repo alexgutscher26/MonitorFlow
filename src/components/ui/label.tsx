@@ -1,15 +1,23 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as LabelPrimitive from "@radix-ui/react-label"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import * as LabelPrimitive from "@radix-ui/react-label";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/utils";
 
-import { cn } from "@/utils"
-
+/** Style variants for the label component, handling font and disabled states */
 const labelVariants = cva(
   "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-)
+);
 
+/**
+ * Label component for associating text with form controls, using Radix UI’s LabelPrimitive.
+ * 
+ * @param {object} props - Component props.
+ * @param {string} [props.className] - Additional classes for custom styling.
+ * @param {React.Ref} ref - React ref for the label element.
+ * @returns {JSX.Element} Rendered Label component.
+ */
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
@@ -20,7 +28,7 @@ const Label = React.forwardRef<
     className={cn(labelVariants(), className)}
     {...props}
   />
-))
-Label.displayName = LabelPrimitive.Root.displayName
+));
+Label.displayName = LabelPrimitive.Root.displayName;
 
-export { Label }
+export { Label };
