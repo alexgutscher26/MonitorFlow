@@ -1,13 +1,29 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
+import * as React from "react";
+import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
+import { cn } from "@/utils";
 
+/** 
+ * Root component for the HoverCard, which serves as the main container.
+ */
+const HoverCard = HoverCardPrimitive.Root;
 
-const HoverCard = HoverCardPrimitive.Root
+/** 
+ * Trigger component for HoverCard, which opens the card on hover.
+ */
+const HoverCardTrigger = HoverCardPrimitive.Trigger;
 
-const HoverCardTrigger = HoverCardPrimitive.Trigger
-
+/**
+ * Content component for displaying the content inside the HoverCard.
+ *
+ * @param {object} props - Component props.
+ * @param {string} [props.className] - Additional classes for custom styling.
+ * @param {"center" | "start" | "end"} [props.align="center"] - Alignment of the content relative to the trigger.
+ * @param {number} [props.sideOffset=4] - Offset distance from the trigger element.
+ * @param {React.Ref} ref - Forwarded ref for the content element.
+ * @returns {JSX.Element} Rendered HoverCard content.
+ */
 const HoverCardContent = React.forwardRef<
   React.ElementRef<typeof HoverCardPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>
@@ -22,11 +38,7 @@ const HoverCardContent = React.forwardRef<
     )}
     {...props}
   />
-))
-HoverCardContent.displayName = HoverCardPrimitive.Content.displayName
+));
+HoverCardContent.displayName = HoverCardPrimitive.Content.displayName;
 
-export { HoverCard, HoverCardTrigger, HoverCardContent }
-function cn(arg0: string, className: string | undefined): string | undefined {
-  throw new Error("Function not implemented.")
-}
-
+export { HoverCard, HoverCardTrigger, HoverCardContent };
