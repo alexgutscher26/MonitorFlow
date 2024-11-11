@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client"
 
 declare global {
   // Declare a global variable for Prisma client caching in development.
-  // eslint-disable-next-line no-var
+  // Move the var declaration to the top of the scope.
   var cachedPrisma: PrismaClient | undefined
 }
 
