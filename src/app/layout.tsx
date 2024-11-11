@@ -13,8 +13,9 @@ const eb_garamond = EB_Garamond({
 })
 
 export const metadata: Metadata = {
-  title: "jStack App",
-  description: "Created using jStack",
+  title: "MonitorFlow: Event Monitoring SaaS with Real-Time Alerts",
+  description:
+    "MonitorFlow is an advanced event monitoring SaaS offering real-time alerts, secure payments, and an intuitive dashboard. Perfect for developers and businesses, it simplifies event tracking and enhances workflow efficiency.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 }
 
