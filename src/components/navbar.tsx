@@ -23,7 +23,7 @@ export const Navbar = async () => {
         <div className="flex h-16 items-center justify-between">
           {/* Brand Logo */}
           <Link href="/" className="flex z-40 font-semibold">
-            Ping<span className="text-brand-700">Panda</span>
+            Monitor<span className="text-brand-700">Flow</span>
           </Link>
 
           {/* Right-side navigation links based on user status */}
