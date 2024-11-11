@@ -1,11 +1,20 @@
-"use client"
+"use client";
 
-import * as CollapsiblePrimitive from "@radix-ui/react-collapsible"
+import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 
-const Collapsible = CollapsiblePrimitive.Root
+/**
+ * Root component for the Collapsible, which manages open/close states.
+ */
+const Collapsible = CollapsiblePrimitive.Root;
 
-const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger
+/**
+ * Trigger component for toggling the Collapsible open and closed.
+ */
+const CollapsibleTrigger = CollapsiblePrimitive.Trigger;
 
-const CollapsibleContent = CollapsiblePrimitive.CollapsibleContent
+/**
+ * Content component that displays when the Collapsible is open.
+ */
+const CollapsibleContent = CollapsiblePrimitive.Content;
 
-export { Collapsible, CollapsibleTrigger, CollapsibleContent }
+export { Collapsible, CollapsibleTrigger, CollapsibleContent };
