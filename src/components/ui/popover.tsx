@@ -1,15 +1,43 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as PopoverPrimitive from "@radix-ui/react-popover"
+import * as React from "react";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
 
+/**
+ * Utility function to concatenate class names conditionally.
+ *
+ * @param {string} baseClass - Required base class name.
+ * @param {string | undefined} additionalClass - Additional class name if provided.
+ * @returns {string} Combined class name.
+ */
+function cn(baseClass: string, additionalClass?: string): string {
+  return additionalClass ? `${baseClass} ${additionalClass}` : baseClass;
+}
 
-const Popover = PopoverPrimitive.Root
+/**
+ * Popover root component to manage popover state and behaviors.
+ */
+const Popover = PopoverPrimitive.Root;
 
-const PopoverTrigger = PopoverPrimitive.Trigger
+/**
+ * Popover trigger component that opens the popover when clicked.
+ */
+const PopoverTrigger = PopoverPrimitive.Trigger;
 
-const PopoverAnchor = PopoverPrimitive.Anchor
+/**
+ * Popover anchor component for positioning the popover relative to another element.
+ */
+const PopoverAnchor = PopoverPrimitive.Anchor;
 
+/**
+ * Popover content component for displaying the content of the popover.
+ *
+ * @param {object} props - Component props.
+ * @param {string} [props.className] - Additional classes for styling.
+ * @param {"center" | "start" | "end"} [props.align="center"] - Alignment of the popover content.
+ * @param {number} [props.sideOffset=4] - Offset distance from the anchor.
+ * @returns {JSX.Element} Rendered PopoverContent component.
+ */
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
@@ -26,11 +54,7 @@ const PopoverContent = React.forwardRef<
       {...props}
     />
   </PopoverPrimitive.Portal>
-))
-PopoverContent.displayName = PopoverPrimitive.Content.displayName
+));
+PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
-export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor }
-function cn(arg0: string, className: string | undefined): string | undefined {
-  throw new Error("Function not implemented.")
-}
-
+export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor };
