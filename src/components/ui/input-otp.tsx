@@ -1,10 +1,19 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { DashIcon } from "@radix-ui/react-icons"
-import { OTPInput, OTPInputContext } from "input-otp"
+import * as React from "react";
+import { DashIcon } from "@radix-ui/react-icons";
+import { OTPInput, OTPInputContext } from "input-otp";
+import { cn } from "@/utils";
 
-
+/**
+ * OTP input component for capturing one-time password codes.
+ * Uses `input-otp` library for handling OTP input functionality.
+ * 
+ * @param {object} props - Component props.
+ * @param {string} [props.className] - Additional classes for styling input fields.
+ * @param {string} [props.containerClassName] - Additional classes for styling the container.
+ * @returns {JSX.Element} Rendered OTP input component.
+ */
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
   React.ComponentPropsWithoutRef<typeof OTPInput>
@@ -18,27 +27,38 @@ const InputOTP = React.forwardRef<
     className={cn("disabled:cursor-not-allowed", className)}
     {...props}
   />
-))
-InputOTP.displayName = "InputOTP"
+));
+InputOTP.displayName = "InputOTP";
 
+/**
+ * Group container for OTP input fields, aligning fields in a flexbox.
+ * 
+ * @param {object} props - Component props.
+ * @param {string} [props.className] - Additional classes for styling the container.
+ * @returns {JSX.Element} Rendered group container for OTP inputs.
+ */
 const InputOTPGroup = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div">
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("flex items-center", className)} {...props} />
-))
-InputOTPGroup.displayName = "InputOTPGroup"
+));
+InputOTPGroup.displayName = "InputOTPGroup";
 
+/**
+ * Individual slot for each OTP character, showing a fake caret if active.
+ * 
+ * @param {object} props - Component props.
+ * @param {number} props.index - Index of the OTP slot for accessing context.
+ * @param {string} [props.className] - Additional classes for styling each slot.
+ * @returns {JSX.Element} Rendered OTP slot component.
+ */
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & { index: number }
 >(({ index, className, ...props }, ref) => {
-  const inputOTPContext = React.useContext(OTPInputContext)
-  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index]
-
-  function cn(arg0: string, arg1: string | boolean, className: string | undefined): string | undefined {
-    throw new Error("Function not implemented.")
-  }
+  const inputOTPContext = React.useContext(OTPInputContext);
+  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index];
 
   return (
     <div
@@ -57,10 +77,16 @@ const InputOTPSlot = React.forwardRef<
         </div>
       )}
     </div>
-  )
-})
-InputOTPSlot.displayName = "InputOTPSlot"
+  );
+});
+InputOTPSlot.displayName = "InputOTPSlot";
 
+/**
+ * Separator component for OTP input fields, showing a dash icon by default.
+ * 
+ * @param {object} props - Component props.
+ * @returns {JSX.Element} Rendered separator component.
+ */
 const InputOTPSeparator = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div">
@@ -68,11 +94,7 @@ const InputOTPSeparator = React.forwardRef<
   <div ref={ref} role="separator" {...props}>
     <DashIcon />
   </div>
-))
-InputOTPSeparator.displayName = "InputOTPSeparator"
+));
+InputOTPSeparator.displayName = "InputOTPSeparator";
 
-export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }
-function cn(arg0: string, containerClassName: string | undefined): string | undefined {
-  throw new Error("Function not implemented.")
-}
-
+export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator };
