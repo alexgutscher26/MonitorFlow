@@ -1,51 +1,55 @@
-"use client"
+"use client";
 
-import { LoadingSpinner } from "@/components/loading-spinner"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { Modal } from "@/components/ui/modal"
-import { client } from "@/lib/client"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { format, formatDistanceToNow } from "date-fns"
-import { ArrowRight, BarChart2, Clock, Database, Trash2 } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
-import { DashboardEmptyState } from "./dashboard-empty-state"
+import { LoadingSpinner } from "@/components/loading-spinner";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
+import { client } from "@/lib/client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { format, formatDistanceToNow } from "date-fns";
+import { ArrowRight, BarChart2, Clock, Database, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { DashboardEmptyState } from "./dashboard-empty-state";
 
 export const DashboardPageContent = () => {
-  const [deletingCategory, setDeletingCategory] = useState<string | null>(null)
-  const queryClient = useQueryClient()
+  const [deletingCategory, setDeletingCategory] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
+  // Fetch categories with react-query
   const { data: categories, isPending: isEventCategoriesLoading } = useQuery({
     queryKey: ["user-event-categories"],
     queryFn: async () => {
-      const res = await client.category.getEventCategories.$get()
-      const { categories } = await res.json()
-      return categories
+      const res = await client.category.getEventCategories.$get();
+      const { categories } = await res.json();
+      return categories;
     },
-  })
+  });
 
+  // Handle category deletion with react-query mutation
   const { mutate: deleteCategory, isPending: isDeletingCategory } = useMutation(
     {
       mutationFn: async (name: string) => {
-        await client.category.deleteCategory.$post({ name })
+        await client.category.deleteCategory.$post({ name });
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user-event-categories"] })
-        setDeletingCategory(null)
+        queryClient.invalidateQueries({ queryKey: ["user-event-categories"] });
+        setDeletingCategory(null);
       },
     }
-  )
+  );
 
+  // Loading state
   if (isEventCategoriesLoading) {
     return (
       <div className="flex items-center justify-center flex-1 h-full w-full">
         <LoadingSpinner />
       </div>
-    )
+    );
   }
 
+  // Empty state
   if (!categories || categories.length === 0) {
-    return <DashboardEmptyState />
+    return <DashboardEmptyState />;
   }
 
   return (
@@ -56,10 +60,11 @@ export const DashboardPageContent = () => {
             key={category.id}
             className="relative group z-10 transition-all duration-200 hover:-translate-y-0.5"
           >
+            {/* Category Card Background */}
             <div className="absolute z-0 inset-px rounded-lg bg-white" />
+            <div className="pointer-events-none absolute inset-px z-0 rounded-lg shadow-sm transition-all duration-300 group-hover:shadow-md ring-1 ring-black/5" />
 
-            <div className="pointer-events-none z-0 absolute inset-px rounded-lg shadow-sm transition-all duration-300 group-hover:shadow-md ring-1 ring-black/5" />
-
+            {/* Category Card Content */}
             <div className="relative p-6 z-10">
               <div className="flex items-center gap-4 mb-6">
                 <div
@@ -70,7 +75,6 @@ export const DashboardPageContent = () => {
                       : "#f3f4f6",
                   }}
                 />
-
                 <div>
                   <h3 className="text-lg/7 font-medium tracking-tight text-gray-950">
                     {category.emoji || "📂"} {category.name}
@@ -87,7 +91,7 @@ export const DashboardPageContent = () => {
                   <span className="font-medium">Last ping:</span>
                   <span className="ml-1">
                     {category.lastPing
-                      ? formatDistanceToNow(category.lastPing) + " ago"
+                      ? `${formatDistanceToNow(category.lastPing)} ago`
                       : "Never"}
                   </span>
                 </div>
@@ -112,7 +116,7 @@ export const DashboardPageContent = () => {
                     className: "flex items-center gap-2 text-sm",
                   })}
                 >
-                  View all <ArrowRight className="size-4" />
+                  View all <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Button
                   variant="ghost"
@@ -121,7 +125,7 @@ export const DashboardPageContent = () => {
                   aria-label={`Delete ${category.name} category`}
                   onClick={() => setDeletingCategory(category.name)}
                 >
-                  <Trash2 className="size-5" />
+                  <Trash2 className="h-5 w-5" />
                 </Button>
               </div>
             </div>
@@ -129,6 +133,7 @@ export const DashboardPageContent = () => {
         ))}
       </ul>
 
+      {/* Modal for Deleting Category */}
       <Modal
         showModal={Boolean(deletingCategory)}
         setShowModal={() => setDeletingCategory(null)}
@@ -162,5 +167,5 @@ export const DashboardPageContent = () => {
         </div>
       </Modal>
     </>
-  )
-}
+  );
+};
