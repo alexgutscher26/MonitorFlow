@@ -1,16 +1,29 @@
-import * as React from "react"
-import { ChevronRightIcon, DotsHorizontalIcon } from "@radix-ui/react-icons"
-import { Slot } from "@radix-ui/react-slot"
+import * as React from "react";
+import { ChevronRightIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { Slot } from "@radix-ui/react-slot";
+import { cn } from "@/utils";
 
-
+/**
+ * Breadcrumb Component
+ *
+ * Wraps the breadcrumb navigation container, providing an accessible ARIA label.
+ *
+ * @param {React.ComponentPropsWithoutRef<"nav"> & { separator?: React.ReactNode }} props - Properties for the Breadcrumb component.
+ * @returns {JSX.Element} The breadcrumb navigation wrapper.
+ */
 const Breadcrumb = React.forwardRef<
   HTMLElement,
   React.ComponentPropsWithoutRef<"nav"> & {
-    separator?: React.ReactNode
+    separator?: React.ReactNode;
   }
->(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />)
-Breadcrumb.displayName = "Breadcrumb"
+>(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
+Breadcrumb.displayName = "Breadcrumb";
 
+/**
+ * BreadcrumbList Component
+ *
+ * Wraps an ordered list of breadcrumb items, with spacing and responsive adjustments.
+ */
 const BreadcrumbList = React.forwardRef<
   HTMLOListElement,
   React.ComponentPropsWithoutRef<"ol">
@@ -23,9 +36,14 @@ const BreadcrumbList = React.forwardRef<
     )}
     {...props}
   />
-))
-BreadcrumbList.displayName = "BreadcrumbList"
+));
+BreadcrumbList.displayName = "BreadcrumbList";
 
+/**
+ * BreadcrumbItem Component
+ *
+ * Represents a single breadcrumb item container.
+ */
 const BreadcrumbItem = React.forwardRef<
   HTMLLIElement,
   React.ComponentPropsWithoutRef<"li">
@@ -35,31 +53,36 @@ const BreadcrumbItem = React.forwardRef<
     className={cn("inline-flex items-center gap-1.5", className)}
     {...props}
   />
-))
-BreadcrumbItem.displayName = "BreadcrumbItem"
+));
+BreadcrumbItem.displayName = "BreadcrumbItem";
 
+/**
+ * BreadcrumbLink Component
+ *
+ * Renders a link within a breadcrumb, with optional support for rendering as a child component using Radix's Slot.
+ */
 const BreadcrumbLink = React.forwardRef<
   HTMLAnchorElement,
   React.ComponentPropsWithoutRef<"a"> & {
-    asChild?: boolean
+    asChild?: boolean;
   }
 >(({ asChild, className, ...props }, ref) => {
-  const Comp = asChild ? Slot : "a"
-
-  function cn(arg0: string, className: string | undefined): string | undefined {
-    throw new Error("Function not implemented.")
-  }
-
+  const Comp = asChild ? Slot : "a";
   return (
     <Comp
       ref={ref}
       className={cn("transition-colors hover:text-foreground", className)}
       {...props}
     />
-  )
-})
-BreadcrumbLink.displayName = "BreadcrumbLink"
+  );
+});
+BreadcrumbLink.displayName = "BreadcrumbLink";
 
+/**
+ * BreadcrumbPage Component
+ *
+ * Displays the current page in the breadcrumb path, visually distinct and inaccessible.
+ */
 const BreadcrumbPage = React.forwardRef<
   HTMLSpanElement,
   React.ComponentPropsWithoutRef<"span">
@@ -72,9 +95,14 @@ const BreadcrumbPage = React.forwardRef<
     className={cn("font-normal text-foreground", className)}
     {...props}
   />
-))
-BreadcrumbPage.displayName = "BreadcrumbPage"
+));
+BreadcrumbPage.displayName = "BreadcrumbPage";
 
+/**
+ * BreadcrumbSeparator Component
+ *
+ * Renders a separator icon or custom content between breadcrumb items.
+ */
 const BreadcrumbSeparator = ({
   children,
   className,
@@ -88,9 +116,14 @@ const BreadcrumbSeparator = ({
   >
     {children ?? <ChevronRightIcon />}
   </li>
-)
-BreadcrumbSeparator.displayName = "BreadcrumbSeparator"
+);
+BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
 
+/**
+ * BreadcrumbEllipsis Component
+ *
+ * Indicates additional content in a breadcrumb path with an ellipsis icon.
+ */
 const BreadcrumbEllipsis = ({
   className,
   ...props
@@ -104,8 +137,8 @@ const BreadcrumbEllipsis = ({
     <DotsHorizontalIcon className="h-4 w-4" />
     <span className="sr-only">More</span>
   </span>
-)
-BreadcrumbEllipsis.displayName = "BreadcrumbElipssis"
+);
+BreadcrumbEllipsis.displayName = "BreadcrumbEllipsis";
 
 export {
   Breadcrumb,
@@ -115,8 +148,4 @@ export {
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
-}
-function cn(arg0: string, className: string | undefined): string | undefined {
-  throw new Error("Function not implemented.")
-}
-
+};
