@@ -1,5 +1,7 @@
-import { httpHandler } from "@/server"
+import { httpHandler } from "@/server";
 
-export const runtime = "edge"
+// Set the runtime environment to "edge" for improved performance and scalability.
+export const runtime = "edge";
 
-export { httpHandler as GET, httpHandler as POST }
+// Re-export `httpHandler` for both GET and POST requests.
+export { httpHandler as GET, httpHandler as POST };
