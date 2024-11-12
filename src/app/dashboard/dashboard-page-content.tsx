@@ -1,42 +1,42 @@
-"use client";
+"use client"
 
-import { LoadingSpinner } from "@/components/loading-spinner";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Modal } from "@/components/ui/modal";
-import { client } from "@/lib/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { format, formatDistanceToNow } from "date-fns";
-import { ArrowRight, BarChart2, Clock, Database, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { DashboardEmptyState } from "./dashboard-empty-state";
+import { LoadingSpinner } from "@/components/loading-spinner"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { Modal } from "@/components/ui/modal"
+import { client } from "@/lib/client"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { format, formatDistanceToNow } from "date-fns"
+import { ArrowRight, BarChart2, Clock, Database, Trash2 } from "lucide-react"
+import Link from "next/link"
+import { useState } from "react"
+import { DashboardEmptyState } from "./dashboard-empty-state"
 
 export const DashboardPageContent = () => {
-  const [deletingCategory, setDeletingCategory] = useState<string | null>(null);
-  const queryClient = useQueryClient();
+  const [deletingCategory, setDeletingCategory] = useState<string | null>(null)
+  const queryClient = useQueryClient()
 
   // Fetch categories with react-query
   const { data: categories, isPending: isEventCategoriesLoading } = useQuery({
     queryKey: ["user-event-categories"],
     queryFn: async () => {
-      const res = await client.category.getEventCategories.$get();
-      const { categories } = await res.json();
-      return categories;
+      const res = await client.category.getEventCategories.$get()
+      const { categories } = await res.json()
+      return categories
     },
-  });
+  })
 
   // Handle category deletion with react-query mutation
   const { mutate: deleteCategory, isPending: isDeletingCategory } = useMutation(
     {
       mutationFn: async (name: string) => {
-        await client.category.deleteCategory.$post({ name });
+        await client.category.deleteCategory.$post({ name })
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user-event-categories"] });
-        setDeletingCategory(null);
+        queryClient.invalidateQueries({ queryKey: ["user-event-categories"] })
+        setDeletingCategory(null)
       },
     }
-  );
+  )
 
   // Loading state
   if (isEventCategoriesLoading) {
@@ -44,12 +44,12 @@ export const DashboardPageContent = () => {
       <div className="flex items-center justify-center flex-1 h-full w-full">
         <LoadingSpinner />
       </div>
-    );
+    )
   }
 
   // Empty state
   if (!categories || categories.length === 0) {
-    return <DashboardEmptyState />;
+    return <DashboardEmptyState />
   }
 
   return (
@@ -167,5 +167,5 @@ export const DashboardPageContent = () => {
         </div>
       </Modal>
     </>
-  );
-};
+  )
+}

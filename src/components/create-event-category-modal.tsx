@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { PropsWithChildren, useState } from "react"
-import { useForm, useFieldArray } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { CATEGORY_NAME_VALIDATOR } from "@/lib/validators/category-validator"
@@ -27,7 +27,6 @@ const EVENT_CATEGORY_VALIDATOR = z.object({
     .min(1, "Color is required")
     .regex(/^#[0-9A-F]{6}$/i, "Invalid color format."),
   emoji: z.string().emoji("Invalid emoji").optional(),
-  tags: z.array(z.string().min(1)).optional().default([]),
 })
 
 type EventCategoryForm = z.infer<typeof EVENT_CATEGORY_VALIDATOR>
@@ -116,17 +115,8 @@ export const CreateEventCategoryModal = ({
     watch,
     setValue,
     formState: { errors },
-    control,
   } = useForm<EventCategoryForm>({
     resolver: zodResolver(EVENT_CATEGORY_VALIDATOR),
-    defaultValues: {
-      tags: [],
-    },
-  })
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "tags",
   })
 
   const color = watch("color")
@@ -156,8 +146,7 @@ export const CreateEventCategoryModal = ({
                     New Event Category
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    Create a category with color, emoji, and tags to organize
-                    your events.
+                    Create a category with color and emoji to organize your events.
                   </p>
                 </div>
                 <div className="flex space-x-3">
@@ -269,41 +258,6 @@ export const CreateEventCategoryModal = ({
                   ))}
                 </div>
               </div>
-
-              {/* Right Column - Custom Tags */}
-              <div className="space-y-4">
-                <Label className="text-sm font-medium">Custom Tags</Label>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    {fields.map((field, index) => (
-                      <div key={field.id} className="flex items-center gap-2">
-                        <Input
-                          {...register(`tags.${index}`)}
-                          placeholder="Add custom tag"
-                          className="w-full transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
-                        />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          onClick={() => remove(index)}
-                          className="px-3 hover:scale-105 transition-transform"
-                          aria-label="Remove tag"
-                        >
-                          ×
-                        </Button>
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => append("")}
-                      className="w-full text-blue-600 dark:text-blue-400 hover:scale-105 transition-transform"
-                    >
-                      Add Custom Tag
-                    </Button>
-                  </div>
-                </div>
-              </div>
             </div>
           </form>
         </TooltipProvider>
@@ -311,5 +265,3 @@ export const CreateEventCategoryModal = ({
     </>
   )
 }
-
-export default CreateEventCategoryModal
