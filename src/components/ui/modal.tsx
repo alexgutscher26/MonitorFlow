@@ -5,19 +5,12 @@ import { Drawer } from "vaul";
 import { Dialog, DialogContent, DialogTitle } from "./dialog";
 
 interface ModalProps {
-  /** The content of the modal */
   children?: ReactNode;
-  /** Additional classes for styling */
   className?: string;
-  /** Controls modal visibility */
   showModal?: boolean;
-  /** Setter for modal visibility state */
   setShowModal?: Dispatch<SetStateAction<boolean>>;
-  /** Callback fired on modal close */
   onClose?: () => void;
-  /** If true, modal is shown only on desktop */
   desktopOnly?: boolean;
-  /** Prevents default close behavior unless dragged */
   preventDefaultClose?: boolean;
 }
 
@@ -25,9 +18,6 @@ interface ModalProps {
  * Modal component that adapts between Drawer and Dialog components
  * based on screen size. Allows for conditional close behavior and
  * desktop-only display.
- *
- * @param {ModalProps} props - Props for configuring the modal component.
- * @returns {JSX.Element} Rendered modal component.
  */
 export const Modal = ({
   children,
@@ -38,7 +28,6 @@ export const Modal = ({
   setShowModal,
   showModal,
 }: ModalProps) => {
-  /** Close the modal, conditionally preventing close if dragged */
   const closeModal = ({ dragged }: { dragged?: boolean }) => {
     if (preventDefaultClose && !dragged) {
       return;
@@ -47,10 +36,8 @@ export const Modal = ({
     setShowModal?.(false);
   };
 
-  /** Checks if the device is mobile */
   const { isMobile } = useMediaQuery();
 
-  /** Render Drawer on mobile or when desktop-only is disabled */
   if (isMobile && !desktopOnly) {
     return (
       <Drawer.Root
@@ -63,7 +50,7 @@ export const Modal = ({
         <Drawer.Portal>
           <Drawer.Content
             className={cn(
-              "fixed !max-w-[95%] md:!max-w-[80%] lg:!max-w-[70%] h-[90vh] left-0 right-0 z-50 mt-24 rounded-t-[10px] border-t border-gray-200 bg-white",
+              "fixed h-[90vh] left-0 right-0 z-50 mt-24 rounded-t-[10px] border-t border-gray-200 bg-white !max-w-[95%] md:!max-w-[80%] lg:!max-w-[50%]",
               className
             )}
           >
@@ -77,7 +64,6 @@ export const Modal = ({
     );
   }
 
-  /** Render Dialog for desktop or if desktop-only is true */
   return (
     <Dialog
       open={setShowModal ? showModal : true}
@@ -86,7 +72,7 @@ export const Modal = ({
       }}
     >
       <DialogTitle className="sr-only">Dialog</DialogTitle>
-      <DialogContent className="!max-w-[95%] md:!max-w-[80%] lg:!max-w-[70%] h-[80vh] pb-10">
+      <DialogContent className="h-[80vh] !max-w-[95%] md:!max-w-[80%] lg:!max-w-[70%]">
         {children}
       </DialogContent>
     </Dialog>

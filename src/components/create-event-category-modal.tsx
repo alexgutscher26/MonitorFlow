@@ -68,6 +68,18 @@ const COLOR_PALETTES = {
     "#0080FF",
     "#FF0080",
   ],
+  Colorful: [
+    "#FF0000",
+    "#00FF00",
+    "#0000FF",
+    "#FFFF00",
+    "#FF00FF",
+    "#00FFFF",
+    "#FF8000",
+    "#8000FF",
+    "#0080FF",
+    "#FF0080",
+  ],
 }
 
 const EMOJI_OPTIONS = [
@@ -222,40 +234,117 @@ export const CreateEventCategoryModal = ({
                 </div>
               </div>
 
-              {/* Middle Column - Color Palettes */}
-              <div className="space-y-2">
+              {/* Middle and Right Columns - Color Palettes */}
+              <div className="col-span-2 space-y-2">
                 <Label className="text-sm font-medium">Choose Color</Label>
-                <div className="space-y-6">
-                  {Object.entries(COLOR_PALETTES).map(([paletteName, colors]) => (
-                    <div key={paletteName} className="space-y-2">
-                      <p className="text-xs font-medium text-gray-500">
-                        {paletteName}
-                      </p>
-                      <div className="grid grid-cols-5 gap-2">
-                        {colors.map((hex) => (
-                          <Tooltip key={hex}>
-                            <TooltipTrigger asChild>
-                              <button
-                                type="button"
-                                aria-label={`Select color ${hex}`}
-                                style={{ backgroundColor: hex }}
-                                className={cn(
-                                  "w-10 h-10 rounded-lg",
-                                  "transition-all duration-200",
-                                  "hover:scale-110",
-                                  color === hex
-                                    ? "ring-2 ring-blue-600 scale-110"
-                                    : "ring-1 ring-gray-200 dark:ring-gray-700"
-                                )}
-                                onClick={() => setValue("color", hex)}
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent>{hex}</TooltipContent>
-                          </Tooltip>
-                        ))}
-                      </div>
+                <div className="grid grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-gray-500">Modern</p>
+                    <div className="grid grid-cols-5 gap-2">
+                      {COLOR_PALETTES.Modern.map((hex) => (
+                        <Tooltip key={hex}>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              aria-label={`Select color ${hex}`}
+                              style={{ backgroundColor: hex }}
+                              className={cn(
+                                "w-10 h-10 rounded-lg",
+                                "transition-all duration-200",
+                                "hover:scale-110",
+                                color === hex
+                                  ? "ring-2 ring-blue-600 scale-110"
+                                  : "ring-1 ring-gray-200 dark:ring-gray-700"
+                              )}
+                              onClick={() => setValue("color", hex)}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>{hex}</TooltipContent>
+                        </Tooltip>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-gray-500">Professional</p>
+                    <div className="grid grid-cols-5 gap-2">
+                      {COLOR_PALETTES.Professional.map((hex) => (
+                        <Tooltip key={hex}>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              aria-label={`Select color ${hex}`}
+                              style={{ backgroundColor: hex }}
+                              className={cn(
+                                "w-10 h-10 rounded-lg",
+                                "transition-all duration-200",
+                                "hover:scale-110",
+                                color === hex
+                                  ? "ring-2 ring-blue-600 scale-110"
+                                  : "ring-1 ring-gray-200 dark:ring-gray-700"
+                              )}
+                              onClick={() => setValue("color", hex)}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>{hex}</TooltipContent>
+                        </Tooltip>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-gray-500">Vibrant</p>
+                    <div className="grid grid-cols-5 gap-2">
+                      {COLOR_PALETTES.Vibrant.map((hex) => (
+                        <Tooltip key={hex}>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              aria-label={`Select color ${hex}`}
+                              style={{ backgroundColor: hex }}
+                              className={cn(
+                                "w-10 h-10 rounded-lg",
+                                "transition-all duration-200",
+                                "hover:scale-110",
+                                color === hex
+                                  ? "ring-2 ring-blue-600 scale-110"
+                                  : "ring-1 ring-gray-200 dark:ring-gray-700"
+                              )}
+                              onClick={() => setValue("color", hex)}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>{hex}</TooltipContent>
+                        </Tooltip>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-gray-500">Colorful</p>
+                    <div className="grid grid-cols-5 gap-2">
+                      {COLOR_PALETTES.Colorful.map((hex) => (
+                        <Tooltip key={hex}>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              aria-label={`Select color ${hex}`}
+                              style={{ backgroundColor: hex }}
+                              className={cn(
+                                "w-10 h-10 rounded-lg",
+                                "transition-all duration-200",
+                                "hover:scale-110",
+                                color === hex
+                                  ? "ring-2 ring-blue-600 scale-110"
+                                  : "ring-1 ring-gray-200 dark:ring-gray-700"
+                              )}
+                              onClick={() => setValue("color", hex)}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>{hex}</TooltipContent>
+                        </Tooltip>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
