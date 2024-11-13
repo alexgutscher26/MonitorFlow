@@ -6,7 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { cn } from "@/utils";
 import { UserButton } from "@clerk/nextjs";
-import { Gem, Home, Key, LucideIcon, Menu, Settings, X } from "lucide-react";
+import { Gem, Home, Key, LucideIcon, Menu, Settings, X, ChartBar } from "lucide-react";
 
 // Define Sidebar item and category types
 interface SidebarItem {
@@ -24,7 +24,14 @@ interface SidebarCategory {
 const SIDEBAR_ITEMS: SidebarCategory[] = [
   {
     category: "Overview",
-    items: [{ href: "/dashboard", icon: Home, text: "Dashboard" }],
+    items: [
+      { href: "/dashboard/", icon: Home, text: "Dashboard" },
+      {
+        href: "/dashboard/analytics",
+        icon: ChartBar,
+        text: "Analytics",
+      },
+    ],
   },
   {
     category: "Account",
