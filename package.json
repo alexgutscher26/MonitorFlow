@@ -61,6 +61,8 @@
     "next": "^14.2.8",
     "node-fetch": "^3.3.2",
     "prisma": "^5.18.0",
+    "pusher": "^5.2.0",
+    "pusher-js": "^8.4.0-rc2",
     "react": "^18",
     "react-day-picker": "^9.3.0",
     "react-dom": "^18",
@@ -72,6 +74,7 @@
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "twilio": "^5.3.5",
     "vaul": "^1.1.1",
     "wrangler": "^3.86.0",
     "zod": "^3.23.8"

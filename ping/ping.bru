@@ -5,7 +5,25 @@ meta {
 }
 
 post {
-  url: https://localhost:3000/api/v1/webhook
-  body: none
+  url: http://localhost:3000/api/v1/events
+  body: json
   auth: none
+}
+
+headers {
+  Authorization: Bearer cm3fkny0n000174oad480kfaz
+}
+
+body:json {
+  {"category": "dqd", "fields": {"amount": 22, "email": "john@gmail.com"}}
+}
+
+tests {
+    body: JSON.stringify({
+      category: 'dqd',
+      fields: {
+        field1: 'value1', // for example: user id
+        field2: 'value2' // for example: user email
+      }
+  })
 }

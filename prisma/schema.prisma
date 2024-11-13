@@ -20,17 +20,17 @@ model User {
   id         String  @id @default(cuid())
   externalId String? @unique
 
-  quotaLimit Int
-  plan       Plan @default(FREE)
-
-  email     String   @unique
-  apiKey    String   @unique @default(cuid())
-  discordId String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  quotaLimit  Int
+  plan        Plan     @default(FREE)
+  phoneNumber String?
+  email       String   @unique
+  apiKey      String   @unique @default(cuid())
+  discordId   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   EventCategories EventCategory[]
-  events           Event[]
+  events          Event[]
   Quota           Quota[]
 
   @@index([email, apiKey])
@@ -47,7 +47,7 @@ model EventCategory {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  events     Event[]
+  events    Event[]
 
   @@unique([name, userId])
 }
@@ -75,6 +75,9 @@ model Event {
 
   EventCategory   EventCategory? @relation(fields: [eventCategoryId], references: [id])
   eventCategoryId String?
+
+  notes String?
+  tags  String?
 
   @@index([createdAt])
 }

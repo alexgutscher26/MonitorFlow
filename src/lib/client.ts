@@ -4,16 +4,8 @@ import { HTTPException } from "hono/http-exception"
 import { StatusCode } from "hono/utils/http-status"
 import superjson from "superjson"
 
-/**
- * Determines the base URL for the client, depending on the environment.
- *
- * - Uses a relative path if in a browser.
- * - Uses localhost for development.
- * - Uses the Vercel URL for production, or a fallback URL if unavailable.
- *
- * @returns The base URL string.
- */
 const getBaseUrl = () => {
+  // browser should use relative path
   if (typeof window !== "undefined") {
     return ""
   }
@@ -25,9 +17,6 @@ const getBaseUrl = () => {
     : "https://<YOUR_DEPLOYED_WORKER_URL>/"
 }
 
-/**
- * Base client for API requests, handling errors and parsing responses.
- */
 export const baseClient = hc<AppType>(getBaseUrl(), {
   fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
     const response = await fetch(input, { ...init, cache: "no-store" })
@@ -60,13 +49,6 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
   },
 })["api"]
 
-/**
- * Retrieves a nested function handler within an object.
- *
- * @param obj - The object containing nested functions.
- * @param keys - Path keys to reach the target function.
- * @returns The function at the specified path within the object.
- */
 function getHandler(obj: Object, ...keys: string[]) {
   let current = obj
   for (const key of keys) {
@@ -75,12 +57,6 @@ function getHandler(obj: Object, ...keys: string[]) {
   return current as Function
 }
 
-/**
- * Serializes an object using SuperJSON, ensuring compatibility for complex data types.
- *
- * @param data - The data to be serialized.
- * @returns A new object with all values serialized by SuperJSON.
- */
 function serializeWithSuperJSON(data: any): any {
   if (typeof data !== "object" || data === null) {
     return data
@@ -94,14 +70,8 @@ function serializeWithSuperJSON(data: any): any {
 }
 
 /**
- * Creates a proxy to allow convenient access to API endpoints.
- *
- * - Automatically handles `$get` and `$post` requests, serializing data with SuperJSON.
- * - Allows nested property access to mimic structured API endpoints.
- *
- * @param target - The target API client.
- * @param path - The path of keys to reach the desired endpoint.
- * @returns A Proxy object that provides easy access to API methods.
+ * This is an optional convenience proxy to pass data directly to your API
+ * instead of using nested objects as hono does by default
  */
 function createProxy(target: any, path: string[] = []): any {
   return new Proxy(target, {
@@ -132,10 +102,4 @@ function createProxy(target: any, path: string[] = []): any {
   })
 }
 
-/**
- * The main API client proxy, providing convenient access to API routes.
- * 
- * - `client.$get` for GET requests with serialized query parameters.
- * - `client.$post` for POST requests with serialized JSON body.
- */
 export const client: typeof baseClient = createProxy(baseClient)
