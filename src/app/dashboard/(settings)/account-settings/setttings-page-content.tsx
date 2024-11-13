@@ -16,6 +16,10 @@ export const AccountSettings = ({
 }) => {
   const [discordId, setDiscordId] = useState(initialDiscordId)
 
+    /**
+   * Mutation to update the user's Discord ID.
+   * Disables the button while saving to prevent duplicate requests.
+   */
   const { mutate, isPending } = useMutation({
     mutationFn: async (discordId: string) => {
       const res = await client.project.setDiscordID.$post({ discordId })
