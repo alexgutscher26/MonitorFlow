@@ -1,4 +1,3 @@
-
 Add more notification channels (Slack, Discord, etc.)?
 Add the ability to set different notification recipients for different SLAs
 Enhanced Analytics:
@@ -15,4 +14,3 @@ Implement team assignments for SLA monitoring
 Add an audit log to track changes to SLA configurations
 Integration Features:
 Add integration with incident management tools
-Implement API endpoints for external systems to query SLA status
