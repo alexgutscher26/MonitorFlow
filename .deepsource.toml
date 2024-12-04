@@ -1,0 +1,29 @@
+version = 1
+
+[[analyzers]]
+name = "javascript"
+enabled = true
+
+  [analyzers.meta]
+  environment = ["nodejs"]
+  plugins = ["react"]
+  style_guide = "standard"
+  dialect = "typescript"
+  module_system = "es-modules"
+
+[[analyzers]]
+name = "test-coverage"
+enabled = true
+
+[[analyzers]]
+name = "secrets"
+enabled = true
+
+[exclude]
+paths = [
+    "node_modules/**",
+    ".next/**",
+    "public/**",
+    "*.md",
+    "*.json"
+]
