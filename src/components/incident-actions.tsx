@@ -4,10 +4,13 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { client } from "@/lib/client"
+import { Card } from "./ui/card"
+import { Switch } from "@radix-ui/react-switch"
+import { Textarea } from "./ui/textarea"
 
 const actionTypes = [
   { value: "DISCORD_NOTIFICATION", label: "Discord Notification" },
@@ -21,6 +24,22 @@ interface IncidentActionsProps {
   categoryName: string
 }
 
+type IncidentAction = {
+  id: string;
+  name: string;
+  description: string | null;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+  enabled: boolean;
+  categoryId: string;
+  actionType: "DISCORD_NOTIFICATION" | "WEBHOOK" | "EMAIL" | "RETRY_CHECK" | "PAUSE_MONITORING";
+  config: Record<string, any> | null;
+  conditions: Record<string, any> | null;
+  cooldownMinutes: number;
+  lastTriggered: string | null;
+}
+
 export function IncidentActions({ categoryName }: IncidentActionsProps) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
@@ -31,30 +50,36 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
     actionType: "DISCORD_NOTIFICATION",
     config: "{}",
     conditions: "{}",
-    priority: "1",
     cooldownMinutes: "5",
     enabled: true,
   })
 
-  const { data: actions, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["incident-actions", categoryName],
     queryFn: async () => {
-      const response = await client.category.getIncidentActions.$query({
+      const response = await client.category.getIncidentActions.$get({
         categoryName
       })
-      return response.actions
+      const data = await response.json()
+      return data.actions
     }
   })
+
+  const actions = data as IncidentAction[] | undefined
 
   const createMutation = useMutation({
     mutationFn: async (action: any) => {
       const response = await client.category.createIncidentAction.$post({
-        json: {
-          categoryName,
-          ...action,
-        }
+        categoryName,
+        name: action.name,
+        actionType: action.actionType,
+        description: action.description,
+        config: JSON.parse(action.config),
+        conditions: JSON.parse(action.conditions),
+        cooldownMinutes: parseInt(action.cooldownMinutes, 10),
+        enabled: action.enabled,
       })
-      return response.action
+      return response
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["incident-actions"] })
@@ -65,7 +90,6 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
         actionType: "DISCORD_NOTIFICATION",
         config: "{}",
         conditions: "{}",
-        priority: "1",
         cooldownMinutes: "5",
         enabled: true,
       })
@@ -86,13 +110,11 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
   const toggleMutation = useMutation({
     mutationFn: async ({ id, enabled }: { id: string; enabled: boolean }) => {
       const response = await client.category.updateIncidentAction.$post({
-        json: {
-          categoryName,
-          id,
-          enabled,
-        }
+        categoryName,
+        id,
+        enabled,
       })
-      return response.action
+      return response
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["incident-actions"] })
@@ -113,12 +135,10 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const response = await client.category.deleteIncidentAction.$post({
-        json: {
-          categoryName,
-          id,
-        }
+        id,
+        categoryName
       })
-      return response.success
+      return response
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["incident-actions"] })
@@ -156,10 +176,6 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               e.preventDefault()
               createMutation.mutate({
                 ...newAction,
-                priority: parseInt(newAction.priority),
-                cooldownMinutes: parseInt(newAction.cooldownMinutes),
-                config: JSON.parse(newAction.config),
-                conditions: JSON.parse(newAction.conditions),
               })
             }}
             className="space-y-4"
@@ -179,7 +195,7 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <Textarea
                 id="description"
                 value={newAction.description}
-                onChange={(e) => setNewAction({ ...newAction, description: e.target.value })}
+                onChange={(e: { target: { value: any } }) => setNewAction({ ...newAction, description: e.target.value })}
               />
             </div>
 
@@ -207,7 +223,7 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <Textarea
                 id="config"
                 value={newAction.config}
-                onChange={(e) => setNewAction({ ...newAction, config: e.target.value })}
+                onChange={(e: { target: { value: any } }) => setNewAction({ ...newAction, config: e.target.value })}
                 required
               />
             </div>
@@ -217,24 +233,12 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <Textarea
                 id="conditions"
                 value={newAction.conditions}
-                onChange={(e) => setNewAction({ ...newAction, conditions: e.target.value })}
+                onChange={(e: { target: { value: any } }) => setNewAction({ ...newAction, conditions: e.target.value })}
                 required
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="priority">Priority</Label>
-                <Input
-                  id="priority"
-                  type="number"
-                  min="1"
-                  value={newAction.priority}
-                  onChange={(e) => setNewAction({ ...newAction, priority: e.target.value })}
-                  required
-                />
-              </div>
-
               <div>
                 <Label htmlFor="cooldown">Cooldown (minutes)</Label>
                 <Input
@@ -251,7 +255,7 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
             <div className="flex items-center space-x-2">
               <Switch
                 checked={newAction.enabled}
-                onCheckedChange={(checked) => setNewAction({ ...newAction, enabled: checked })}
+                onCheckedChange={(checked: any) => setNewAction({ ...newAction, enabled: checked })}
               />
               <Label>Enabled</Label>
             </div>
@@ -273,7 +277,7 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
       )}
 
       <div className="grid gap-4">
-        {actions?.map((action: any) => (
+        {actions?.map((action) => (
           <Card key={action.id} className="p-4">
             <div className="flex justify-between items-start">
               <div>
@@ -285,7 +289,7 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <div className="flex items-center space-x-2">
                 <Switch
                   checked={action.enabled}
-                  onCheckedChange={(checked) =>
+                  onCheckedChange={(checked: any) =>
                     toggleMutation.mutate({ id: action.id, enabled: checked })
                   }
                 />
@@ -306,9 +310,6 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <div>
                 <span className="font-medium">Type:</span>{" "}
                 {actionTypes.find((t) => t.value === action.actionType)?.label}
-              </div>
-              <div>
-                <span className="font-medium">Priority:</span> {action.priority}
               </div>
               <div>
                 <span className="font-medium">Cooldown:</span> {action.cooldownMinutes} minutes

@@ -149,7 +149,7 @@ export default async function SLAPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <CardTitle className="flex items-center gap-2 text-xl">
-                          {sla.EventCategory?.emoji || "🎯"} {sla.name}
+                          {sla.EventCategory?.emoji ?? "🎯"} {sla.name}
                         </CardTitle>
                         <CardDescription>{sla.description}</CardDescription>
                       </div>
@@ -225,7 +225,7 @@ export default async function SLAPage() {
                 key={`trend-${sla.id}`}
                 measurements={sla.measurements}
                 target={sla.target}
-                title={`${sla.EventCategory?.emoji || "🎯"} ${sla.name} - Performance Trend`}
+                title={`${sla.EventCategory?.emoji ?? "🎯"} ${sla.name} - Performance Trend`}
               />
             ))}
             {slas.filter(sla => sla.measurements.length > 0).length === 0 && (
