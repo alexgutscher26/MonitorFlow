@@ -1,0 +1,26 @@
+meta {
+  name: montiroflow
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/api/v1/events
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer cm47v0fhk0001vx0w0p71wqsi
+}
+
+body:json {
+  {
+      "category": "question",
+      "fields": {
+            amount: "1500",
+            status: "completed",
+            userEmail: "test@example.com"
+      }
+  }
+}
