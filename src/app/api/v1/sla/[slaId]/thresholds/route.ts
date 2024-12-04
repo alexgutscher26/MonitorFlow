@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { sla } from "@/db/schema";
 import { and, eq } from "drizzle-orm";

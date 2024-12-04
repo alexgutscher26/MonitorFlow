@@ -2,7 +2,6 @@ import { NextResponse, NextRequest } from "next/server";
 import { z } from "zod";
 import { db } from "@/db";
 import { auth } from "@clerk/nextjs/server";
-import { calculateUptimePercentage } from "@/lib/sla";
 import { FREE_QUOTA, PRO_QUOTA } from "@/config";
 
 const createSLASchema = z.object({

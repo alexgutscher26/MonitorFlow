@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -59,7 +60,7 @@ export function NotificationHistory({ slaId }: NotificationHistoryProps) {
   // Fetch notifications on mount
   useEffect(() => {
     fetchNotifications();
-  }, [slaId]);
+  }, [fetchNotifications, slaId]);
 
   const getStatusBadge = (status: Notification["status"]) => {
     switch (status) {

@@ -2,14 +2,10 @@
 
 import * as React from "react"
 
-import { CalendarIcon } from "@radix-ui/react-icons"
 import { format, startOfYear, endOfYear } from "date-fns"
 import { DateRange } from "react-day-picker"
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { cn } from "@/utils"
+import { PopoverContent } from "@/components/ui/popover"
 
 interface DateRangePickerProps extends React.HTMLAttributes<HTMLDivElement> {
   readonly selectedRange?: DateRange | undefined

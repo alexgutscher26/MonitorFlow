@@ -7,6 +7,7 @@ import { CATEGORY_NAME_VALIDATOR } from "@/lib/validators/category-validator"
 import { parseColor } from "@/utils"
 import { HTTPException } from "hono/http-exception"
 import { ActionExecutor } from "../services/action-executor"
+import { nanoid } from "nanoid"
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -488,46 +489,49 @@ export const categoryRouter = router({
     }),
 
   createIncidentAction: privateProcedure
-    .input(
-      z.object({
-        categoryName: z.string(),
-        name: z.string(),
-        description: z.string().optional(),
-        actionType: z.enum([
-          "DISCORD_NOTIFICATION",
-          "WEBHOOK",
-          "EMAIL",
-          "RETRY_CHECK",
-          "PAUSE_MONITORING",
-        ]),
-        config: z.record(z.any()),
-        conditions: z.record(z.any()),
-        priority: z.number(),
-        cooldownMinutes: z.number(),
-        enabled: z.boolean(),
-      })
-    )
+    .input(z.object({
+      categoryName: z.string(),
+      name: z.string().min(1, "Name is required"),
+      description: z.string().optional(),
+      actionType: z.enum(["DISCORD_NOTIFICATION", "WEBHOOK", "EMAIL", "RETRY_CHECK", "PAUSE_MONITORING"]),
+      conditions: z.record(z.object({
+        operator: z.enum(["equals", "contains", "gt", "lt"]),
+        value: z.union([z.string(), z.number()]),
+      })).optional(),
+      config: z.record(z.any()).optional(),
+      cooldownMinutes: z.number().min(0).default(0),
+      enabled: z.boolean().default(true),
+    }))
     .mutation(async ({ c, ctx, input }) => {
-      const { categoryName, ...actionData } = input
+      const { user } = ctx;
 
-      const category = await db.eventCategory.findUnique({
+      const category = await db.eventCategory.findFirst({
         where: {
-          name_userId: { name: categoryName, userId: ctx.user.id },
+          name: input.categoryName,
+          userId: user.id,
         },
-      })
+      });
 
       if (!category) {
-        throw new HTTPException(404, { message: "Category not found" })
+        throw new HTTPException(404, { message: "Category not found" });
       }
 
       const action = await db.incidentAction.create({
         data: {
-          ...actionData,
+          id: nanoid(),
+          userId: user.id,
           categoryId: category.id,
+          name: input.name,
+          description: input.description,
+          actionType: input.actionType,
+          conditions: input.conditions || {},
+          config: input.config || {},
+          cooldownMinutes: input.cooldownMinutes,
+          enabled: input.enabled,
         },
-      })
+      });
 
-      return c.json({ action })
+      return c.json({ action });
     }),
 
   updateIncidentAction: privateProcedure

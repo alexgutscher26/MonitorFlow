@@ -27,7 +27,7 @@ async function getSLAData() {
       return redirect("/welcome");
     }
 
-    const slas = await db.SLADefinition.findMany({
+    const slas = await db.sLADefinition.findMany({
       where: {
         userId: user.id,
       },

@@ -1,19 +1,52 @@
+/* eslint-disable react/jsx-no-undef */
 "use client";
+import * as React from "react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Loader2 } from "lucide-react";
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Loader2, Upload } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Fragment } from "react";
+import { cn } from "@/utils";
 
 interface ImportSLAButtonProps {
   onImportComplete?: () => void;
 }
+
+const DropdownMenuContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.Content
+    ref={ref}
+    className={cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className
+    )}
+    {...props}
+  />
+));
+DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
+
+const DropdownMenuItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
+));
+DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
 
 export function ImportSLAButton({ onImportComplete }: ImportSLAButtonProps) {
   const [isImporting, setIsImporting] = useState(false);
@@ -114,25 +147,27 @@ export function ImportSLAButton({ onImportComplete }: ImportSLAButtonProps) {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" disabled={isImporting}>
-          {isImporting ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-          ) : (
-            <Upload className="h-4 w-4 mr-2" />
-          )}
-          {isImporting ? "Importing..." : "Import SLAs"}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => handleFileSelect("json")}>
-          Import from JSON
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleFileSelect("csv")}>
-          Import from CSV
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Fragment>
+      <DropdownMenuPrimitive.Root>
+        <DropdownMenuPrimitive.Trigger asChild>
+          <Button variant="outline" size="sm" disabled={isImporting}>
+            {isImporting ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4 mr-2" />
+            )}
+            {isImporting ? "Importing..." : "Import SLAs"}
+          </Button>
+        </DropdownMenuPrimitive.Trigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => handleFileSelect("json")}>
+            Import from JSON
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFileSelect("csv")}>
+            Import from CSV
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenuPrimitive.Root>
+    </Fragment>
   );
 }

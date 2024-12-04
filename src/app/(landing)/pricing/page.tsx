@@ -17,7 +17,9 @@ const Page = () => {
   const INCLUDED_FEATURES = [
     "10.000 real-time events per month",
     "10 event categories",
+    "5 Service Level Agreements",
     "Advanced analytics and insights",
+    "Custom alert thresholds and conditions",
     "Priority support",
   ]
 

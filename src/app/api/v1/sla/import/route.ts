@@ -1,116 +1,62 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
-import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/db";
+import { sla } from "@/db/schema";
 import { z } from "zod";
 
-const slaSchema = z.object({
-  name: z.string(),
+const importSchema = z.object({
+  name: z.string().min(1),
   description: z.string().optional(),
-  target: z.number().min(0).max(100),
-  timeWindow: z.enum(["24h", "7d", "30d"]),
-  category: z.object({
-    emoji: z.string(),
-    name: z.string()
-  }).optional(),
-  warningThreshold: z.number().min(0).max(100).optional(),
-  criticalThreshold: z.number().min(0).max(100).optional(),
-  enableNotifications: z.boolean().optional(),
-  emailNotifications: z.boolean().optional(),
-  webhookNotifications: z.boolean().optional(),
+  warningThreshold: z.number().min(0).max(100),
+  criticalThreshold: z.number().min(0).max(100),
+  enableNotifications: z.boolean(),
+  emailNotifications: z.boolean(),
+  webhookNotifications: z.boolean(),
   webhookUrl: z.string().url().optional().nullable(),
 });
 
-const importSchema = z.object({
-  slas: z.array(slaSchema)
-});
-
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
     const { userId } = auth();
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const json = await req.json();
-    const { slas } = importSchema.parse(json);
+    const body = await request.json();
+    const validatedData = importSchema.parse(body);
 
-    // Get user's plan and SLA quota
-    const user = await db.user.findUnique({
-      where: { id: userId },
-      select: { plan: true }
+    // Create new SLA in database
+    const newSla = await db.insert(sla).values({
+      userId,
+      name: validatedData.name,
+      description: validatedData.description || null,
+      warningThreshold: validatedData.warningThreshold,
+      criticalThreshold: validatedData.criticalThreshold,
+      enableNotifications: validatedData.enableNotifications,
+      emailNotifications: validatedData.emailNotifications,
+      webhookNotifications: validatedData.webhookNotifications,
+      webhookUrl: validatedData.webhookUrl || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
-    if (!user) {
-      return new NextResponse("User not found", { status: 404 });
-    }
-
-    // Get current SLA count
-    const currentSLACount = await db.sLA.count({
-      where: { userId }
-    });
-
-    // Check quota
-    const maxSLAs = user.plan === "FREE" ? 1 : 10; // Adjust based on your actual quotas
-    if (currentSLACount + slas.length > maxSLAs) {
-      return new NextResponse(
-        `SLA quota exceeded. Your plan allows ${maxSLAs} SLAs.`, 
-        { status: 400 }
+    return NextResponse.json({ message: "SLA imported successfully" }, { status: 201 });
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          message: "Validation error",
+          errors: err.errors,
+        },
+        { status: 422 }
       );
     }
 
-    // Process each SLA
-    const createdSLAs = await Promise.all(
-      slas.map(async (sla) => {
-        // Find or create category if provided
-        let categoryId = null;
-        if (sla.category) {
-          const category = await db.eventCategory.upsert({
-            where: {
-              userId_name: {
-                userId,
-                name: sla.category.name
-              }
-            },
-            create: {
-              name: sla.category.name,
-              emoji: sla.category.emoji,
-              userId
-            },
-            update: {
-              emoji: sla.category.emoji
-            }
-          });
-          categoryId = category.id;
-        }
-
-        // Create SLA
-        return db.sLA.create({
-          data: {
-            name: sla.name,
-            description: sla.description,
-            target: sla.target,
-            timeWindow: sla.timeWindow,
-            warningThreshold: sla.warningThreshold,
-            criticalThreshold: sla.criticalThreshold,
-            enableNotifications: sla.enableNotifications,
-            emailNotifications: sla.emailNotifications,
-            webhookNotifications: sla.webhookNotifications,
-            webhookUrl: sla.webhookUrl,
-            userId,
-            categoryId
-          }
-        });
-      })
-    );
-
-    return NextResponse.json(createdSLAs);
-  } catch (error) {
-    console.error("Error importing SLAs:", error);
-    if (error instanceof z.ZodError) {
-      return new NextResponse(JSON.stringify(error.issues), { status: 400 });
-    }
-    return new NextResponse(
-      error instanceof Error ? error.message : "Internal Server Error",
+    return NextResponse.json(
+      {
+        message: "Internal server error",
+        details: err instanceof Error ? err.message : "Unknown error occurred",
+      },
       { status: 500 }
     );
   }

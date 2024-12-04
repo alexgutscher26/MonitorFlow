@@ -12,25 +12,10 @@ import { Download, Loader2 } from "lucide-react";
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
 import { toast } from "sonner";
-
-interface SLAData {
-  id: string;
-  name: string;
-  description?: string;
-  target: number;
-  timeWindow: string;
-  category?: {
-    name: string;
-    emoji?: string;
-  };
-  measurements: {
-    uptimePercent: number;
-    endTime: Date;
-  }[];
-}
+import { SLADefinition } from "@/types/sla";
 
 interface ExportSLAButtonProps {
-  slas: SLAData[];
+  slas: SLADefinition[];
 }
 
 export function ExportSLAButton({ slas }: ExportSLAButtonProps) {
@@ -52,7 +37,7 @@ export function ExportSLAButton({ slas }: ExportSLAButtonProps) {
 
         return [
           sla.name,
-          `${sla.category?.emoji || "🎯"} ${sla.category?.name || "Uncategorized"}`,
+          `${sla.EventCategory?.emoji || "🎯"} ${sla.EventCategory?.name || "Uncategorized"}`,
           `${sla.target}%`,
           `${currentUptime}%`,
           `${avgUptime}%`,
@@ -110,8 +95,8 @@ export function ExportSLAButton({ slas }: ExportSLAButtonProps) {
           : "N/A";
 
         return [
-          `${sla.category?.emoji || "🎯"} ${sla.name}`,
-          sla.category?.name || "Uncategorized",
+          `${sla.EventCategory?.emoji || "🎯"} ${sla.name}`,
+          sla.EventCategory?.name || "Uncategorized",
           `${sla.target}%`,
           `${currentUptime}%`,
           `${avgUptime}%`,
