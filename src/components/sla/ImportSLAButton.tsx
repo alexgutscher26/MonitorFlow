@@ -2,11 +2,11 @@
 "use client";
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
-import type {
-  DropdownMenu as DropdownMenuType,
-  DropdownMenuTrigger as DropdownMenuTriggerType,
-  DropdownMenuContent as DropdownMenuContentType,
-  DropdownMenuItem as DropdownMenuItemType,
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Loader2, Upload } from "lucide-react";
@@ -118,8 +118,8 @@ export function ImportSLAButton({ onImportComplete }: ImportSLAButtonProps) {
 
   return (
     <Fragment>
-      <DropdownMenuType>
-        <DropdownMenuTriggerType asChild>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" disabled={isImporting}>
             {isImporting ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -128,16 +128,16 @@ export function ImportSLAButton({ onImportComplete }: ImportSLAButtonProps) {
             )}
             {isImporting ? "Importing..." : "Import SLAs"}
           </Button>
-        </DropdownMenuTriggerType>
-        <DropdownMenuContentType align="end">
-          <DropdownMenuItemType onClick={() => handleFileSelect("json")}>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => handleFileSelect("json")}>
             Import from JSON
-          </DropdownMenuItemType>
-          <DropdownMenuItemType onClick={() => handleFileSelect("csv")}>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFileSelect("csv")}>
             Import from CSV
-          </DropdownMenuItemType>
-        </DropdownMenuContentType>
-      </DropdownMenuType>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </Fragment>
   );
 }

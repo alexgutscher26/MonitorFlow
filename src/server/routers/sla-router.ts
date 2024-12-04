@@ -42,33 +42,47 @@ export const slaRouter = router({
             throw new Error(`Category not found: ${sla.category.name}`);
           }
 
-          // Create or update SLA definition
-          const slaDefinition = await db.sLADefinition.upsert({
+          // Find existing SLA definition
+          const existingSLA = await db.sLADefinition.findFirst({
             where: {
-              name_userId: {
-                name: sla.name,
-                userId: user.id,
-              },
-            },
-            create: {
               name: sla.name,
-              target: sla.target,
-              timeWindow: sla.timeWindow,
-              emailNotifications: sla.emailNotifications,
-              webhookNotifications: sla.webhookNotifications,
-              webhookUrl: sla.webhookUrl,
               userId: user.id,
-              categoryId: category.id,
-            },
-            update: {
-              target: sla.target,
-              timeWindow: sla.timeWindow,
-              emailNotifications: sla.emailNotifications,
-              webhookNotifications: sla.webhookNotifications,
-              webhookUrl: sla.webhookUrl,
-              categoryId: category.id,
             },
           });
+
+          // Create or update SLA definition
+          const slaDefinition = existingSLA
+            ? await db.sLADefinition.update({
+                where: { id: existingSLA.id },
+                data: {
+                  target: sla.target,
+                  timeWindow: sla.timeWindow,
+                  emailNotifications: sla.emailNotifications,
+                  webhookNotifications: sla.webhookNotifications,
+                  webhookUrl: sla.webhookUrl,
+                  category: {
+                    connect: {
+                      id: category.id
+                    }
+                  }
+                },
+              })
+            : await db.sLADefinition.create({
+                data: {
+                  name: sla.name,
+                  target: sla.target,
+                  timeWindow: sla.timeWindow,
+                  emailNotifications: sla.emailNotifications,
+                  webhookNotifications: sla.webhookNotifications,
+                  webhookUrl: sla.webhookUrl,
+                  userId: user.id,
+                  category: {
+                    connect: {
+                      id: category.id
+                    }
+                  }
+                },
+              });
 
           results.push({
             name: sla.name,
@@ -99,14 +113,6 @@ export const slaRouter = router({
       where: {
         userId: user.id,
       },
-      include: {
-        category: {
-          select: {
-            name: true,
-            emoji: true,
-          },
-        },
-      },
       orderBy: {
         createdAt: "desc",
       },
@@ -123,12 +129,10 @@ export const slaRouter = router({
       const { user } = ctx;
       const { id } = input;
 
-      await db.sLADefinition.delete({
+      await db.sLADefinition.deleteMany({
         where: {
-          id_userId: {
-            id,
-            userId: user.id,
-          },
+          id,
+          userId: user.id
         },
       });
 
@@ -150,14 +154,20 @@ export const slaRouter = router({
       const { user } = ctx;
       const { id, ...data } = input;
 
-      const slaDefinition = await db.sLADefinition.update({
+      const slaDefinition = await db.sLADefinition.updateMany({
         where: {
-          id_userId: {
-            id,
-            userId: user.id,
-          },
+          id,
+          userId: user.id
         },
         data,
+      }).then(async () => {
+        // Fetch the updated record
+        return db.sLADefinition.findFirstOrThrow({
+          where: {
+            id,
+            userId: user.id
+          }
+        });
       });
 
       return c.json(slaDefinition);
