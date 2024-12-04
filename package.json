@@ -60,6 +60,7 @@
     "embla-carousel-react": "^8.5.1",
     "framer-motion": "^11.11.9",
     "hono": "^4.5.5",
+    "initials": "^3.1.2",
     "input-otp": "^1.4.1",
     "install": "^0.13.0",
     "jspdf": "^2.5.2",
