@@ -7,6 +7,7 @@ import { UserButton } from "@clerk/nextjs"
 import { Activity, Gem, Home, Key, LucideIcon, Menu, Settings, X } from "lucide-react"
 import Link from "next/link"
 import { PropsWithChildren, useState } from "react"
+import { Drawer } from "vaul"
 
 interface SidebarItem {
   href: string
@@ -34,7 +35,7 @@ const SIDEBAR_ITEMS: SidebarCategory[] = [
   {
     category: "Settings",
     items: [
-      { href: "/dashboard/api-key", icon: Key, text: "API Key" },
+      { href: "/dashboard/api-keys", icon: Key, text: "API Keys" },
       {
         href: "/dashboard/account-settings",
         icon: Settings,
