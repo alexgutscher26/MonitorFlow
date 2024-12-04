@@ -117,8 +117,8 @@ export const categoryRouter = router({
         Object.keys(event.fields as object).forEach((fieldName) => {
           uniqueFieldNames.add(fieldName)
         })
-        if (!lastPing || event.createdAt > lastPing) {
-          lastPing = event.createdAt
+        if (!lastPing || (event.createdAt && new Date(event.createdAt).getTime() > lastPing.getTime())) {
+          lastPing = new Date(Math.max(lastPing?.getTime() || 0, new Date(event.createdAt || 0).getTime()))
         }
       })
 
@@ -432,10 +432,12 @@ export const categoryRouter = router({
       const formattedMessage = formatEventMessage(input.fields)
       const event = await db.event.create({
         data: {
+          name: `Event ${new Date().toISOString()}`,
           formattedMessage,
           fields: input.fields,
           userId: ctx.user.id,
           eventCategoryId: category.id,
+          createdAt: new Date(), // Add createdAt field
         },
       });
 
