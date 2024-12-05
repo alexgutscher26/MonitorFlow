@@ -6,7 +6,7 @@ import { publicProcedure } from "../procedures"
 export const dynamic = "force-dynamic"
 
 export const authRouter = router({
-  getDatabaseSyncStatus: publicProcedure.query(async ({ c, ctx }) => {
+  getDatabaseSyncStatus: publicProcedure.query(async ({ c }) => {
     const auth = await currentUser()
 
     if (!auth) {
@@ -17,7 +17,7 @@ export const authRouter = router({
       where: { externalId: auth.id },
     })
 
-    console.log('USER IN DB:', user);
+    console.log("USER IN DB:", user)
 
     if (!user) {
       await db.user.create({

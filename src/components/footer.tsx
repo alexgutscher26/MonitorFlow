@@ -42,8 +42,8 @@ export function Footer() {
               <h3 className="font-semibold text-gray-900 mb-3">Company</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/about" className="text-sm text-gray-600 hover:text-gray-900">
-                    About
+                  <Link href="https://monitorflow.openstatus.dev" className="text-sm text-gray-600 hover:text-gray-900">
+                    Open Status
                   </Link>
                 </li>
                 <li>
