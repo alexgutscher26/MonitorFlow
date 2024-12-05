@@ -134,3 +134,5 @@ Need help? Contact us at <support@monitorflow.com>
 ---
 
   Made with ❤️ by the MonitorFlow Team
+
+  [![CodeFactor](https://www.codefactor.io/repository/github/alexgutscher26/monitorflow/badge)](https://www.codefactor.io/repository/github/alexgutscher26/monitorflow)
