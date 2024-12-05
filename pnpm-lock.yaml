@@ -7332,8 +7332,6 @@ packages:
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
 
-
-
   tailwindcss-animate@1.0.7:
     resolution:
       {
