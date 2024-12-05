@@ -59,14 +59,18 @@ export const Navbar = () => {
       className={cn(
         "sticky inset-x-0 top-0 z-[100] h-16 w-full transition-all duration-300",
         {
-          "border-b bg-background/80 backdrop-blur-lg": isScrolled || isMobileMenuOpen,
+          "border-b bg-background/80 backdrop-blur-lg":
+            isScrolled || isMobileMenuOpen,
           "bg-background/0": !isScrolled && !isMobileMenuOpen,
         }
       )}
     >
       <MaxWidthWrapper>
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-semibold transition-colors">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-semibold transition-colors"
+          >
             <span className="text-2xl">🐼</span>
             <span>
               Monitor<span className="text-brand-700">Flow</span>

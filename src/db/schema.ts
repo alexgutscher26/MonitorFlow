@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm"
 import {
   boolean,
   decimal,
@@ -10,12 +10,12 @@ import {
   text,
   timestamp,
   varchar,
-} from "drizzle-orm/mysql-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+} from "drizzle-orm/mysql-core"
+import { createInsertSchema } from "drizzle-zod"
+import { z } from "zod"
 
 // Common types
-type TimeWindow = "1h" | "24h" | "7d" | "30d" | "90d";
+type TimeWindow = "1h" | "24h" | "7d" | "30d" | "90d"
 
 // SLA table and types
 export const slaStatusEnum = mysqlEnum("status", [
@@ -23,7 +23,7 @@ export const slaStatusEnum = mysqlEnum("status", [
   "paused",
   "maintenance",
   "archived",
-]);
+])
 
 export const sla = mysqlTable(
   "sla",
@@ -37,9 +37,9 @@ export const sla = mysqlTable(
       .$type<TimeWindow>()
       .notNull(),
     category: json("category").$type<{
-      name: string;
-      emoji?: string;
-      color?: string;
+      name: string
+      emoji?: string
+      color?: string
     }>(),
     warningThreshold: decimal("warning_threshold", {
       precision: 5,
@@ -55,16 +55,16 @@ export const sla = mysqlTable(
     webhookNotifications: boolean("webhook_notifications").default(false),
     webhookUrl: text("webhook_url"),
     notificationConfig: json("notification_config").$type<{
-      channels?: string[];
-      throttle?: number;
-      customTemplate?: string;
+      channels?: string[]
+      throttle?: number
+      customTemplate?: string
     }>(),
     maintenanceWindows: json("maintenance_windows").$type<
       Array<{
-        start: string;
-        end: string;
-        recurring?: boolean;
-        frequency?: "daily" | "weekly" | "monthly";
+        start: string
+        end: string
+        recurring?: boolean
+        frequency?: "daily" | "weekly" | "monthly"
       }>
     >(),
     tags: json("tags").$type<string[]>(),
@@ -85,7 +85,7 @@ export const sla = mysqlTable(
     categoryIdx: index("category_idx").on(table.category),
     timeWindowIdx: index("time_window_idx").on(table.timeWindow),
   })
-);
+)
 
 // Measurements table and types
 export const measurements = mysqlTable(
@@ -116,42 +116,42 @@ export const measurements = mysqlTable(
     timeRangeIdx: index("time_range_idx").on(table.startTime, table.endTime),
     uptimeIdx: index("uptime_idx").on(table.uptimePercent),
   })
-);
+)
 
 // Incident action types
 export type ActionCondition = {
-  field: string;
-  operator: "equals" | "contains" | "gt" | "lt" | "between";
-  value: string | number | [number, number];
-  type?: "string" | "number" | "boolean";
-};
+  field: string
+  operator: "equals" | "contains" | "gt" | "lt" | "between"
+  value: string | number | [number, number]
+  type?: "string" | "number" | "boolean"
+}
 
 export type ActionConfig = {
   webhook?: {
-    url: string;
-    method: "GET" | "POST" | "PUT";
-    headers?: Record<string, string>;
-    body?: string;
-  };
+    url: string
+    method: "GET" | "POST" | "PUT"
+    headers?: Record<string, string>
+    body?: string
+  }
   email?: {
-    to: string[];
-    cc?: string[];
-    bcc?: string[];
-    template?: string;
-  };
+    to: string[]
+    cc?: string[]
+    bcc?: string[]
+    template?: string
+  }
   discord?: {
-    webhookUrl: string;
-    message?: string;
-    embed?: boolean;
-  };
+    webhookUrl: string
+    message?: string
+    embed?: boolean
+  }
   retry?: {
-    maxAttempts: number;
-    delayMs: number;
-  };
+    maxAttempts: number
+    delayMs: number
+  }
   pause?: {
-    durationMinutes: number;
-  };
-};
+    durationMinutes: number
+  }
+}
 
 // Incident action table
 export const incidentAction = mysqlTable(
@@ -196,7 +196,7 @@ export const incidentAction = mysqlTable(
     enabledIdx: index("enabled_idx").on(table.enabled),
     priorityIdx: index("priority_idx").on(table.priority),
   })
-);
+)
 
 // Incident action log table
 export const incidentActionLog = mysqlTable(
@@ -228,7 +228,7 @@ export const incidentActionLog = mysqlTable(
     statusIdx: index("status_idx").on(table.status),
     timeIdx: index("time_idx").on(table.startedAt, table.completedAt),
   })
-);
+)
 
 // Relations
 export const measurementsRelations = relations(measurements, ({ one }) => ({
@@ -236,15 +236,18 @@ export const measurementsRelations = relations(measurements, ({ one }) => ({
     fields: [measurements.slaId],
     references: [sla.id],
   }),
-}));
+}))
 
 export const slaRelations = relations(sla, ({ many }) => ({
   measurements: many(measurements),
-}));
+}))
 
-export const incidentActionRelations = relations(incidentAction, ({ many }) => ({
-  logs: many(incidentActionLog),
-}));
+export const incidentActionRelations = relations(
+  incidentAction,
+  ({ many }) => ({
+    logs: many(incidentActionLog),
+  })
+)
 
 export const incidentActionLogRelations = relations(
   incidentActionLog,
@@ -254,7 +257,7 @@ export const incidentActionLogRelations = relations(
       references: [incidentAction.id],
     }),
   })
-);
+)
 
 // Zod schemas for validation
 export const insertSLASchema = createInsertSchema(sla, {
@@ -264,17 +267,17 @@ export const insertSLASchema = createInsertSchema(sla, {
   warningThreshold: z.number().min(0).max(100).optional(),
   criticalThreshold: z.number().min(0).max(100).optional(),
   webhookUrl: z.string().url().optional(),
-});
+})
 
 export const insertMeasurementSchema = createInsertSchema(measurements, {
   uptimePercent: z.number().min(0).max(100),
   totalChecks: z.number().min(0),
   successfulChecks: z.number().min(0),
-});
+})
 
 export const insertIncidentActionSchema = createInsertSchema(incidentAction, {
   name: z.string().min(1).max(255),
   priority: z.number().min(0).max(100).optional(),
   cooldownMinutes: z.number().min(0).optional(),
   maxRetries: z.number().min(0).max(10).optional(),
-});
+})
