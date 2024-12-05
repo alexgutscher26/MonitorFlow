@@ -1,36 +1,40 @@
-import { cn } from "@/utils";
+import { cn } from "@/utils"
 
 interface SLAStatusIndicatorProps {
-  currentUptime: number;
-  target: number;
-  className?: string;
+  currentUptime: number
+  target: number
+  className?: string
 }
 
-export function SLAStatusIndicator({ currentUptime, target, className }: SLAStatusIndicatorProps) {
+export function SLAStatusIndicator({
+  currentUptime,
+  target,
+  className,
+}: SLAStatusIndicatorProps) {
   // Calculate status
   const getStatus = () => {
     if (currentUptime >= target) {
-      return "success";
+      return "success"
     } else if (currentUptime >= target - 5) {
       // Warning if within 5% of target
-      return "warning";
+      return "warning"
     }
-    return "error";
-  };
+    return "error"
+  }
 
-  const status = getStatus();
+  const status = getStatus()
 
   const statusColors = {
     success: "bg-green-500",
     warning: "bg-yellow-500",
     error: "bg-red-500",
-  };
+  }
 
   const statusText = {
     success: "Meeting SLA",
     warning: "At Risk",
     error: "Below Target",
-  };
+  }
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
@@ -44,5 +48,5 @@ export function SLAStatusIndicator({ currentUptime, target, className }: SLAStat
         {statusText[status]}
       </span>
     </div>
-  );
+  )
 }

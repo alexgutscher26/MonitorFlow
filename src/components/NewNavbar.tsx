@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
 // TODO: Add new features to the navbar
 
-import { FeatureFlag } from "./feature-flags/FeatureFlag";
-import { Button } from "./ui/button";
+import { FeatureFlag } from "./feature-flags/FeatureFlag"
+import { Button } from "./ui/button"
 
 export function NewNavbar() {
   return (
@@ -12,27 +12,34 @@ export function NewNavbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-4">
             <h1 className="text-xl font-bold">PingPanda</h1>
-            
+
             {/* Basic navigation visible to everyone */}
             <Button variant="ghost">Dashboard</Button>
             <Button variant="ghost">Monitors</Button>
-            
+
             {/* New features with percentage rollout */}
             <FeatureFlag flag="new-nav-items" fallback={null}>
               <div className="flex items-center space-x-2">
-                <Button variant="ghost" className="text-blue-500">Analytics</Button>
-                <Button variant="ghost" className="text-blue-500">Reports</Button>
+                <Button variant="ghost" className="text-blue-500">
+                  Analytics
+                </Button>
+                <Button variant="ghost" className="text-blue-500">
+                  Reports
+                </Button>
               </div>
             </FeatureFlag>
-            
+
             {/* Beta features for specific users */}
             <FeatureFlag flag="beta-features">
-              <Button variant="outline" className="border-purple-500 text-purple-500">
+              <Button
+                variant="outline"
+                className="border-purple-500 text-purple-500"
+              >
                 Beta Features
               </Button>
             </FeatureFlag>
           </div>
-          
+
           {/* New notification system with percentage rollout */}
           <FeatureFlag flag="new-notifications" fallback={<OldNotifications />}>
             <NewNotifications />
@@ -40,7 +47,7 @@ export function NewNavbar() {
         </div>
       </div>
     </nav>
-  );
+  )
 }
 
 function NewNotifications() {
@@ -51,13 +58,9 @@ function NewNotifications() {
       </span>
       🔔 New
     </Button>
-  );
+  )
 }
 
 function OldNotifications() {
-  return (
-    <Button variant="ghost">
-      Notifications
-    </Button>
-  );
+  return <Button variant="ghost">Notifications</Button>
 }

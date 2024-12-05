@@ -1,4 +1,4 @@
-import { db } from "./src/db";
+import { db } from "./src/db"
 
 async function setupTestUser() {
   // Create a test user
@@ -9,7 +9,7 @@ async function setupTestUser() {
       plan: "PRO",
       role: "USER",
     },
-  });
+  })
 
   // Create a test category
   const category = await db.eventCategory.create({
@@ -19,10 +19,10 @@ async function setupTestUser() {
       emoji: "💰",
       userId: user.id,
     },
-  });
+  })
 
-  console.log("Test user created with API key:", user.apiKey);
-  console.log("Test category created:", category.name);
+  console.log("Test user created with API key:", user.apiKey)
+  console.log("Test category created:", category.name)
 }
 
-setupTestUser().catch(console.error);
+setupTestUser().catch(console.error)

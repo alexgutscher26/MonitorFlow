@@ -1,11 +1,6 @@
 "use client"
 
-import React, {
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useState,
-} from "react"
+import React, { ReactElement, ReactNode, useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 
 export interface AnimatedListProps {

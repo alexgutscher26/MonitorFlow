@@ -1,45 +1,45 @@
-import { Resend } from 'resend';
+import { Resend } from "resend"
 
 // Initialize Resend with API key from environment variable
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const sendEmail = async ({
   to,
   subject,
   html,
 }: {
-  to: string;
-  subject: string;
-  html: string;
+  to: string
+  subject: string
+  html: string
 }) => {
   try {
     const data = await resend.emails.send({
-      from: 'PingPanda <notifications@pingpanda.dev>',
+      from: "PingPanda <notifications@pingpanda.dev>",
       to,
       subject,
       html,
-    });
+    })
 
-    return { success: true, data };
+    return { success: true, data }
   } catch (error) {
-    console.error('Error sending email:', error);
-    throw error;
+    console.error("Error sending email:", error)
+    throw error
   }
-};
+}
 
 export const generateSLANotificationEmail = (
-  type: 'WARNING' | 'CRITICAL' | 'RECOVERY',
+  type: "WARNING" | "CRITICAL" | "RECOVERY",
   message: string,
   slaName: string
 ) => {
   const typeColors = {
-    WARNING: '#FFA500',
-    CRITICAL: '#FF0000',
-    RECOVERY: '#00FF00',
-  };
+    WARNING: "#FFA500",
+    CRITICAL: "#FF0000",
+    RECOVERY: "#00FF00",
+  }
 
-  const color = typeColors[type];
-  const title = `${type} Alert for ${slaName}`;
+  const color = typeColors[type]
+  const title = `${type} Alert for ${slaName}`
 
   return {
     subject: title,
@@ -89,5 +89,5 @@ export const generateSLANotificationEmail = (
         </body>
       </html>
     `,
-  };
-};
+  }
+}

@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations } from "drizzle-orm"
 import {
   boolean,
   decimal,
@@ -9,7 +9,7 @@ import {
   text,
   timestamp,
   varchar,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/mysql-core"
 
 export const sla = mysqlTable("sla", {
   id: varchar("id", { length: 255 }).primaryKey(),
@@ -27,27 +27,30 @@ export const sla = mysqlTable("sla", {
   webhookUrl: text("webhook_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
-});
+})
 
 export const measurements = mysqlTable("measurements", {
   id: varchar("id", { length: 255 }).primaryKey(),
   slaId: varchar("sla_id", { length: 255 }).notNull(),
-  uptimePercent: decimal("uptime_percent", { precision: 5, scale: 2 }).notNull(),
+  uptimePercent: decimal("uptime_percent", {
+    precision: 5,
+    scale: 2,
+  }).notNull(),
   startTime: timestamp("start_time").notNull(),
   endTime: timestamp("end_time").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+})
 
 export const measurementsRelations = relations(measurements, ({ one }) => ({
   sla: one(sla, {
     fields: [measurements.slaId],
     references: [sla.id],
   }),
-}));
+}))
 
 export const slaRelations = relations(sla, ({ many }) => ({
   measurements: many(measurements),
-}));
+}))
 
 export const incidentAction = mysqlTable("incident_action", {
   id: varchar("id", { length: 255 }).primaryKey(),
@@ -56,14 +59,28 @@ export const incidentAction = mysqlTable("incident_action", {
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
   enabled: boolean("enabled").default(true),
-  actionType: mysqlEnum("action_type", ["DISCORD_NOTIFICATION", "WEBHOOK", "EMAIL", "RETRY_CHECK", "PAUSE_MONITORING"]).notNull(),
-  conditions: json("conditions").$type<Record<string, { operator: "equals" | "contains" | "gt" | "lt"; value: string | number }>>(),
+  actionType: mysqlEnum("action_type", [
+    "DISCORD_NOTIFICATION",
+    "WEBHOOK",
+    "EMAIL",
+    "RETRY_CHECK",
+    "PAUSE_MONITORING",
+  ]).notNull(),
+  conditions: json("conditions").$type<
+    Record<
+      string,
+      {
+        operator: "equals" | "contains" | "gt" | "lt"
+        value: string | number
+      }
+    >
+  >(),
   config: json("config").$type<Record<string, any>>(),
   cooldownMinutes: int("cooldown_minutes").default(0),
   lastTriggered: timestamp("last_triggered"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
-});
+})
 
 export const incidentActionLog = mysqlTable("incident_action_log", {
   id: varchar("id", { length: 255 }).primaryKey(),
@@ -74,15 +91,21 @@ export const incidentActionLog = mysqlTable("incident_action_log", {
   error: text("error"),
   startedAt: timestamp("started_at").notNull().defaultNow(),
   completedAt: timestamp("completed_at"),
-});
+})
 
-export const incidentActionRelations = relations(incidentAction, ({ many }) => ({
-  logs: many(incidentActionLog),
-}));
+export const incidentActionRelations = relations(
+  incidentAction,
+  ({ many }) => ({
+    logs: many(incidentActionLog),
+  })
+)
 
-export const incidentActionLogRelations = relations(incidentActionLog, ({ one }) => ({
-  action: one(incidentAction, {
-    fields: [incidentActionLog.actionId],
-    references: [incidentAction.id],
-  }),
-}));
+export const incidentActionLogRelations = relations(
+  incidentActionLog,
+  ({ one }) => ({
+    action: one(incidentAction, {
+      fields: [incidentActionLog.actionId],
+      references: [incidentAction.id],
+    }),
+  })
+)

@@ -4,7 +4,13 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { client } from "@/lib/client"
@@ -25,19 +31,24 @@ interface IncidentActionsProps {
 }
 
 type IncidentAction = {
-  id: string;
-  name: string;
-  description: string | null;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-  enabled: boolean;
-  categoryId: string;
-  actionType: "DISCORD_NOTIFICATION" | "WEBHOOK" | "EMAIL" | "RETRY_CHECK" | "PAUSE_MONITORING";
-  config: Record<string, any> | null;
-  conditions: Record<string, any> | null;
-  cooldownMinutes: number;
-  lastTriggered: string | null;
+  id: string
+  name: string
+  description: string | null
+  userId: string
+  createdAt: string
+  updatedAt: string
+  enabled: boolean
+  categoryId: string
+  actionType:
+    | "DISCORD_NOTIFICATION"
+    | "WEBHOOK"
+    | "EMAIL"
+    | "RETRY_CHECK"
+    | "PAUSE_MONITORING"
+  config: Record<string, any> | null
+  conditions: Record<string, any> | null
+  cooldownMinutes: number
+  lastTriggered: string | null
 }
 
 export function IncidentActions({ categoryName }: IncidentActionsProps) {
@@ -58,11 +69,11 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
     queryKey: ["incident-actions", categoryName],
     queryFn: async () => {
       const response = await client.category.getIncidentActions.$get({
-        categoryName
+        categoryName,
       })
       const data = await response.json()
       return data.actions
-    }
+    },
   })
 
   const actions = data as IncidentAction[] | undefined
@@ -136,7 +147,7 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
     mutationFn: async (id: string) => {
       const response = await client.category.deleteIncidentAction.$post({
         id,
-        categoryName
+        categoryName,
       })
       return response
     },
@@ -185,7 +196,9 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <Input
                 id="name"
                 value={newAction.name}
-                onChange={(e) => setNewAction({ ...newAction, name: e.target.value })}
+                onChange={(e) =>
+                  setNewAction({ ...newAction, name: e.target.value })
+                }
                 required
               />
             </div>
@@ -195,7 +208,9 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <Textarea
                 id="description"
                 value={newAction.description}
-                onChange={(e: { target: { value: any } }) => setNewAction({ ...newAction, description: e.target.value })}
+                onChange={(e: { target: { value: any } }) =>
+                  setNewAction({ ...newAction, description: e.target.value })
+                }
               />
             </div>
 
@@ -203,7 +218,9 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <Label htmlFor="actionType">Action Type</Label>
               <Select
                 value={newAction.actionType}
-                onValueChange={(value) => setNewAction({ ...newAction, actionType: value })}
+                onValueChange={(value) =>
+                  setNewAction({ ...newAction, actionType: value })
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -223,7 +240,9 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <Textarea
                 id="config"
                 value={newAction.config}
-                onChange={(e: { target: { value: any } }) => setNewAction({ ...newAction, config: e.target.value })}
+                onChange={(e: { target: { value: any } }) =>
+                  setNewAction({ ...newAction, config: e.target.value })
+                }
                 required
               />
             </div>
@@ -233,7 +252,9 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <Textarea
                 id="conditions"
                 value={newAction.conditions}
-                onChange={(e: { target: { value: any } }) => setNewAction({ ...newAction, conditions: e.target.value })}
+                onChange={(e: { target: { value: any } }) =>
+                  setNewAction({ ...newAction, conditions: e.target.value })
+                }
                 required
               />
             </div>
@@ -246,7 +267,12 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
                   type="number"
                   min="0"
                   value={newAction.cooldownMinutes}
-                  onChange={(e) => setNewAction({ ...newAction, cooldownMinutes: e.target.value })}
+                  onChange={(e) =>
+                    setNewAction({
+                      ...newAction,
+                      cooldownMinutes: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
@@ -255,7 +281,9 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
             <div className="flex items-center space-x-2">
               <Switch
                 checked={newAction.enabled}
-                onCheckedChange={(checked: any) => setNewAction({ ...newAction, enabled: checked })}
+                onCheckedChange={(checked: any) =>
+                  setNewAction({ ...newAction, enabled: checked })
+                }
               />
               <Label>Enabled</Label>
             </div>
@@ -283,7 +311,9 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               <div>
                 <h3 className="font-semibold">{action.name}</h3>
                 {action.description && (
-                  <p className="text-sm text-muted-foreground">{action.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {action.description}
+                  </p>
                 )}
               </div>
               <div className="flex items-center space-x-2">
@@ -297,7 +327,9 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
                   variant="destructive"
                   size="sm"
                   onClick={() => {
-                    if (confirm("Are you sure you want to delete this action?")) {
+                    if (
+                      confirm("Are you sure you want to delete this action?")
+                    ) {
                       deleteMutation.mutate(action.id)
                     }
                   }}
@@ -312,7 +344,8 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
                 {actionTypes.find((t) => t.value === action.actionType)?.label}
               </div>
               <div>
-                <span className="font-medium">Cooldown:</span> {action.cooldownMinutes} minutes
+                <span className="font-medium">Cooldown:</span>{" "}
+                {action.cooldownMinutes} minutes
               </div>
               <div>
                 <span className="font-medium">Last Triggered:</span>{" "}

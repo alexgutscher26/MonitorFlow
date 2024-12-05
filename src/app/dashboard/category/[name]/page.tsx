@@ -52,17 +52,32 @@ const Page = async ({ params }: PageProps) => {
     <DashboardPage title={`${category.emoji} ${category.name}`}>
       <Tabs defaultValue="events" className="w-full">
         <TabsList className="w-full justify-start border-b rounded-none px-4 bg-transparent">
-          <TabsTrigger value="events" className="data-[state=active]:bg-brand-50">Events</TabsTrigger>
-          <TabsTrigger value="alerts" className="data-[state=active]:bg-brand-50">Alert Thresholds</TabsTrigger>
-          <TabsTrigger value="actions" className="data-[state=active]:bg-brand-50">Incident Actions</TabsTrigger>
+          <TabsTrigger
+            value="events"
+            className="data-[state=active]:bg-brand-50"
+          >
+            Events
+          </TabsTrigger>
+          <TabsTrigger
+            value="alerts"
+            className="data-[state=active]:bg-brand-50"
+          >
+            Alert Thresholds
+          </TabsTrigger>
+          <TabsTrigger
+            value="actions"
+            className="data-[state=active]:bg-brand-50"
+          >
+            Incident Actions
+          </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="events" className="p-4">
           <div className="space-y-4">
             <CategoryPageContent hasEvents={hasEvents} category={category} />
           </div>
         </TabsContent>
-        
+
         <TabsContent value="alerts" className="p-4">
           <AlertThresholds categoryName={params.name} />
         </TabsContent>

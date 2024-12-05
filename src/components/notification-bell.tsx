@@ -54,7 +54,9 @@ export const NotificationBell = () => {
                   }`}
                 >
                   <h4 className="text-sm font-medium">{notification.title}</h4>
-                  <p className="text-sm text-zinc-500">{notification.message}</p>
+                  <p className="text-sm text-zinc-500">
+                    {notification.message}
+                  </p>
                   <p className="text-xs text-zinc-400 mt-1">
                     {notification.timestamp.toLocaleString()}
                   </p>

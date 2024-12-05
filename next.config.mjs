@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  useFileSystemPublicRoutes: true
+  useFileSystemPublicRoutes: true,
 }
 
 export default nextConfig
