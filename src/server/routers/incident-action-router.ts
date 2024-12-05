@@ -2,7 +2,6 @@ import { db } from "@/db";
 import { router } from "../__internals/router";
 import { privateProcedure } from "../procedures";
 import { z } from "zod";
-import { ActionExecutor } from "../services/action-executor";
 import { nanoid } from "nanoid";
 
 const actionTypeEnum = z.enum(["DISCORD_NOTIFICATION", "WEBHOOK", "EMAIL", "RETRY_CHECK", "PAUSE_MONITORING"]);

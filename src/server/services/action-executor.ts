@@ -1,5 +1,5 @@
 import { db } from "@/db"
-import { ActionType, Event, IncidentAction } from "@prisma/client"
+import { Event, IncidentAction } from "@prisma/client"
 import { isAfter, addMinutes } from "date-fns"
 
 export class ActionExecutor {
@@ -137,19 +137,19 @@ export class ActionExecutor {
     }
   }
 
-  private static async executeEmail(action: IncidentAction, event: Event) {
-    // Note: Implement email sending logic here using your preferred email service
+  private static async executeEmail(_action: IncidentAction, _event: Event) {
+    // TODO: Implement email sending logic here using your preferred email service
     // For example: SendGrid, Amazon SES, etc.
     return "Email notification not implemented yet"
   }
 
-  private static async executeRetryCheck(action: IncidentAction, event: Event) {
-    // Implement retry logic here
+  private static async executeRetryCheck(_action: IncidentAction, _event: Event) {
+    // TODO: Implement retry logic here
     return "Retry check executed"
   }
 
-  private static async executePauseMonitoring(action: IncidentAction, event: Event) {
-    // Implement monitoring pause logic here
+  private static async executePauseMonitoring(_action: IncidentAction, _event: Event) {
+    // TODO: Implement monitoring pause logic here
     return "Monitoring paused"
   }
 
