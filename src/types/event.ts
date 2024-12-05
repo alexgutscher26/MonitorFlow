@@ -5,46 +5,46 @@ export enum EventStatus {
   SUCCESS = "success",
   ERROR = "error",
   WARNING = "warning",
-  PENDING = "pending"
+  PENDING = "pending",
 }
 
 /**
  * Represents the supported field types for event data
  */
-export type EventFieldValue = 
-  | string 
-  | number 
-  | boolean 
-  | null 
+export type EventFieldValue =
+  | string
+  | number
+  | boolean
+  | null
   | { [key: string]: EventFieldValue }
-  | EventFieldValue[];
+  | EventFieldValue[]
 
 /**
  * Represents a monitoring event with its associated metadata and measurements
  */
 export interface Event {
   /** Unique identifier for the event */
-  id: string;
+  id: string
   /** Name of the event */
-  name: string;
+  name: string
   /** Custom fields associated with the event */
-  fields: Record<string, EventFieldValue>;
+  fields: Record<string, EventFieldValue>
   /** User who owns this event */
-  userId: string;
+  userId: string
   /** Category this event belongs to */
-  categoryId: string;
+  categoryId: string
   /** Current status of the event */
-  status: EventStatus;
+  status: EventStatus
   /** Optional response time in milliseconds */
-  responseTime?: number | null;
+  responseTime?: number | null
   /** Optional duration in milliseconds */
-  duration?: number | null;
+  duration?: number | null
   /** Optional error message if status is ERROR */
-  error?: string | null;
+  error?: string | null
   /** Timestamp when the event was created */
-  createdAt: Date;
+  createdAt: Date
   /** Timestamp when the event was last updated */
-  updatedAt: Date;
+  updatedAt: Date
 }
 
 /**
@@ -52,36 +52,36 @@ export interface Event {
  */
 export interface EventCategory {
   /** Unique identifier for the category */
-  id: string;
+  id: string
   /** Name of the category */
-  name: string;
+  name: string
   /** User who owns this category */
-  userId: string;
+  userId: string
   /** Timestamp when the category was created */
-  createdAt: Date;
+  createdAt: Date
   /** Timestamp when the category was last updated */
-  updatedAt: Date;
+  updatedAt: Date
 }
 
 /**
  * Type guard to check if a value is a valid EventFieldValue
  */
 export function isEventFieldValue(value: unknown): value is EventFieldValue {
-  if (value === null) return true;
-  
+  if (value === null) return true
+
   switch (typeof value) {
     case "string":
     case "number":
     case "boolean":
-      return true;
+      return true
     case "object":
       if (Array.isArray(value)) {
-        return value.every(isEventFieldValue);
+        return value.every(isEventFieldValue)
       }
-      if (value === null) return true;
-      return Object.values(value).every(isEventFieldValue);
+      if (value === null) return true
+      return Object.values(value).every(isEventFieldValue)
     default:
-      return false;
+      return false
   }
 }
 
@@ -92,25 +92,33 @@ export function isEventFieldValue(value: unknown): value is EventFieldValue {
  */
 export function validateEvent(event: Event): void {
   if (!event.name || event.name.trim().length === 0) {
-    throw new Error("Event name is required");
+    throw new Error("Event name is required")
   }
 
   if (!Object.values(EventStatus).includes(event.status)) {
-    throw new Error(`Invalid event status: ${event.status}`);
+    throw new Error(`Invalid event status: ${event.status}`)
   }
 
-  if (event.responseTime !== null && event.responseTime !== undefined && event.responseTime < 0) {
-    throw new Error("Response time cannot be negative");
+  if (
+    event.responseTime !== null &&
+    event.responseTime !== undefined &&
+    event.responseTime < 0
+  ) {
+    throw new Error("Response time cannot be negative")
   }
 
-  if (event.duration !== null && event.duration !== undefined && event.duration < 0) {
-    throw new Error("Duration cannot be negative");
+  if (
+    event.duration !== null &&
+    event.duration !== undefined &&
+    event.duration < 0
+  ) {
+    throw new Error("Duration cannot be negative")
   }
 
   // Validate all fields are of correct type
   for (const [key, value] of Object.entries(event.fields)) {
     if (!isEventFieldValue(value)) {
-      throw new Error(`Invalid field value for ${key}`);
+      throw new Error(`Invalid field value for ${key}`)
     }
   }
 }
@@ -119,7 +127,7 @@ export function validateEvent(event: Event): void {
  * Creates a new Event with default values
  */
 export function createEvent(params: Partial<Event>): Event {
-  const now = new Date();
+  const now = new Date()
   return {
     id: params.id ?? crypto.randomUUID(),
     name: params.name ?? "",
@@ -131,6 +139,6 @@ export function createEvent(params: Partial<Event>): Event {
     duration: params.duration ?? null,
     error: params.error ?? null,
     createdAt: params.createdAt ?? now,
-    updatedAt: params.updatedAt ?? now
-  };
+    updatedAt: params.updatedAt ?? now,
+  }
 }

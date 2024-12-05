@@ -8,7 +8,7 @@
  * @returns Promise that resolves after the specified duration
  */
 export function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 /**
@@ -17,7 +17,7 @@ export function sleep(ms: number): Promise<void> {
  * @returns True if the value is a non-null object
  */
 export function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
 /**
@@ -26,16 +26,16 @@ export function isObject(value: unknown): value is Record<string, unknown> {
  * @returns JSON string representation of the value
  */
 export function safeStringify(value: unknown): string {
-  const seen = new WeakSet();
+  const seen = new WeakSet()
   return JSON.stringify(value, (_key, value) => {
-    if (typeof value === 'object' && value !== null) {
+    if (typeof value === "object" && value !== null) {
       if (seen.has(value)) {
-        return '[Circular]';
+        return "[Circular]"
       }
-      seen.add(value);
+      seen.add(value)
     }
-    return value;
-  });
+    return value
+  })
 }
 
 /**
@@ -44,8 +44,10 @@ export function safeStringify(value: unknown): string {
  * @returns Random string
  */
 export function randomString(length: number): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  return Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  return Array.from({ length }, () =>
+    chars.charAt(Math.floor(Math.random() * chars.length))
+  ).join("")
 }
 
 /**
@@ -60,21 +62,21 @@ export async function retry<T>(
   maxRetries = 3,
   baseDelay = 1000
 ): Promise<T> {
-  let lastError: Error | null = null;
+  let lastError: Error | null = null
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
-      return await operation();
+      return await operation()
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
+      lastError = error instanceof Error ? error : new Error(String(error))
       if (attempt < maxRetries - 1) {
-        const delay = baseDelay * Math.pow(2, attempt);
-        await sleep(delay);
+        const delay = baseDelay * Math.pow(2, attempt)
+        await sleep(delay)
       }
     }
   }
 
-  throw lastError;
+  throw lastError
 }
 
 /**
@@ -86,7 +88,7 @@ export async function retry<T>(
 export function chunk<T>(array: T[], size: number): T[][] {
   return Array.from({ length: Math.ceil(array.length / size) }, (_, index) =>
     array.slice(index * size, (index + 1) * size)
-  );
+  )
 }
 
 /**
@@ -99,17 +101,17 @@ export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout | null = null;
+  let timeout: NodeJS.Timeout | null = null
 
-  return function(this: unknown, ...args: Parameters<T>): void {
-    const context = this;
-    
+  return function (this: unknown, ...args: Parameters<T>): void {
+    const context = this
+
     if (timeout) {
-      clearTimeout(timeout);
+      clearTimeout(timeout)
     }
 
     timeout = setTimeout(() => {
-      func.apply(context, args);
-    }, wait);
-  };
+      func.apply(context, args)
+    }, wait)
+  }
 }
