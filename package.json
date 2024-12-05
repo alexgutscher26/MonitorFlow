@@ -53,6 +53,7 @@
     "botbuilder": "^4.23.1",
     "botbuilder-teams": "^0.2.9",
     "class-variance-authority": "^0.7.0",
+    "cloudinary": "^2.5.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "date-fns": "^4.1.0",
