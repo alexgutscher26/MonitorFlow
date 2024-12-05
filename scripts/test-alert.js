@@ -1,15 +1,18 @@
 // Example script to test alert thresholds
+require('dotenv').config();
+
+const API_KEY = process.env.TEST_API_KEY || 'YOUR_API_KEY_HERE';
+if (!process.env.TEST_API_KEY) {
+  console.warn('Warning: TEST_API_KEY not found in environment variables. Please set it in your .env file.');
+}
 
 async function sendTestAlert() {
   try {
-    // Replace with your API key from the dashboard
-    const API_KEY = 'cm4ak5jqi0001sb0w1v086cnp';
-    
     const response = await fetch('http://localhost:3000/api/v1/events', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer cm4ak5jqi0001sb0w1v086cnp`
+        'Authorization': `Bearer ${API_KEY}`
       },
       body: JSON.stringify({
         category: 'sale',
@@ -37,7 +40,7 @@ async function sendTestAlert() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer cm4ak5jqi0001sb0w1v086cnp`
+          'Authorization': `Bearer ${API_KEY}`
         },
         body: JSON.stringify({
           category: 'sale',
@@ -69,8 +72,6 @@ sendTestAlert();
 
 async function sendSalesAlert() {
   try {
-    const API_KEY = 'cm4ak5jqi0001sb0w1v086cnp';
-    
     const response = await fetch('http://localhost:3000/api/v1/events', {
       method: 'POST',
       headers: {
@@ -110,8 +111,6 @@ sendSalesAlert();
 
 async function sendDatabasePerformanceAlert() {
   try {
-    const API_KEY = 'cm4ak5jqi0001sb0w1v086cnp';
-    
     // Send high latency alert
     const response = await fetch('http://localhost:3000/api/v1/events', {
       method: 'POST',
