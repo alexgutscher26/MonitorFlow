@@ -83,6 +83,7 @@ model User {
   permissions   UserPermission[]
   IncidentActions IncidentAction[]
   SLADefinitions  SLADefinition[]
+  FeatureFlags    FeatureFlag[]
 
   @@index([email, apiKey])
 }
@@ -182,27 +183,23 @@ model IncidentAction {
   
   // Configuration for the action (JSON)
   config      Json
-  
   // Conditions that trigger this action (JSON)
   conditions  Json
-  
   // Priority (lower number = higher priority)
   priority    Int         @default(1)
-  
   // Rate limiting
   cooldownMinutes Int     @default(0)
   lastTriggered   DateTime?
   
   category    EventCategory @relation(fields: [categoryId], references: [id])
   categoryId  String
+  user        User        @relation(fields: [userId], references: [id])
+  userId      String
   
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   
   actionLogs  IncidentActionLog[]
-  user        User        @relation(fields: [userId], references: [id])
-  userId      String
-
   @@unique([categoryId, name])
 }
 
@@ -214,7 +211,6 @@ model IncidentActionLog {
   
   action      IncidentAction @relation(fields: [actionId], references: [id])
   actionId    String
-  
   event       Event?      @relation(fields: [eventId], references: [id])
   eventId     String?
   
@@ -245,9 +241,9 @@ model SLADefinition {
   events              Event[]
   user                User           @relation(fields: [userId], references: [id])
   notifications       SLANotification[]
-
+  EventCategory       EventCategory[]
+  
   @@unique([userId, name])
-  EventCategory EventCategory[]
 }
 
 model SLANotification {
@@ -276,7 +272,6 @@ model SLAMeasurement {
   
   slaDefinition   SLADefinition @relation(fields: [slaDefinitionId], references: [id])
   slaDefinitionId String
-  
   event           Event?     @relation(fields: [eventId], references: [id])
   eventId         String?    @unique
   
@@ -284,4 +279,39 @@ model SLAMeasurement {
   updatedAt       DateTime @updatedAt
 
   @@index([startTime, endTime])
+}
+
+model FeatureFlag {
+  id          String      @id @default(cuid())
+  key         String
+  name        String
+  description String?
+  type        String      @default("boolean")
+  value       Json?
+  environment String      @default("development")
+  isArchived  Boolean     @default(false)
+  expiresAt   DateTime?
+  
+  user        User        @relation(fields: [userId], references: [id])
+  userId      String
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  auditLogs   FeatureFlagAuditLog[]
+  
+  @@unique([key, environment, userId])
+}
+
+model FeatureFlagAuditLog {
+  id          String      @id @default(cuid())
+  action      String
+  changes     Json
+  performedBy String
+  
+  flag        FeatureFlag @relation(fields: [flagId], references: [id])
+  flagId      String
+  
+  createdAt   DateTime    @default(now())
+  
+  @@index([flagId])
 }

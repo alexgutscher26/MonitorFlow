@@ -3,6 +3,7 @@ import { Inter, EB_Garamond } from "next/font/google"
 import { Providers } from "@/components/providers"
 import { cn } from "@/utils"
 import { Toaster } from "sonner"
+import { FeatureFlagProvider } from "@/providers/FeatureFlagProvider"
 
 import "./globals.css"
 import { ClerkProvider } from "@clerk/nextjs"
@@ -18,7 +19,7 @@ const eb_garamond = EB_Garamond({
 })
 
 export const metadata: Metadata = {
-  title: "PingPanda",
+  title: "MonitorFlow",
   description: "Monitor your services with ease",
 }
 
@@ -33,7 +34,9 @@ export default function RootLayout({
         <body className="min-h-[calc(100vh-1px)] flex flex-col font-sans bg-brand-50 text-brand-950 antialiased">
           <main className="relative flex-1 flex flex-col">
             <Providers>
-              {children}
+              <FeatureFlagProvider environment="production">
+                {children}
+              </FeatureFlagProvider>
               <Toaster richColors />
             </Providers>
           </main>

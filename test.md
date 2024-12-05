@@ -55,3 +55,7 @@ Custom branding options
 Priority support
 Extended data retention
 Advanced API access
+
+
+
+@Features-TO-add pick a  random feature to implament im lookng for somthing else we can add to pro plan and just as a note im using @config.tsfor  what the user gets in the pro plan.
