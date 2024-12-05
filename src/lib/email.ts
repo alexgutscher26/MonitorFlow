@@ -1,127 +1,127 @@
-import { Resend } from 'resend';
-import { z } from 'zod';
-import { rateLimit } from '@/utils/rate-limit';
+import { Resend } from "resend"
+import { z } from "zod"
+import { rateLimit } from "@/utils/rate-limit"
 
 // Email validation schema
 const emailSchema = z.object({
   to: z.string().email(),
   subject: z.string().min(1).max(100),
   html: z.string().min(1),
-});
+})
 
 // Initialize Resend with API key from environment variable
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 // Rate limiter: 100 emails per hour
 const limiter = rateLimit({
   interval: 60 * 60 * 1000, // 1 hour
   uniqueTokenPerInterval: 500,
   maxRequests: 100,
-});
+})
 
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000; // 1 second
+const MAX_RETRIES = 3
+const RETRY_DELAY = 1000 // 1 second
 
 export const sendEmail = async ({
   to,
   subject,
   html,
 }: {
-  to: string;
-  subject: string;
-  html: string;
+  to: string
+  subject: string
+  html: string
 }) => {
   try {
     // Validate email parameters
-    emailSchema.parse({ to, subject, html });
+    emailSchema.parse({ to, subject, html })
 
     // Check rate limit
-    await limiter.check();
+    await limiter.check()
 
     // Retry logic with exponential backoff
-    let lastError: Error | null = null;
+    let lastError: Error | null = null
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
       try {
         const { data } = await resend.emails.send({
-          from: 'PingPanda <notifications@pingpanda.dev>',
+          from: "PingPanda <notifications@pingpanda.dev>",
           to,
           subject,
           html,
-          tags: [{ name: 'category', value: 'notification' }],
-        });
+          tags: [{ name: "category", value: "notification" }],
+        })
 
-        console.info('Email sent successfully:', {
+        console.info("Email sent successfully:", {
           to,
           subject,
           emailId: data?.id,
           timestamp: new Date().toISOString(),
-        });
+        })
 
-        return { success: true, data };
+        return { success: true, data }
       } catch (error) {
-        lastError = error as Error;
+        lastError = error as Error
         if (attempt < MAX_RETRIES - 1) {
-          await new Promise(resolve => 
+          await new Promise((resolve) =>
             setTimeout(resolve, RETRY_DELAY * Math.pow(2, attempt))
-          );
+          )
         }
       }
     }
 
     // If all retries failed
-    console.error('All retry attempts failed:', {
+    console.error("All retry attempts failed:", {
       to,
       subject,
       error: lastError,
       timestamp: new Date().toISOString(),
-    });
+    })
 
-    throw lastError;
+    throw lastError
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('Email validation failed:', {
+      console.error("Email validation failed:", {
         to,
         subject,
         errors: error.errors,
         timestamp: new Date().toISOString(),
-      });
+      })
     } else {
-      console.error('Error sending email:', {
+      console.error("Error sending email:", {
         to,
         subject,
         error,
         timestamp: new Date().toISOString(),
-      });
+      })
     }
-    throw error;
+    throw error
   }
-};
+}
 
 export const generateSLANotificationEmail = (
-  type: 'WARNING' | 'CRITICAL' | 'RECOVERY',
+  type: "WARNING" | "CRITICAL" | "RECOVERY",
   message: string,
   slaName: string,
   details?: {
-    currentUptime?: number;
-    threshold?: number;
-    timestamp?: string;
+    currentUptime?: number
+    threshold?: number
+    timestamp?: string
   }
 ) => {
   const typeColors = {
-    WARNING: '#FFA500',
-    CRITICAL: '#FF0000',
-    RECOVERY: '#00FF00',
-  };
+    WARNING: "#FFA500",
+    CRITICAL: "#FF0000",
+    RECOVERY: "#00FF00",
+  }
 
   const typeIcons = {
-    WARNING: '⚠️',
-    CRITICAL: '🚨',
-    RECOVERY: '✅',
-  };
+    WARNING: "⚠️",
+    CRITICAL: "🚨",
+    RECOVERY: "✅",
+  }
 
-  const color = typeColors[type];
-  const icon = typeIcons[type];
-  const title = `${icon} ${type} Alert for ${slaName}`;
+  const color = typeColors[type]
+  const icon = typeIcons[type]
+  const title = `${icon} ${type} Alert for ${slaName}`
 
   return {
     subject: title,
@@ -199,28 +199,44 @@ export const generateSLANotificationEmail = (
             <div class="message">
               ${message}
             </div>
-            ${details ? `
+            ${
+              details
+                ? `
               <div class="details">
-                ${details.currentUptime ? `
+                ${
+                  details.currentUptime
+                    ? `
                   <div class="details-item">
                     <span>Current Uptime:</span>
                     <strong>${details.currentUptime.toFixed(2)}%</strong>
                   </div>
-                ` : ''}
-                ${details.threshold ? `
+                `
+                    : ""
+                }
+                ${
+                  details.threshold
+                    ? `
                   <div class="details-item">
                     <span>Threshold:</span>
                     <strong>${details.threshold}%</strong>
                   </div>
-                ` : ''}
-                ${details.timestamp ? `
+                `
+                    : ""
+                }
+                ${
+                  details.timestamp
+                    ? `
                   <div class="details-item">
                     <span>Timestamp:</span>
                     <strong>${new Date(details.timestamp).toLocaleString()}</strong>
                   </div>
-                ` : ''}
+                `
+                    : ""
+                }
               </div>
-            ` : ''}
+            `
+                : ""
+            }
           </div>
           <div class="footer">
             <p style="margin:0;">This is an automated message from MonitorFlow. Please do not reply to this email.</p>
@@ -233,5 +249,5 @@ export const generateSLANotificationEmail = (
         </body>
       </html>
     `,
-  };
-};
+  }
+}
