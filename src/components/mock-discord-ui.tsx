@@ -66,7 +66,9 @@ const defaultDirectMessages: DirectMessage[] = [
   ...Array.from({ length: 4 }, (_, i) => ({
     id: `user-${i}`,
     name: `User ${i + 1}`,
-    status: ["online", "idle", "dnd", "offline"][Math.floor(Math.random() * 4)] as DirectMessage["status"],
+    status: ["online", "idle", "dnd", "offline"][
+      Math.floor(Math.random() * 4)
+    ] as DirectMessage["status"],
   })),
 ]
 
@@ -152,7 +154,9 @@ export const MockDiscordUI = ({
         <div
           className={cn(
             "w-60 bg-[#2f3136] flex-col",
-            isMobileMenuOpen ? "fixed inset-y-0 left-[72px] z-50" : "hidden md:flex"
+            isMobileMenuOpen
+              ? "fixed inset-y-0 left-[72px] z-50"
+              : "hidden md:flex"
           )}
         >
           <div className="px-4 h-16 border-b border-[#202225] flex items-center shadow-sm">

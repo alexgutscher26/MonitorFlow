@@ -110,8 +110,8 @@ export const CreateEventCategoryModal = ({
 
   return (
     <>
-      <div 
-        className={cn("cursor-pointer", containerClassName)} 
+      <div
+        className={cn("cursor-pointer", containerClassName)}
         onClick={() => setIsOpen(true)}
         role="button"
         tabIndex={0}
@@ -172,7 +172,9 @@ export const CreateEventCategoryModal = ({
                         : "ring-transparent"
                     )}
                     style={{ backgroundColor: premadeColor }}
-                    onClick={() => setValue("color", premadeColor, { shouldDirty: true })}
+                    onClick={() =>
+                      setValue("color", premadeColor, { shouldDirty: true })
+                    }
                     title={label}
                     aria-label={`Select ${label} color`}
                     aria-pressed={color === premadeColor}
@@ -200,7 +202,9 @@ export const CreateEventCategoryModal = ({
                         ? "bg-brand-100 ring-2 ring-brand-700 scale-110"
                         : "bg-brand-100"
                     )}
-                    onClick={() => setValue("emoji", emoji, { shouldDirty: true })}
+                    onClick={() =>
+                      setValue("emoji", emoji, { shouldDirty: true })
+                    }
                     title={label}
                     aria-label={`Select ${label} emoji`}
                     aria-pressed={selectedEmoji === emoji}
@@ -226,8 +230,8 @@ export const CreateEventCategoryModal = ({
             >
               Cancel
             </Button>
-            <Button 
-              disabled={isPending || !isDirty} 
+            <Button
+              disabled={isPending || !isDirty}
               type="submit"
               aria-busy={isPending}
             >
