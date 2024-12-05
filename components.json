@@ -6,15 +6,21 @@
   "tailwind": {
     "config": "tailwind.config.ts",
     "css": "src/app/globals.css",
-    "baseColor": "gray",
+    "baseColor": "slate",
     "cssVariables": true,
     "prefix": ""
   },
   "aliases": {
     "components": "@/components",
-    "utils": "@/lib/utils",
     "ui": "@/components/ui",
+    "features": "@/components/features",
+    "layouts": "@/components/layouts",
+    "utils": "@/utils",
     "lib": "@/lib",
-    "hooks": "@/hooks"
+    "hooks": "@/hooks",
+    "types": "@/types",
+    "styles": "@/styles",
+    "config": "@/config",
+    "constants": "@/constants"
   }
 }
