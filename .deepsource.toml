@@ -20,7 +20,6 @@ enabled = true
     "method-definition"
   ]
   max_line_length = 100
-  target_version = "es2022"
 
 [[analyzers]]
 name = "test-coverage"
