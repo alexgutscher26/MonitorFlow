@@ -1,55 +1,73 @@
-"use client";
+"use client"
 
-import { Activity, AlertTriangle, Bell, Monitor, Settings, BarChart, Clock, Shield, Users } from "lucide-react";
-import { motion } from "framer-motion";
+import {
+  Activity,
+  AlertTriangle,
+  Bell,
+  Monitor,
+  Settings,
+  BarChart,
+  Clock,
+  Shield,
+  Users,
+} from "lucide-react"
+import { motion } from "framer-motion"
 
 const benefits = [
   {
     title: "Real-time Monitoring",
-    description: "Monitor your services 24/7 with instant alerts and comprehensive dashboards",
+    description:
+      "Monitor your services 24/7 with instant alerts and comprehensive dashboards",
     icon: Monitor,
   },
   {
     title: "Incident Management",
-    description: "Track and manage incidents with automated workflows and detailed timelines",
+    description:
+      "Track and manage incidents with automated workflows and detailed timelines",
     icon: AlertTriangle,
   },
   {
     title: "Performance Analytics",
-    description: "Gain insights with detailed metrics, trends, and performance analysis",
+    description:
+      "Gain insights with detailed metrics, trends, and performance analysis",
     icon: BarChart,
   },
   {
     title: "Smart Notifications",
-    description: "Receive context-aware alerts through multiple channels with intelligent filtering",
+    description:
+      "Receive context-aware alerts through multiple channels with intelligent filtering",
     icon: Bell,
   },
   {
     title: "Team Collaboration",
-    description: "Work together seamlessly with shared dashboards and incident responses",
+    description:
+      "Work together seamlessly with shared dashboards and incident responses",
     icon: Users,
   },
   {
     title: "Uptime Guarantee",
-    description: "Track and maintain high availability with historical uptime metrics",
+    description:
+      "Track and maintain high availability with historical uptime metrics",
     icon: Clock,
   },
   {
     title: "Security First",
-    description: "Enterprise-grade security with encrypted data and access controls",
+    description:
+      "Enterprise-grade security with encrypted data and access controls",
     icon: Shield,
   },
   {
     title: "Easy Configuration",
-    description: "Get started in minutes with intuitive setup and flexible customization",
+    description:
+      "Get started in minutes with intuitive setup and flexible customization",
     icon: Settings,
   },
-];
+]
 
 export function BenefitsSection() {
   return (
     <section className="flex w-full flex-col items-center space-y-8 bg-slate-50 py-12 dark:bg-transparent md:py-16 lg:py-24">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -59,7 +77,8 @@ export function BenefitsSection() {
           Why Choose PingPanda?
         </h2>
         <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-          Experience enterprise-grade monitoring with features trusted by developers worldwide
+          Experience enterprise-grade monitoring with features trusted by
+          developers worldwide
         </p>
       </motion.div>
 
@@ -69,13 +88,13 @@ export function BenefitsSection() {
             key={benefit.title}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ 
+            transition={{
               duration: 0.5,
-              delay: index * 0.1 
+              delay: index * 0.1,
             }}
-            whileHover={{ 
+            whileHover={{
               scale: 1.03,
-              transition: { duration: 0.2 }
+              transition: { duration: 0.2 },
             }}
             className="relative overflow-hidden rounded-lg border bg-background p-2 transition-colors hover:bg-accent hover:text-accent-foreground"
           >
@@ -92,5 +111,5 @@ export function BenefitsSection() {
         ))}
       </div>
     </section>
-  );
+  )
 }
