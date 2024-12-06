@@ -22,7 +22,7 @@ export const HeroSection = () => {
       <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
         <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" />
       </div>
-      
+
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
@@ -32,14 +32,18 @@ export const HeroSection = () => {
             </span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
-            MonitorFlow is the easiest way to monitor your SaaS. Get instant notifications for sales, new users, or any other event sent directly to your Discord.
+            MonitorFlow is the easiest way to monitor your SaaS. Get instant
+            notifications for sales, new users, or any other event sent directly
+            to your Discord.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4">
             <ul className="space-y-3 text-left">
               {features.map((feature) => (
                 <li key={feature} className="flex items-center gap-2">
                   <Check className="h-5 w-5 text-green-500" />
-                  <span className="text-gray-600 dark:text-gray-300">{feature}</span>
+                  <span className="text-gray-600 dark:text-gray-300">
+                    {feature}
+                  </span>
                 </li>
               ))}
             </ul>

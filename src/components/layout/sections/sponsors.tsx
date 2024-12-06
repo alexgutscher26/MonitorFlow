@@ -1,7 +1,16 @@
 "use client"
 
 import { MaxWidthWrapper } from "@/components/max-width-wrapper"
-import { Boxes, Train, Database, Layers, Lock, Cloud, Server, Globe } from "lucide-react"
+import {
+  Boxes,
+  Train,
+  Database,
+  Layers,
+  Lock,
+  Cloud,
+  Server,
+  Globe,
+} from "lucide-react"
 import { useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
 
@@ -37,14 +46,14 @@ export function SponsorsSection() {
 
     const scroll = () => {
       if (!scroller) return
-      
+
       scrollPos += 0.5 * direction
-      
+
       // Reset position for seamless loop
       if (scrollPos >= scrollWidth - clientWidth) {
         scrollPos = 0
       }
-      
+
       scroller.scrollLeft = scrollPos
       animationFrameId = requestAnimationFrame(scroll)
     }
@@ -75,7 +84,7 @@ export function SponsorsSection() {
     <section className="relative overflow-hidden py-12 md:py-16">
       {/* Grid Background Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:14px_14px] [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
-      
+
       {/* Spotlight Effect */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-background/50 to-transparent blur-3xl" />
 
@@ -87,7 +96,7 @@ export function SponsorsSection() {
             </p>
           </div>
 
-          <div 
+          <div
             ref={scrollerRef}
             className={cn(
               "relative flex w-full gap-6 overflow-hidden",
@@ -110,10 +119,10 @@ export function SponsorsSection() {
                   >
                     {/* Card Glow Effect */}
                     <div className="absolute inset-0 -z-10 rounded-lg bg-gradient-to-b from-transparent to-background/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                    
-                    <IconComponent 
-                      className="h-8 w-8 text-muted-foreground transition-colors duration-300 group-hover:text-foreground" 
-                      strokeWidth={1.5} 
+
+                    <IconComponent
+                      className="h-8 w-8 text-muted-foreground transition-colors duration-300 group-hover:text-foreground"
+                      strokeWidth={1.5}
                     />
                     <span className="text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
                       {sponsor.name}

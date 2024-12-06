@@ -17,7 +17,7 @@ declare module "hono" {
 type SuperJSONParsedType<T> = ReturnType<typeof superjson.parse<T>>
 export type SuperJSONTypedResponse<
   T,
-  U extends StatusCode = StatusCode
+  U extends StatusCode = StatusCode,
 > = TypedResponse<SuperJSONParsedType<T>, U, "json">
 
 export class Procedure<ctx = {}> {

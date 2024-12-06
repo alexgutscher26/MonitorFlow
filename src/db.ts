@@ -5,7 +5,10 @@ import { retry } from "./utils"
 
 // Custom error class for database-related errors
 export class DatabaseError extends Error {
-  constructor(message: string, public readonly cause?: unknown) {
+  constructor(
+    message: string,
+    public readonly cause?: unknown
+  ) {
     super(message)
     this.name = "DatabaseError"
   }
@@ -59,7 +62,7 @@ const initPrisma = async (config: DbConfig): Promise<PrismaClient> => {
 
     // Create Prisma adapter with the pool
     const adapter = new PrismaNeon(pool)
-    
+
     // Initialize Prisma client with the adapter
     const client = new PrismaClient({
       adapter,
@@ -68,7 +71,7 @@ const initPrisma = async (config: DbConfig): Promise<PrismaClient> => {
 
     // Test the connection
     await client.$connect()
-    
+
     return client
   } catch (error) {
     throw new DatabaseError("Failed to initialize Prisma client", error)
@@ -81,18 +84,22 @@ const initPrisma = async (config: DbConfig): Promise<PrismaClient> => {
 const initDatabase = async (): Promise<PrismaClient> => {
   const config: DbConfig = {
     connectionString: process.env.DATABASE_URL!,
-    maxPoolSize: process.env.DB_MAX_CONNECTIONS ? parseInt(process.env.DB_MAX_CONNECTIONS) : 20,
-    connectionTimeout: process.env.DB_CONNECTION_TIMEOUT ? parseInt(process.env.DB_CONNECTION_TIMEOUT) : 10000,
-    idleTimeout: process.env.DB_IDLE_TIMEOUT ? parseInt(process.env.DB_IDLE_TIMEOUT) : 60000,
-    maxRetries: process.env.DB_MAX_RETRIES ? parseInt(process.env.DB_MAX_RETRIES) : 3,
+    maxPoolSize: process.env.DB_MAX_CONNECTIONS
+      ? parseInt(process.env.DB_MAX_CONNECTIONS)
+      : 20,
+    connectionTimeout: process.env.DB_CONNECTION_TIMEOUT
+      ? parseInt(process.env.DB_CONNECTION_TIMEOUT)
+      : 10000,
+    idleTimeout: process.env.DB_IDLE_TIMEOUT
+      ? parseInt(process.env.DB_IDLE_TIMEOUT)
+      : 60000,
+    maxRetries: process.env.DB_MAX_RETRIES
+      ? parseInt(process.env.DB_MAX_RETRIES)
+      : 3,
     debug: process.env.NODE_ENV !== "production",
   }
 
-  return retry(
-    () => initPrisma(config),
-    config.maxRetries,
-    1000
-  )
+  return retry(() => initPrisma(config), config.maxRetries, 1000)
 }
 
 // Initialize database connection based on environment
@@ -126,16 +133,16 @@ const ensureInit = async (): Promise<PrismaClient> => {
   if (!initializationPromise) {
     throw new DatabaseError("Database initialization was not started")
   }
-  
+
   try {
     if (!prisma) {
       prisma = await initializationPromise
     }
-    
+
     if (!prisma) {
       throw new DatabaseError("Database initialization failed")
     }
-    
+
     return prisma
   } catch (error) {
     console.error("Error ensuring database initialization:", error)
@@ -145,19 +152,19 @@ const ensureInit = async (): Promise<PrismaClient> => {
 
 // Transaction options interface
 interface TransactionOptions {
-  maxWait?: number       // Maximum time to wait for transaction in milliseconds
-  timeout?: number       // Transaction timeout in milliseconds
+  maxWait?: number // Maximum time to wait for transaction in milliseconds
+  timeout?: number // Transaction timeout in milliseconds
   isolationLevel?: Prisma.TransactionIsolationLevel
-  retries?: number       // Number of retries on deadlock
+  retries?: number // Number of retries on deadlock
 }
 
 // Transaction error types
 export enum TransactionErrorType {
-  TIMEOUT = 'TIMEOUT',
-  DEADLOCK = 'DEADLOCK',
-  SERIALIZATION = 'SERIALIZATION',
-  CONNECTION = 'CONNECTION',
-  UNKNOWN = 'UNKNOWN'
+  TIMEOUT = "TIMEOUT",
+  DEADLOCK = "DEADLOCK",
+  SERIALIZATION = "SERIALIZATION",
+  CONNECTION = "CONNECTION",
+  UNKNOWN = "UNKNOWN",
 }
 
 // Custom transaction error class
@@ -168,7 +175,7 @@ export class TransactionError extends DatabaseError {
     public readonly cause?: unknown
   ) {
     super(message, cause)
-    this.name = 'TransactionError'
+    this.name = "TransactionError"
   }
 }
 
@@ -176,15 +183,20 @@ export class TransactionError extends DatabaseError {
  * Executes a function within a transaction with retries and error handling
  */
 export const transaction = async <T>(
-  fn: (tx: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>) => Promise<T>,
+  fn: (
+    tx: Omit<
+      PrismaClient,
+      "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+    >
+  ) => Promise<T>,
   options: TransactionOptions = {}
 ): Promise<T> => {
   const db = await ensureInit()
   const {
     maxWait = 5000,
     timeout = 30000,
-    isolationLevel = 'ReadCommitted',
-    retries = 3
+    isolationLevel = "ReadCommitted",
+    retries = 3,
   } = options
 
   let attempt = 0
@@ -206,18 +218,17 @@ export const transaction = async <T>(
           maxWait,
           isolationLevel,
         }),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Transaction timeout')), timeout)
-        )
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Transaction timeout")), timeout)
+        ),
       ])
 
       return result as T
-
     } catch (error: any) {
       attempt++
-      
+
       // Handle specific error types
-      if (error.code === 'P2034' || /deadlock/i.test(error.message)) {
+      if (error.code === "P2034" || /deadlock/i.test(error.message)) {
         if (attempt >= retries) {
           throw new TransactionError(
             `Transaction failed after ${retries} retries due to deadlock`,
@@ -226,32 +237,32 @@ export const transaction = async <T>(
           )
         }
         // Exponential backoff before retry
-        await new Promise(resolve => 
+        await new Promise((resolve) =>
           setTimeout(resolve, Math.min(100 * Math.pow(2, attempt), 1000))
         )
         continue
       }
 
       // Handle serialization failures
-      if (error.code === 'P2037' || /serialization/i.test(error.message)) {
+      if (error.code === "P2037" || /serialization/i.test(error.message)) {
         throw new TransactionError(
-          'Transaction failed due to serialization failure',
+          "Transaction failed due to serialization failure",
           TransactionErrorType.SERIALIZATION,
           error
         )
       }
 
       // Handle connection issues
-      if (error.code === 'P2028' || /connection/i.test(error.message)) {
+      if (error.code === "P2028" || /connection/i.test(error.message)) {
         throw new TransactionError(
-          'Transaction failed due to connection issue',
+          "Transaction failed due to connection issue",
           TransactionErrorType.CONNECTION,
           error
         )
       }
 
       // Handle timeout
-      if (error.message === 'Transaction timeout') {
+      if (error.message === "Transaction timeout") {
         throw new TransactionError(
           `Transaction timed out after ${timeout}ms`,
           TransactionErrorType.TIMEOUT,
@@ -261,7 +272,7 @@ export const transaction = async <T>(
 
       // Handle unknown errors
       throw new TransactionError(
-        'Transaction failed due to unknown error',
+        "Transaction failed due to unknown error",
         TransactionErrorType.UNKNOWN,
         error
       )
@@ -307,16 +318,19 @@ export const healthCheck = async (): Promise<boolean> => {
 export const getDb = async (): Promise<PrismaClient> => ensureInit()
 
 // Export the initialization promise to allow waiting for database readiness
-export const dbReady = (): Promise<PrismaClient> => 
-  initializationPromise || Promise.reject(new DatabaseError("Database initialization was not started"))
+export const dbReady = (): Promise<PrismaClient> =>
+  initializationPromise ||
+  Promise.reject(new DatabaseError("Database initialization was not started"))
 
 // Export the database instance
 // Note: This provides backward compatibility while still ensuring safety
 export const db = new Proxy({} as PrismaClient, {
   get(_target, prop) {
     if (!prisma) {
-      throw new DatabaseError("Database not initialized. Use getDb() or await dbReady() first")
+      throw new DatabaseError(
+        "Database not initialized. Use getDb() or await dbReady() first"
+      )
     }
     return prisma[prop as keyof PrismaClient]
-  }
+  },
 })

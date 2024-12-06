@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import { PercentageRollout } from "@/components/feature-flags/PercentageRollout";
+import { PercentageRollout } from "@/components/feature-flags/PercentageRollout"
 
 export default function ExamplePage() {
   return (
     <div>
       <h1>Example Page</h1>
-      
+
       <PercentageRollout
         flagKey="new-ui-redesign"
         environment="production"
@@ -15,7 +15,7 @@ export default function ExamplePage() {
         <NewDesign />
       </PercentageRollout>
     </div>
-  );
+  )
 }
 
 function NewDesign() {
@@ -26,7 +26,7 @@ function NewDesign() {
         You're seeing the new design because you're part of the rollout group!
       </p>
     </div>
-  );
+  )
 }
 
 function OldDesign() {
@@ -37,5 +37,5 @@ function OldDesign() {
         You'll get access to the new design soon!
       </p>
     </div>
-  );
+  )
 }

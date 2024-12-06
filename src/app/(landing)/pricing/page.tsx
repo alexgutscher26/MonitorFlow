@@ -1,7 +1,14 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Check, Zap } from "lucide-react"
 import { motion } from "framer-motion"
 import { MaxWidthWrapper } from "@/components/max-width-wrapper"
@@ -101,7 +108,7 @@ const Page = () => {
   return (
     <section className="relative flex min-h-screen w-full items-center justify-center py-24 sm:py-32">
       <div className="absolute inset-0 bg-grid-white/25 [mask-image:radial-gradient(white,transparent_95%)]" />
-      
+
       <div className="container relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -116,69 +123,86 @@ const Page = () => {
             Choose Your Monitoring Plan
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Start monitoring your services with our flexible pricing plans. 
+            Start monitoring your services with our flexible pricing plans.
             Scale as you grow with our powerful features.
           </p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {plans.map(({ title, popular, price, description, buttonText, benefitList, highlight }, index) => (
-            <motion.div
-              key={title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card
-                className={
-                  popular === PopularPlan.YES
-                    ? "relative border-2 border-primary shadow-lg dark:shadow-primary/20"
-                    : "hover:border-primary/50 transition-colors"
-                }
+          {plans.map(
+            (
+              {
+                title,
+                popular,
+                price,
+                description,
+                buttonText,
+                benefitList,
+                highlight,
+              },
+              index
+            ) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                {highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-primary text-primary-foreground text-sm rounded-full px-3 py-1 font-medium flex items-center gap-1">
-                      <Zap size={14} />
-                      {highlight}
-                    </span>
-                  </div>
-                )}
-                
-                <CardHeader className="flex flex-col justify-center">
-                  <CardTitle className="flex items-center gap-2">
-                    <span>{title}</span>
-                  </CardTitle>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold">${price}</span>
-                    <span className="text-muted-foreground">/month</span>
-                  </div>
-                  <CardDescription className="min-h-[60px] flex items-center justify-center">{description}</CardDescription>
-                </CardHeader>
+                <Card
+                  className={
+                    popular === PopularPlan.YES
+                      ? "relative border-2 border-primary shadow-lg dark:shadow-primary/20"
+                      : "hover:border-primary/50 transition-colors"
+                  }
+                >
+                  {highlight && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <span className="bg-primary text-primary-foreground text-sm rounded-full px-3 py-1 font-medium flex items-center gap-1">
+                        <Zap size={14} />
+                        {highlight}
+                      </span>
+                    </div>
+                  )}
 
-                <CardContent className="flex flex-col justify-center">
-                  <div className="space-y-4">
-                    {benefitList.map((benefit) => (
-                      <div key={benefit} className="flex items-center">
-                        <Check className="text-primary mr-2 h-4 w-4 shrink-0" />
-                        <span className="text-sm">{benefit}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
+                  <CardHeader className="flex flex-col justify-center">
+                    <CardTitle className="flex items-center gap-2">
+                      <span>{title}</span>
+                    </CardTitle>
+                    <div className="mt-4">
+                      <span className="text-4xl font-bold">${price}</span>
+                      <span className="text-muted-foreground">/month</span>
+                    </div>
+                    <CardDescription className="min-h-[60px] flex items-center justify-center">
+                      {description}
+                    </CardDescription>
+                  </CardHeader>
 
-                <CardFooter className="flex justify-center">
-                  <Button
-                    variant={popular === PopularPlan.YES ? "default" : "outline"}
-                    className="w-full"
-                    onClick={handleGetAccess}
-                  >
-                    {buttonText}
-                  </Button>
-                </CardFooter>
-              </Card>
-            </motion.div>
-          ))}
+                  <CardContent className="flex flex-col justify-center">
+                    <div className="space-y-4">
+                      {benefitList.map((benefit) => (
+                        <div key={benefit} className="flex items-center">
+                          <Check className="text-primary mr-2 h-4 w-4 shrink-0" />
+                          <span className="text-sm">{benefit}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="flex justify-center">
+                    <Button
+                      variant={
+                        popular === PopularPlan.YES ? "default" : "outline"
+                      }
+                      className="w-full"
+                      onClick={handleGetAccess}
+                    >
+                      {buttonText}
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </motion.div>
+            )
+          )}
         </div>
       </div>
     </section>

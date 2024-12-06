@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import { useFeatureFlag } from "@/hooks/useFeatureFlag";
+import { useFeatureFlag } from "@/hooks/useFeatureFlag"
 
 interface PercentageRolloutProps {
-  flagKey: string;
-  environment?: string;
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
+  flagKey: string
+  environment?: string
+  children: React.ReactNode
+  fallback?: React.ReactNode
 }
 
 export function PercentageRollout({
@@ -15,11 +15,11 @@ export function PercentageRollout({
   children,
   fallback = null,
 }: PercentageRolloutProps) {
-  const isEnabled = useFeatureFlag(flagKey, environment);
+  const isEnabled = useFeatureFlag(flagKey, environment)
 
   if (!isEnabled) {
-    return fallback;
+    return fallback
   }
 
-  return children;
+  return children
 }

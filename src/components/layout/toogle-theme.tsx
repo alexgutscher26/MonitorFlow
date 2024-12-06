@@ -1,9 +1,9 @@
-import { useTheme } from "next-themes";
-import { Button } from "../ui/button";
-import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes"
+import { Button } from "../ui/button"
+import { Moon, Sun } from "lucide-react"
 
 export const ToggleTheme = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme()
   return (
     <Button
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -23,5 +23,5 @@ export const ToggleTheme = () => {
 
       <span className="sr-only">Trocar de tema</span>
     </Button>
-  );
-};
+  )
+}

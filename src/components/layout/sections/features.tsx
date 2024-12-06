@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { Check, Gauge, Bell, Users } from "lucide-react";
-import { motion } from "framer-motion";
+import { Check, Gauge, Bell, Users } from "lucide-react"
+import { motion } from "framer-motion"
 
 const features = [
   {
@@ -37,12 +37,12 @@ const features = [
       "Audit logs and reporting",
     ],
   },
-];
+]
 
 export function FeaturesSection() {
   return (
     <section className="flex w-full flex-col items-center space-y-12 bg-slate-50/50 py-16 dark:bg-transparent md:py-24">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -62,13 +62,13 @@ export function FeaturesSection() {
             key={feature.title}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ 
+            transition={{
               duration: 0.5,
-              delay: index * 0.1 
+              delay: index * 0.1,
             }}
-            whileHover={{ 
+            whileHover={{
               scale: 1.02,
-              transition: { duration: 0.2 }
+              transition: { duration: 0.2 },
             }}
             className="group relative overflow-hidden rounded-xl border bg-background p-2 transition-colors hover:bg-accent hover:text-accent-foreground"
           >
@@ -99,5 +99,5 @@ export function FeaturesSection() {
         ))}
       </div>
     </section>
-  );
+  )
 }

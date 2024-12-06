@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,45 +9,46 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
+} from "@/components/ui/dialog"
+import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation"
+import { Trash2 } from "lucide-react"
 
 interface DeleteSLADialogProps {
-  slaId: string;
-  slaName: string;
+  slaId: string
+  slaName: string
 }
 
 export function DeleteSLADialog({ slaId, slaName }: DeleteSLADialogProps) {
-  const [open, setOpen] = useState(false);
-  const { toast } = useToast();
-  const router = useRouter();
+  const [open, setOpen] = useState(false)
+  const { toast } = useToast()
+  const router = useRouter()
 
   async function onDelete() {
     try {
       const response = await fetch(`/api/v1/sla?id=${slaId}`, {
         method: "DELETE",
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error);
+        const error = await response.text()
+        throw new Error(error)
       }
 
       toast({
         title: "Success",
         description: "SLA deleted successfully",
-      });
+      })
 
-      setOpen(false);
-      router.refresh();
+      setOpen(false)
+      router.refresh()
     } catch (error) {
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to delete SLA",
+        description:
+          error instanceof Error ? error.message : "Failed to delete SLA",
         variant: "destructive",
-      });
+      })
     }
   }
 
@@ -62,7 +63,8 @@ export function DeleteSLADialog({ slaId, slaName }: DeleteSLADialogProps) {
         <DialogHeader>
           <DialogTitle>Delete SLA</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete the SLA &quot;{slaName}&quot;? This action cannot be undone.
+            Are you sure you want to delete the SLA &quot;{slaName}&quot;? This
+            action cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-end space-x-2">
@@ -75,5 +77,5 @@ export function DeleteSLADialog({ slaId, slaName }: DeleteSLADialogProps) {
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

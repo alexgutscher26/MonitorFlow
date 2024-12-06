@@ -758,5 +758,6 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  useSidebar, Separator,
+  useSidebar,
+  Separator,
 }
