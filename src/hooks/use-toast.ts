@@ -3,10 +3,7 @@
 import * as React from "react"
 import { z } from "zod"
 
-import type {
-  ToastActionElement,
-  ToastProps,
-} from "@/components/ui/toast"
+import type { ToastActionElement, ToastProps } from "@/components/ui/toast"
 
 // Configurable constants
 const TOAST_LIMIT = 3
@@ -286,7 +283,8 @@ function useToast() {
   const utils = React.useMemo(
     () => ({
       toast,
-      dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+      dismiss: (toastId?: string) =>
+        dispatch({ type: "DISMISS_TOAST", toastId }),
       dismissAll: () => dispatch({ type: "DISMISS_TOAST" }),
     }),
     []

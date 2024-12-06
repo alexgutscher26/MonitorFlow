@@ -28,7 +28,7 @@ const ACTION_TYPES = [
   { value: "PAUSE_MONITORING", label: "Pause Monitoring" },
 ] as const
 
-type ActionType = typeof ACTION_TYPES[number]["value"]
+type ActionType = (typeof ACTION_TYPES)[number]["value"]
 
 interface IncidentAction {
   id: string
@@ -74,7 +74,8 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const [isCreating, setIsCreating] = useState(false)
-  const [newAction, setNewAction] = useState<NewIncidentAction>(DEFAULT_NEW_ACTION)
+  const [newAction, setNewAction] =
+    useState<NewIncidentAction>(DEFAULT_NEW_ACTION)
 
   const {
     data: actions,
@@ -305,7 +306,10 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
                   min="0"
                   value={newAction.cooldownMinutes}
                   onChange={(e) =>
-                    setNewAction({ ...newAction, cooldownMinutes: e.target.value })
+                    setNewAction({
+                      ...newAction,
+                      cooldownMinutes: e.target.value,
+                    })
                   }
                   required
                 />
