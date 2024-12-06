@@ -4,7 +4,16 @@ import { buttonVariants } from "@/components/ui/button"
 import { Modal } from "@/components/ui/modal"
 import { cn } from "@/utils"
 import { UserButton } from "@clerk/nextjs"
-import { Activity, Gem, Home, Key, LucideIcon, Menu, Settings, X } from "lucide-react"
+import {
+  Activity,
+  Gem,
+  Home,
+  Key,
+  LucideIcon,
+  Menu,
+  Settings,
+  X,
+} from "lucide-react"
 import Link from "next/link"
 import { PropsWithChildren, useState } from "react"
 import { Drawer } from "vaul"
