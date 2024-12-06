@@ -1,9 +1,12 @@
 import { db } from "@/db"
-import { ActionType, Event, IncidentAction } from "@prisma/client"
+import { Event, IncidentAction } from "@prisma/client"
 import { isAfter, addMinutes } from "date-fns"
 
 export class ActionExecutor {
-  private static async shouldExecute(action: IncidentAction, event: Event): Promise<boolean> {
+  private static async shouldExecute(
+    action: IncidentAction,
+    event: Event
+  ): Promise<boolean> {
     // Check if action is enabled
     if (!action.enabled) {
       return false
@@ -11,7 +14,10 @@ export class ActionExecutor {
 
     // Check cooldown
     if (action.lastTriggered && action.cooldownMinutes > 0) {
-      const cooldownEnd = addMinutes(action.lastTriggered, action.cooldownMinutes)
+      const cooldownEnd = addMinutes(
+        action.lastTriggered,
+        action.cooldownMinutes
+      )
       if (isAfter(new Date(), cooldownEnd) === false) {
         return false
       }
@@ -31,7 +37,8 @@ export class ActionExecutor {
             if (eventValue !== condition.value) return false
             break
           case "contains":
-            if (!String(eventValue).includes(String(condition.value))) return false
+            if (!String(eventValue).includes(String(condition.value)))
+              return false
             break
           case "gt":
             if (Number(eventValue) <= Number(condition.value)) return false
@@ -52,14 +59,17 @@ export class ActionExecutor {
     }
   }
 
-  private static async executeDiscordNotification(action: IncidentAction, event: Event) {
+  private static async executeDiscordNotification(
+    action: IncidentAction,
+    event: Event
+  ) {
     const config = action.config as { webhookUrl?: string; message?: string }
     if (!config.webhookUrl) {
       throw new Error("Discord webhook URL not configured")
     }
 
     const message = config.message || "Incident detected!"
-    
+
     try {
       const response = await fetch(config.webhookUrl, {
         method: "POST",
@@ -96,13 +106,18 @@ export class ActionExecutor {
 
       return "Discord notification sent successfully"
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred"
       throw new Error(`Failed to send Discord notification: ${errorMessage}`)
     }
   }
 
   private static async executeWebhook(action: IncidentAction, event: Event) {
-    const config = action.config as { url?: string; method?: string; headers?: Record<string, string> }
+    const config = action.config as {
+      url?: string
+      method?: string
+      headers?: Record<string, string>
+    }
     if (!config.url) {
       throw new Error("Webhook URL not configured")
     }
@@ -132,24 +147,31 @@ export class ActionExecutor {
 
       return "Webhook executed successfully"
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred"
       throw new Error(`Failed to execute webhook: ${errorMessage}`)
     }
   }
 
-  private static async executeEmail(action: IncidentAction, event: Event) {
-    // Note: Implement email sending logic here using your preferred email service
+  private static async executeEmail(_action: IncidentAction, _event: Event) {
+    // TODO: Implement email sending logic here using your preferred email service
     // For example: SendGrid, Amazon SES, etc.
     return "Email notification not implemented yet"
   }
 
-  private static async executeRetryCheck(action: IncidentAction, event: Event) {
-    // Implement retry logic here
+  private static async executeRetryCheck(
+    _action: IncidentAction,
+    _event: Event
+  ) {
+    // TODO: Implement retry logic here
     return "Retry check executed"
   }
 
-  private static async executePauseMonitoring(action: IncidentAction, event: Event) {
-    // Implement monitoring pause logic here
+  private static async executePauseMonitoring(
+    _action: IncidentAction,
+    _event: Event
+  ) {
+    // TODO: Implement monitoring pause logic here
     return "Monitoring paused"
   }
 
@@ -216,7 +238,8 @@ export class ActionExecutor {
         },
       })
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred"
       console.error(`Error executing action ${action.name}:`, error)
       await db.incidentActionLog.update({
         where: { id: actionLog.id },

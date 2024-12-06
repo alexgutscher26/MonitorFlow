@@ -1,4 +1,4 @@
-import { db } from "@/db"
+import { getDb } from "@/db"
 import { router } from "../__internals/router"
 import { privateProcedure } from "../procedures"
 import { startOfDay, startOfMonth, startOfWeek } from "date-fns"
@@ -13,7 +13,8 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const checkThresholds = async (event: any, category: any) => {
   try {
-    const thresholds = await db.alertThreshold.findMany({
+    const prisma = await getDb()
+    const thresholds = await prisma.alertThreshold.findMany({
       where: {
         categoryId: category.id,
         enabled: true,
@@ -79,63 +80,69 @@ const formatEventMessage = (fields: any) => {
 
 export const categoryRouter = router({
   getEventCategories: privateProcedure.query(async ({ c, ctx }) => {
-    const now = new Date()
-    const firstDayOfMonth = startOfMonth(now)
+    try {
+      const prisma = await getDb()
+      const now = new Date()
+      const firstDayOfMonth = startOfMonth(now)
 
-    const categories = await db.eventCategory.findMany({
-      where: { userId: ctx.user.id },
-      select: {
-        id: true,
-        name: true,
-        emoji: true,
-        color: true,
-        updatedAt: true,
-        createdAt: true,
-        events: {
-          where: { createdAt: { gte: firstDayOfMonth } },
-          select: {
-            fields: true,
-            createdAt: true,
+      const categories = await prisma.eventCategory.findMany({
+        where: { userId: ctx.user.id },
+        select: {
+          id: true,
+          name: true,
+          emoji: true,
+          color: true,
+          updatedAt: true,
+          createdAt: true,
+          events: {
+            where: { createdAt: { gte: firstDayOfMonth } },
+            select: {
+              fields: true,
+              createdAt: true,
+            },
           },
-        },
-        _count: {
-          select: {
-            events: {
-              where: { createdAt: { gte: firstDayOfMonth } },
+          _count: {
+            select: {
+              events: {
+                where: { createdAt: { gte: firstDayOfMonth } },
+              },
             },
           },
         },
-      },
-      orderBy: { updatedAt: "desc" },
-    })
+        orderBy: { updatedAt: "desc" },
+      })
 
-    const categoriesWithCounts = categories.map((category: { events: any[]; id: any; name: any; emoji: any; color: any; updatedAt: any; createdAt: any; _count: { events: any } }) => {
-      const uniqueFieldNames = new Set<string>()
-      let lastPing: Date | null = null
+      const categoriesWithCounts = categories.map((category: { events: any[]; id: any; name: any; emoji: any; color: any; updatedAt: any; createdAt: any; _count: { events: any } }) => {
+        const uniqueFieldNames = new Set<string>()
+        let lastPing: Date | null = null
 
-      category.events.forEach((event: { fields: object; createdAt: number | Date | null }) => {
-        Object.keys(event.fields as object).forEach((fieldName) => {
-          uniqueFieldNames.add(fieldName)
+        category.events.forEach((event: { fields: object; createdAt: number | Date | null }) => {
+          Object.keys(event.fields as object).forEach((fieldName) => {
+            uniqueFieldNames.add(fieldName)
+          })
+          if (!lastPing || (event.createdAt && new Date(event.createdAt).getTime() > lastPing.getTime())) {
+            lastPing = new Date(Math.max(lastPing?.getTime() || 0, new Date(event.createdAt || 0).getTime()))
+          }
         })
-        if (!lastPing || (event.createdAt && new Date(event.createdAt).getTime() > lastPing.getTime())) {
-          lastPing = new Date(Math.max(lastPing?.getTime() || 0, new Date(event.createdAt || 0).getTime()))
+
+        return {
+          id: category.id,
+          name: category.name,
+          emoji: category.emoji,
+          color: category.color,
+          updatedAt: category.updatedAt,
+          createdAt: category.createdAt,
+          uniqueFieldCount: uniqueFieldNames.size,
+          eventsCount: category._count.events,
+          lastPing,
         }
       })
 
-      return {
-        id: category.id,
-        name: category.name,
-        emoji: category.emoji,
-        color: category.color,
-        updatedAt: category.updatedAt,
-        createdAt: category.createdAt,
-        uniqueFieldCount: uniqueFieldNames.size,
-        eventsCount: category._count.events,
-        lastPing,
-      }
-    })
-
-    return c.superjson({ categories: categoriesWithCounts })
+      return c.superjson({ categories: categoriesWithCounts })
+    } catch (error) {
+      console.error("Error in getEventCategories:", error)
+      throw new HTTPException(500, { message: "Failed to fetch event categories" })
+    }
   }),
 
   deleteCategory: privateProcedure
@@ -143,7 +150,8 @@ export const categoryRouter = router({
     .mutation(async ({ c, input, ctx }) => {
       const { name } = input
 
-      await db.eventCategory.delete({
+      const prisma = await getDb()
+      await prisma.eventCategory.delete({
         where: { name_userId: { name, userId: ctx.user.id } },
       })
 
@@ -167,7 +175,8 @@ export const categoryRouter = router({
 
       // TODO: ADD PAID PLAN LOGIC
 
-      const eventCategory = await db.eventCategory.create({
+      const prisma = await getDb()
+      const eventCategory = await prisma.eventCategory.create({
         data: {
           name: name.toLowerCase(),
           color: parseColor(color),
@@ -180,18 +189,24 @@ export const categoryRouter = router({
     }),
 
   insertQuickstartCategories: privateProcedure.mutation(async ({ ctx, c }) => {
-    const categories = await db.eventCategory.createMany({
-      data: [
-        { name: "bug", emoji: "🐛", color: 0xff6b6b },
-        { name: "sale", emoji: "💰", color: 0xffeb3b },
-        { name: "question", emoji: "🤔", color: 0x6c5ce7 },
-      ].map((category) => ({
-        ...category,
-        userId: ctx.user.id,
-      })),
-    })
+    try {
+      const prisma = await getDb()
+      const categories = await prisma.eventCategory.createMany({
+        data: [
+          { name: "bug", emoji: "🐛", color: 0xff6b6b },
+          { name: "sale", emoji: "💰", color: 0xffeb3b },
+          { name: "question", emoji: "🤔", color: 0x6c5ce7 },
+        ].map((category) => ({
+          ...category,
+          userId: ctx.user.id,
+        })),
+      })
 
-    return c.json({ success: true, count: categories.count })
+      return c.json({ success: true, count: categories.count })
+    } catch (error) {
+      console.error("Error in insertQuickstartCategories:", error)
+      throw new HTTPException(500, { message: "Failed to create quickstart categories" })
+    }
   }),
 
   pollCategory: privateProcedure
@@ -199,7 +214,8 @@ export const categoryRouter = router({
     .query(async ({ c, ctx, input }) => {
       const { name } = input
 
-      const category = await db.eventCategory.findUnique({
+      const prisma = await getDb()
+      const category = await prisma.eventCategory.findUnique({
         where: { name_userId: { name, userId: ctx.user.id } },
         include: {
           _count: {
@@ -233,6 +249,7 @@ export const categoryRouter = router({
     .query(async ({ c, ctx, input }) => {
       const { name, page, limit, timeRange } = input
 
+      const prisma = await getDb()
       const now = new Date()
       let startDate: Date
 
@@ -249,7 +266,7 @@ export const categoryRouter = router({
       }
 
       const [events, eventsCount, uniqueFieldCount] = await Promise.all([
-        db.event.findMany({
+        prisma.event.findMany({
           where: {
             EventCategory: { name, userId: ctx.user.id },
             createdAt: { gte: startDate },
@@ -258,13 +275,13 @@ export const categoryRouter = router({
           take: limit,
           orderBy: { createdAt: "desc" },
         }),
-        db.event.count({
+        prisma.event.count({
           where: {
             EventCategory: { name, userId: ctx.user.id },
             createdAt: { gte: startDate },
           },
         }),
-        db.event
+        prisma.event
           .findMany({
             where: {
               EventCategory: { name, userId: ctx.user.id },
@@ -304,7 +321,8 @@ export const categoryRouter = router({
       })
     )
     .mutation(async ({ c, ctx, input }) => {
-      const category = await db.eventCategory.findFirst({
+      const prisma = await getDb()
+      const category = await prisma.eventCategory.findFirst({
         where: {
           name: input.categoryName,
           userId: ctx.user.id,
@@ -315,7 +333,7 @@ export const categoryRouter = router({
         throw new HTTPException(404, { message: "Category not found" });
       }
 
-      const alertThreshold = await db.alertThreshold.create({
+      const alertThreshold = await prisma.alertThreshold.create({
         data: {
           name: input.name,
           condition: input.condition,
@@ -331,7 +349,8 @@ export const categoryRouter = router({
   getAlertThresholds: privateProcedure
     .input(z.object({ categoryName: z.string() }))
     .query(async ({ c, ctx, input }) => {
-      const category = await db.eventCategory.findFirst({
+      const prisma = await getDb()
+      const category = await prisma.eventCategory.findFirst({
         where: {
           name: input.categoryName,
           userId: ctx.user.id,
@@ -360,7 +379,8 @@ export const categoryRouter = router({
       })
     )
     .mutation(async ({ c, ctx, input }) => {
-      const threshold = await db.alertThreshold.findFirst({
+      const prisma = await getDb()
+      const threshold = await prisma.alertThreshold.findFirst({
         where: {
           id: input.id,
           category: {
@@ -373,7 +393,7 @@ export const categoryRouter = router({
         throw new HTTPException(404, { message: "Alert threshold not found" });
       }
 
-      const updatedThreshold = await db.alertThreshold.update({
+      const updatedThreshold = await prisma.alertThreshold.update({
         where: { id: input.id },
         data: {
           name: input.name,
@@ -390,7 +410,8 @@ export const categoryRouter = router({
   deleteAlertThreshold: privateProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ c, ctx, input }) => {
-      const threshold = await db.alertThreshold.findFirst({
+      const prisma = await getDb()
+      const threshold = await prisma.alertThreshold.findFirst({
         where: {
           id: input.id,
           category: {
@@ -403,7 +424,7 @@ export const categoryRouter = router({
         throw new HTTPException(404, { message: "Alert threshold not found" });
       }
 
-      await db.alertThreshold.delete({
+      await prisma.alertThreshold.delete({
         where: { id: input.id },
       });
 
@@ -418,7 +439,8 @@ export const categoryRouter = router({
       })
     )
     .mutation(async ({ c, ctx, input }) => {
-      const category = await db.eventCategory.findFirst({
+      const prisma = await getDb()
+      const category = await prisma.eventCategory.findFirst({
         where: {
           name: input.name,
           userId: ctx.user.id,
@@ -430,7 +452,7 @@ export const categoryRouter = router({
       }
 
       const formattedMessage = formatEventMessage(input.fields)
-      const event = await db.event.create({
+      const event = await prisma.event.create({
         data: {
           name: `Event ${new Date().toISOString()}`,
           formattedMessage,
@@ -445,7 +467,7 @@ export const categoryRouter = router({
       const alerts = await checkThresholds(event, category)
 
       // Execute incident actions
-      const actions = await db.incidentAction.findMany({
+      const actions = await prisma.incidentAction.findMany({
         where: {
           categoryId: category.id,
           enabled: true,
@@ -468,7 +490,8 @@ export const categoryRouter = router({
     .query(async ({ c, ctx, input }) => {
       const { categoryName } = input
 
-      const category = await db.eventCategory.findUnique({
+      const prisma = await getDb()
+      const category = await prisma.eventCategory.findUnique({
         where: {
           name_userId: { name: categoryName, userId: ctx.user.id },
         },
@@ -478,7 +501,7 @@ export const categoryRouter = router({
         throw new HTTPException(404, { message: "Category not found" })
       }
 
-      const actions = await db.incidentAction.findMany({
+      const actions = await prisma.incidentAction.findMany({
         where: {
           categoryId: category.id,
         },
@@ -507,7 +530,8 @@ export const categoryRouter = router({
     .mutation(async ({ c, ctx, input }) => {
       const { user } = ctx;
 
-      const category = await db.eventCategory.findFirst({
+      const prisma = await getDb()
+      const category = await prisma.eventCategory.findFirst({
         where: {
           name: input.categoryName,
           userId: user.id,
@@ -518,7 +542,7 @@ export const categoryRouter = router({
         throw new HTTPException(404, { message: "Category not found" });
       }
 
-      const action = await db.incidentAction.create({
+      const action = await prisma.incidentAction.create({
         data: {
           id: nanoid(),
           userId: user.id,
@@ -547,7 +571,8 @@ export const categoryRouter = router({
     .mutation(async ({ c, ctx, input }) => {
       const { categoryName, id, enabled } = input
 
-      const category = await db.eventCategory.findUnique({
+      const prisma = await getDb()
+      const category = await prisma.eventCategory.findUnique({
         where: {
           name_userId: { name: categoryName, userId: ctx.user.id },
         },
@@ -557,7 +582,7 @@ export const categoryRouter = router({
         throw new HTTPException(404, { message: "Category not found" })
       }
 
-      const action = await db.incidentAction.findFirst({
+      const action = await prisma.incidentAction.findFirst({
         where: {
           id,
           categoryId: category.id,
@@ -568,7 +593,7 @@ export const categoryRouter = router({
         throw new HTTPException(404, { message: "Action not found" })
       }
 
-      const updatedAction = await db.incidentAction.update({
+      const updatedAction = await prisma.incidentAction.update({
         where: { id },
         data: { enabled },
       })
@@ -586,7 +611,8 @@ export const categoryRouter = router({
     .mutation(async ({ c, ctx, input }) => {
       const { categoryName, id } = input
 
-      const category = await db.eventCategory.findUnique({
+      const prisma = await getDb()
+      const category = await prisma.eventCategory.findUnique({
         where: {
           name_userId: { name: categoryName, userId: ctx.user.id },
         },
@@ -596,7 +622,7 @@ export const categoryRouter = router({
         throw new HTTPException(404, { message: "Category not found" })
       }
 
-      const action = await db.incidentAction.findFirst({
+      const action = await prisma.incidentAction.findFirst({
         where: {
           id,
           categoryId: category.id,
@@ -607,7 +633,7 @@ export const categoryRouter = router({
         throw new HTTPException(404, { message: "Action not found" })
       }
 
-      await db.incidentAction.delete({
+      await prisma.incidentAction.delete({
         where: { id },
       })
 
