@@ -1,7 +1,7 @@
-import { db } from "@/db";
-import { addHours, subHours, parseISO } from "date-fns";
+import { db } from "@/db"
+import { subHours } from "date-fns"
 
-export type TimeWindow = "24h" | "7d" | "30d";
+export type TimeWindow = "24h" | "7d" | "30d"
 
 export async function calculateUptimePercentage(
   slaId: string,
@@ -11,84 +11,86 @@ export async function calculateUptimePercentage(
   const sla = await db.sLADefinition.findUnique({
     where: { id: slaId },
     include: { EventCategory: true },
-  });
+  })
 
   if (!sla || !sla.EventCategory) {
-    return 0;
+    return 0
   }
 
   const events = await db.event.findMany({
     where: {
-      eventCategoryId: sla.EventCategory.id,
+      // TODO: Cannot Fix
+      eventCategoryId: sla.EventCategory?.id,
       createdAt: {
         gte: startTime,
         lte: endTime,
       },
     },
     orderBy: { createdAt: "asc" },
-  });
+  })
 
   if (events.length === 0) {
-    return 100; // No events means no downtime
+    return 100 // No events means no downtime
   }
 
-  let totalDowntimeMs = 0;
-  let lastEvent = events[0];
+  let totalDowntimeMs = 0
+  let lastEvent = events[0]
 
   for (let i = 1; i < events.length; i++) {
-    const currentEvent = events[i];
-    
+    const currentEvent = events[i]
+
     if ((lastEvent.fields as any).status === "down") {
-      totalDowntimeMs += currentEvent.createdAt.getTime() - lastEvent.createdAt.getTime();
+      totalDowntimeMs +=
+        currentEvent.createdAt.getTime() - lastEvent.createdAt.getTime()
     }
-    
-    lastEvent = currentEvent;
+
+    lastEvent = currentEvent
   }
 
   // If the last event is "down", count downtime until endTime
   if ((lastEvent.fields as any).status === "down") {
-    totalDowntimeMs += endTime.getTime() - lastEvent.createdAt.getTime();
+    totalDowntimeMs += endTime.getTime() - lastEvent.createdAt.getTime()
   }
 
-  const totalTimeMs = endTime.getTime() - startTime.getTime();
-  const uptimePercent = ((totalTimeMs - totalDowntimeMs) / totalTimeMs) * 100;
+  const totalTimeMs = endTime.getTime() - startTime.getTime()
+  const uptimePercent = ((totalTimeMs - totalDowntimeMs) / totalTimeMs) * 100
 
-  return Math.max(0, Math.min(100, uptimePercent));
+  return Math.max(0, Math.min(100, uptimePercent))
 }
 
 export async function updateSLAMeasurements() {
-  const slaDefinitions = await db.sLADefinition.findMany();
+  const slaDefinitions = await db.sLADefinition.findMany()
 
-  const now = new Date();
+  const now = new Date()
 
   for (const sla of slaDefinitions) {
-    let startTime: Date;
-    const endTime = now;
+    let startTime: Date
+    const endTime = now
 
     // Parse time window
     switch (sla.timeWindow) {
       case "24h":
-        startTime = subHours(now, 24);
-        break;
+        startTime = subHours(now, 24)
+        break
       case "7d":
-        startTime = subHours(now, 24 * 7);
-        break;
+        startTime = subHours(now, 24 * 7)
+        break
       case "30d":
-        startTime = subHours(now, 24 * 30);
-        break;
+        startTime = subHours(now, 24 * 30)
+        break
       default:
-        console.error(`Invalid time window: ${sla.timeWindow}`);
-        continue;
+        console.error(`Invalid time window: ${sla.timeWindow}`)
+        continue
     }
 
     const uptimePercent = await calculateUptimePercentage(
       sla.id,
       startTime,
       endTime
-    );
+    )
 
-    const totalMinutes = (endTime.getTime() - startTime.getTime()) / 1000 / 60;
-    const downtimeMinutes = totalMinutes * (1 - uptimePercent / 100);
+    const totalMinutes = (endTime.getTime() - startTime.getTime()) / 1000 / 60
+    const downtimeMinutes = totalMinutes * (1 - uptimePercent / 100)
 
     await db.sLAMeasurement.create({
       data: {
@@ -98,6 +100,6 @@ export async function updateSLAMeasurements() {
         uptimePercent,
         downtimeMinutes,
       },
-    });
+    })
   }
 }
