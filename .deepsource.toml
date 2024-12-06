@@ -14,7 +14,7 @@ enabled = true
     "package.json",
     "package-lock.json"
   ]
-  skip_doc_coverage = ["test/**/*", "**/*.test.*", "**/*.spec.*"]
+  skip_doc_coverage = "test/**/*"
   max_line_length = 100
   target_version = "es2022"
 
@@ -24,17 +24,20 @@ enabled = true
 
   [analyzers.meta]
   coverage_format = "lcov"
-  coverage_path = "coverage/lcov.info"
-  threshold = 75.0
+  path = "coverage/lcov.info"
+  minimum_coverage = 75.0
 
 [[analyzers]]
 name = "secrets"
 enabled = true
 
   [analyzers.meta]
-  trusted_domain_patterns = [
-    "^localhost(:\\d+)?$",
-    "\\.monitorflow\\.dev$"
+  exclude_paths = [
+    "test/**/*"
+  ]
+  trusted_domains = [
+    "localhost",
+    ".monitorflow.dev"
   ]
 
 [[analyzers]]
@@ -49,13 +52,9 @@ enabled = true
 paths = [
     "node_modules/**",
     ".next/**",
-    "public/**",
-    "*.md",
-    "*.json",
-    "coverage/**",
-    ".github/**",
     "dist/**",
-    "build/**"
+    "build/**",
+    "coverage/**"
 ]
 
 [metrics]
