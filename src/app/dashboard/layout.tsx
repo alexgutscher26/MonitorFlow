@@ -112,7 +112,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         {/* mobile header */}
         <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-200">
           <p className="text-lg/7 font-semibold text-brand-900">
-            Ping<span className="text-brand-700">Panda</span>
+            Monitor<span className="text-brand-700">Flow</span>
           </p>
           <button
             onClick={() => setIsDrawerOpen(true)}
