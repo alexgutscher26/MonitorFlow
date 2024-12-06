@@ -20,7 +20,12 @@ import { useState } from "react"
 interface AlertThreshold {
   id: string
   name: string
-  condition: "GREATER_THAN" | "LESS_THAN" | "EQUALS" | "CONTAINS" | "NOT_CONTAINS"
+  condition:
+    | "GREATER_THAN"
+    | "LESS_THAN"
+    | "EQUALS"
+    | "CONTAINS"
+    | "NOT_CONTAINS"
   fieldPath: string
   threshold: string
   enabled: boolean
@@ -69,13 +74,7 @@ export const AlertThresholds = ({ categoryName }: AlertThresholdsProps) => {
   })
 
   const { mutate: updateThreshold } = useMutation({
-    mutationFn: async ({
-      id,
-      enabled,
-    }: {
-      id: string
-      enabled: boolean
-    }) => {
+    mutationFn: async ({ id, enabled }: { id: string; enabled: boolean }) => {
       await client.category.updateAlertThreshold.$post({
         id,
         enabled,

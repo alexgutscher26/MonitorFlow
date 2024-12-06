@@ -80,7 +80,10 @@ export const isValidEmail = (email: string): boolean => {
  */
 export const generateRandomString = (length: number): string => {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join("")
+  return Array.from(
+    { length },
+    () => chars[Math.floor(Math.random() * chars.length)]
+  ).join("")
 }
 
 /**
@@ -108,8 +111,8 @@ export const formatBytes = (bytes: number, decimals: number = 2): string => {
 /**
  * Creates a delay promise
  */
-export const delay = (ms: number): Promise<void> => 
-  new Promise(resolve => setTimeout(resolve, ms))
+export const delay = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
  * Retries a function with exponential backoff
@@ -123,7 +126,7 @@ export const retry = async <T>(
     return await fn()
   } catch (error) {
     if (retries === 0) throw error
-    await new Promise(resolve => setTimeout(resolve, delay))
+    await new Promise((resolve) => setTimeout(resolve, delay))
     return retry(fn, retries - 1, delay * 2)
   }
 }

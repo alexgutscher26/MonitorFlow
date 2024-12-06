@@ -1,18 +1,18 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { useState } from "react"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"
 import {
   Card,
   CardContent,
@@ -20,39 +20,34 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from "@/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
+} from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { format } from "date-fns"
 
 interface FeatureFlag {
-  id: string;
-  key: string;
-  name: string;
-  description?: string;
-  type: string;
-  value: any;
-  environment: string;
-  expiresAt?: string;
-  isArchived: boolean;
+  id: string
+  key: string
+  name: string
+  description?: string
+  type: string
+  value: any
+  environment: string
+  expiresAt?: string
+  isArchived: boolean
   auditLogs: Array<{
-    id: string;
-    action: string;
-    changes: any;
-    performedBy: string;
-    createdAt: string;
-  }>;
+    id: string
+    action: string
+    changes: any
+    performedBy: string
+    createdAt: string
+  }>
 }
 
 export default function FeatureFlagsPage() {
-  const queryClient = useQueryClient();
-  const [environment, setEnvironment] = useState("development");
-  const [showArchived, setShowArchived] = useState(false);
+  const queryClient = useQueryClient()
+  const [environment, setEnvironment] = useState("development")
+  const [showArchived, setShowArchived] = useState(false)
   const [newFlag, setNewFlag] = useState({
     key: "",
     name: "",
@@ -61,20 +56,20 @@ export default function FeatureFlagsPage() {
     value: null,
     environment: "development",
     expiresAt: "",
-  });
+  })
 
   const { data: flags } = useQuery<FeatureFlag[]>({
     queryKey: ["featureFlags", environment, showArchived],
     queryFn: async () => {
       const response = await fetch(
         `/api/feature-flags?environment=${environment}&includeArchived=${showArchived}`
-      );
+      )
       if (!response.ok) {
-        throw new Error("Failed to fetch feature flags");
+        throw new Error("Failed to fetch feature flags")
       }
-      return response.json();
+      return response.json()
     },
-  });
+  })
 
   const createFlag = useMutation({
     mutationFn: async (flag: typeof newFlag) => {
@@ -82,14 +77,14 @@ export default function FeatureFlagsPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(flag),
-      });
+      })
       if (!response.ok) {
-        throw new Error("Failed to create feature flag");
+        throw new Error("Failed to create feature flag")
       }
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["featureFlags"] });
+      queryClient.invalidateQueries({ queryKey: ["featureFlags"] })
       setNewFlag({
         key: "",
         name: "",
@@ -98,9 +93,9 @@ export default function FeatureFlagsPage() {
         value: null,
         environment: "development",
         expiresAt: "",
-      });
+      })
     },
-  });
+  })
 
   const toggleMutation = useMutation({
     mutationFn: async (flag: FeatureFlag) => {
@@ -113,16 +108,16 @@ export default function FeatureFlagsPage() {
           id: flag.id,
           value: flag.type === "boolean" ? !flag.value : flag.value,
         }),
-      });
+      })
       if (!response.ok) {
-        throw new Error("Failed to update feature flag");
+        throw new Error("Failed to update feature flag")
       }
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["featureFlags"] });
+      queryClient.invalidateQueries({ queryKey: ["featureFlags"] })
     },
-  });
+  })
 
   const updateFlag = useMutation({
     mutationFn: async (updates: Partial<FeatureFlag> & { id: string }) => {
@@ -130,31 +125,31 @@ export default function FeatureFlagsPage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updates),
-      });
+      })
       if (!response.ok) {
-        throw new Error("Failed to update feature flag");
+        throw new Error("Failed to update feature flag")
       }
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["featureFlags"] });
+      queryClient.invalidateQueries({ queryKey: ["featureFlags"] })
     },
-  });
+  })
 
   const archiveFlag = useMutation({
     mutationFn: async (id: string) => {
       const response = await fetch(`/api/feature-flags?id=${id}`, {
         method: "DELETE",
-      });
+      })
       if (!response.ok) {
-        throw new Error("Failed to archive feature flag");
+        throw new Error("Failed to archive feature flag")
       }
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["featureFlags"] });
+      queryClient.invalidateQueries({ queryKey: ["featureFlags"] })
     },
-  });
+  })
 
   return (
     <div className="container mx-auto py-10">
@@ -183,13 +178,15 @@ export default function FeatureFlagsPage() {
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>Create New Feature Flag</CardTitle>
-          <CardDescription>Add a new feature flag to your application</CardDescription>
+          <CardDescription>
+            Add a new feature flag to your application
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form
             onSubmit={(e) => {
-              e.preventDefault();
-              createFlag.mutate(newFlag);
+              e.preventDefault()
+              createFlag.mutate(newFlag)
             }}
             className="space-y-4"
           >
@@ -199,7 +196,9 @@ export default function FeatureFlagsPage() {
                 <Input
                   id="key"
                   value={newFlag.key}
-                  onChange={(e) => setNewFlag({ ...newFlag, key: e.target.value })}
+                  onChange={(e) =>
+                    setNewFlag({ ...newFlag, key: e.target.value })
+                  }
                   placeholder="feature-key"
                   required
                 />
@@ -209,7 +208,9 @@ export default function FeatureFlagsPage() {
                 <Input
                   id="name"
                   value={newFlag.name}
-                  onChange={(e) => setNewFlag({ ...newFlag, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewFlag({ ...newFlag, name: e.target.value })
+                  }
                   placeholder="Feature Name"
                   required
                 />
@@ -244,7 +245,9 @@ export default function FeatureFlagsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="boolean">Boolean</SelectItem>
-                    <SelectItem value="percentage">Percentage Rollout</SelectItem>
+                    <SelectItem value="percentage">
+                      Percentage Rollout
+                    </SelectItem>
                     <SelectItem value="userlist">User List</SelectItem>
                   </SelectContent>
                 </Select>
@@ -276,7 +279,9 @@ export default function FeatureFlagsPage() {
                     onChange={(e) =>
                       setNewFlag({
                         ...newFlag,
-                        value: { users: e.target.value.split(",").map((s) => s.trim()) },
+                        value: {
+                          users: e.target.value.split(",").map((s) => s.trim()),
+                        },
                       })
                     }
                   />
@@ -327,10 +332,24 @@ export default function FeatureFlagsPage() {
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     {flag.name}
-                    <Badge variant={flag.type === "boolean" ? (flag.value ? "default" : "secondary") : "default"}>
-                      {flag.type === "boolean" ? (flag.value ? "Enabled" : "Disabled") : "Enabled"}
+                    <Badge
+                      variant={
+                        flag.type === "boolean"
+                          ? flag.value
+                            ? "default"
+                            : "secondary"
+                          : "default"
+                      }
+                    >
+                      {flag.type === "boolean"
+                        ? flag.value
+                          ? "Enabled"
+                          : "Disabled"
+                        : "Enabled"}
                     </Badge>
-                    {flag.isArchived && <Badge variant="destructive">Archived</Badge>}
+                    {flag.isArchived && (
+                      <Badge variant="destructive">Archived</Badge>
+                    )}
                   </CardTitle>
                   <CardDescription>{flag.description}</CardDescription>
                 </div>
@@ -354,7 +373,9 @@ export default function FeatureFlagsPage() {
                 <TabsContent value="settings">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <code className="bg-muted px-2 py-1 rounded">{flag.key}</code>
+                      <code className="bg-muted px-2 py-1 rounded">
+                        {flag.key}
+                      </code>
                       <Switch
                         checked={flag.type === "boolean" ? flag.value : false}
                         onCheckedChange={() => toggleMutation.mutate(flag)}
@@ -387,7 +408,11 @@ export default function FeatureFlagsPage() {
                           onChange={(e) =>
                             updateFlag.mutate({
                               id: flag.id,
-                              value: { users: e.target.value.split(",").map((s) => s.trim()) },
+                              value: {
+                                users: e.target.value
+                                  .split(",")
+                                  .map((s) => s.trim()),
+                              },
                             })
                           }
                           disabled={flag.isArchived}
@@ -409,7 +434,8 @@ export default function FeatureFlagsPage() {
                     {flag.auditLogs.map((log) => (
                       <div key={log.id} className="text-sm">
                         <p className="font-medium">
-                          {log.action.charAt(0).toUpperCase() + log.action.slice(1)}
+                          {log.action.charAt(0).toUpperCase() +
+                            log.action.slice(1)}
                         </p>
                         <p className="text-muted-foreground">
                           {format(new Date(log.createdAt), "PPpp")}
@@ -424,5 +450,5 @@ export default function FeatureFlagsPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }

@@ -9,7 +9,7 @@ import { HTTPException } from "hono/http-exception"
 import { ActionExecutor } from "../services/action-executor"
 import { nanoid } from "nanoid"
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const checkThresholds = async (event: any, category: any) => {
   try {
@@ -19,34 +19,34 @@ const checkThresholds = async (event: any, category: any) => {
         categoryId: category.id,
         enabled: true,
       },
-    });
+    })
 
-    const alerts = [];
-    
+    const alerts = []
+
     for (const threshold of thresholds) {
       try {
-        const fieldValue = event.fields[threshold.fieldPath];
-        if (!fieldValue) continue;
+        const fieldValue = event.fields[threshold.fieldPath]
+        if (!fieldValue) continue
 
-        let isTriggered = false;
-        const thresholdValue = threshold.threshold;
+        let isTriggered = false
+        const thresholdValue = threshold.threshold
 
         switch (threshold.condition) {
           case "GREATER_THAN":
-            isTriggered = Number(fieldValue) > Number(thresholdValue);
-            break;
+            isTriggered = Number(fieldValue) > Number(thresholdValue)
+            break
           case "LESS_THAN":
-            isTriggered = Number(fieldValue) < Number(thresholdValue);
-            break;
+            isTriggered = Number(fieldValue) < Number(thresholdValue)
+            break
           case "EQUALS":
-            isTriggered = String(fieldValue) === String(thresholdValue);
-            break;
+            isTriggered = String(fieldValue) === String(thresholdValue)
+            break
           case "CONTAINS":
-            isTriggered = String(fieldValue).includes(String(thresholdValue));
-            break;
+            isTriggered = String(fieldValue).includes(String(thresholdValue))
+            break
           case "NOT_CONTAINS":
-            isTriggered = !String(fieldValue).includes(String(thresholdValue));
-            break;
+            isTriggered = !String(fieldValue).includes(String(thresholdValue))
+            break
         }
 
         if (isTriggered) {
@@ -56,27 +56,29 @@ const checkThresholds = async (event: any, category: any) => {
             fieldPath: threshold.fieldPath,
             actualValue: fieldValue,
             thresholdValue,
-          });
+          })
         }
 
         // Add a small delay between checks to avoid rate limiting
-        await delay(100);
+        await delay(100)
       } catch (error) {
-        console.error(`Error checking threshold ${threshold.name}:`, error);
-        continue;
+        console.error(`Error checking threshold ${threshold.name}:`, error)
+        continue
       }
     }
 
-    return alerts;
+    return alerts
   } catch (error) {
-    console.error("Error in checkThresholds:", error);
-    return [];
+    console.error("Error in checkThresholds:", error)
+    return []
   }
-};
+}
 
 const formatEventMessage = (fields: any) => {
-  return Object.keys(fields).map((key) => `${key}: ${fields[key]}`).join("\n");
-};
+  return Object.keys(fields)
+    .map((key) => `${key}: ${fields[key]}`)
+    .join("\n")
+}
 
 export const categoryRouter = router({
   getEventCategories: privateProcedure.query(async ({ c, ctx }) => {
@@ -112,36 +114,60 @@ export const categoryRouter = router({
         orderBy: { updatedAt: "desc" },
       })
 
-      const categoriesWithCounts = categories.map((category: { events: any[]; id: any; name: any; emoji: any; color: any; updatedAt: any; createdAt: any; _count: { events: any } }) => {
-        const uniqueFieldNames = new Set<string>()
-        let lastPing: Date | null = null
+      const categoriesWithCounts = categories.map(
+        (category: {
+          events: any[]
+          id: any
+          name: any
+          emoji: any
+          color: any
+          updatedAt: any
+          createdAt: any
+          _count: { events: any }
+        }) => {
+          const uniqueFieldNames = new Set<string>()
+          let lastPing: Date | null = null
 
-        category.events.forEach((event: { fields: object; createdAt: number | Date | null }) => {
-          Object.keys(event.fields as object).forEach((fieldName) => {
-            uniqueFieldNames.add(fieldName)
-          })
-          if (!lastPing || (event.createdAt && new Date(event.createdAt).getTime() > lastPing.getTime())) {
-            lastPing = new Date(Math.max(lastPing?.getTime() || 0, new Date(event.createdAt || 0).getTime()))
+          category.events.forEach(
+            (event: { fields: object; createdAt: number | Date | null }) => {
+              Object.keys(event.fields as object).forEach((fieldName) => {
+                uniqueFieldNames.add(fieldName)
+              })
+              if (
+                !lastPing ||
+                (event.createdAt &&
+                  new Date(event.createdAt).getTime() > lastPing.getTime())
+              ) {
+                lastPing = new Date(
+                  Math.max(
+                    lastPing?.getTime() || 0,
+                    new Date(event.createdAt || 0).getTime()
+                  )
+                )
+              }
+            }
+          )
+
+          return {
+            id: category.id,
+            name: category.name,
+            emoji: category.emoji,
+            color: category.color,
+            updatedAt: category.updatedAt,
+            createdAt: category.createdAt,
+            uniqueFieldCount: uniqueFieldNames.size,
+            eventsCount: category._count.events,
+            lastPing,
           }
-        })
-
-        return {
-          id: category.id,
-          name: category.name,
-          emoji: category.emoji,
-          color: category.color,
-          updatedAt: category.updatedAt,
-          createdAt: category.createdAt,
-          uniqueFieldCount: uniqueFieldNames.size,
-          eventsCount: category._count.events,
-          lastPing,
         }
-      })
+      )
 
       return c.superjson({ categories: categoriesWithCounts })
     } catch (error) {
       console.error("Error in getEventCategories:", error)
-      throw new HTTPException(500, { message: "Failed to fetch event categories" })
+      throw new HTTPException(500, {
+        message: "Failed to fetch event categories",
+      })
     }
   }),
 
@@ -205,7 +231,9 @@ export const categoryRouter = router({
       return c.json({ success: true, count: categories.count })
     } catch (error) {
       console.error("Error in insertQuickstartCategories:", error)
-      throw new HTTPException(500, { message: "Failed to create quickstart categories" })
+      throw new HTTPException(500, {
+        message: "Failed to create quickstart categories",
+      })
     }
   }),
 
@@ -315,7 +343,13 @@ export const categoryRouter = router({
       z.object({
         categoryName: z.string(),
         name: z.string(),
-        condition: z.enum(["GREATER_THAN", "LESS_THAN", "EQUALS", "CONTAINS", "NOT_CONTAINS"]),
+        condition: z.enum([
+          "GREATER_THAN",
+          "LESS_THAN",
+          "EQUALS",
+          "CONTAINS",
+          "NOT_CONTAINS",
+        ]),
         fieldPath: z.string(),
         threshold: z.string(),
       })
@@ -327,10 +361,10 @@ export const categoryRouter = router({
           name: input.categoryName,
           userId: ctx.user.id,
         },
-      });
+      })
 
       if (!category) {
-        throw new HTTPException(404, { message: "Category not found" });
+        throw new HTTPException(404, { message: "Category not found" })
       }
 
       const alertThreshold = await prisma.alertThreshold.create({
@@ -341,9 +375,9 @@ export const categoryRouter = router({
           threshold: input.threshold,
           categoryId: category.id,
         },
-      });
+      })
 
-      return c.json({ alertThreshold });
+      return c.json({ alertThreshold })
     }),
 
   getAlertThresholds: privateProcedure
@@ -358,13 +392,13 @@ export const categoryRouter = router({
         include: {
           alertThresholds: true,
         },
-      });
+      })
 
       if (!category) {
-        throw new HTTPException(404, { message: "Category not found" });
+        throw new HTTPException(404, { message: "Category not found" })
       }
 
-      return c.json({ alertThresholds: category.alertThresholds });
+      return c.json({ alertThresholds: category.alertThresholds })
     }),
 
   updateAlertThreshold: privateProcedure
@@ -372,7 +406,15 @@ export const categoryRouter = router({
       z.object({
         id: z.string(),
         name: z.string().optional(),
-        condition: z.enum(["GREATER_THAN", "LESS_THAN", "EQUALS", "CONTAINS", "NOT_CONTAINS"]).optional(),
+        condition: z
+          .enum([
+            "GREATER_THAN",
+            "LESS_THAN",
+            "EQUALS",
+            "CONTAINS",
+            "NOT_CONTAINS",
+          ])
+          .optional(),
         fieldPath: z.string().optional(),
         threshold: z.string().optional(),
         enabled: z.boolean().optional(),
@@ -387,10 +429,10 @@ export const categoryRouter = router({
             userId: ctx.user.id,
           },
         },
-      });
+      })
 
       if (!threshold) {
-        throw new HTTPException(404, { message: "Alert threshold not found" });
+        throw new HTTPException(404, { message: "Alert threshold not found" })
       }
 
       const updatedThreshold = await prisma.alertThreshold.update({
@@ -402,9 +444,9 @@ export const categoryRouter = router({
           threshold: input.threshold,
           enabled: input.enabled,
         },
-      });
+      })
 
-      return c.json({ alertThreshold: updatedThreshold });
+      return c.json({ alertThreshold: updatedThreshold })
     }),
 
   deleteAlertThreshold: privateProcedure
@@ -418,17 +460,17 @@ export const categoryRouter = router({
             userId: ctx.user.id,
           },
         },
-      });
+      })
 
       if (!threshold) {
-        throw new HTTPException(404, { message: "Alert threshold not found" });
+        throw new HTTPException(404, { message: "Alert threshold not found" })
       }
 
       await prisma.alertThreshold.delete({
         where: { id: input.id },
-      });
+      })
 
-      return c.json({ success: true });
+      return c.json({ success: true })
     }),
 
   createEvent: privateProcedure
@@ -445,10 +487,10 @@ export const categoryRouter = router({
           name: input.name,
           userId: ctx.user.id,
         },
-      });
+      })
 
       if (!category) {
-        throw new HTTPException(404, { message: "Category not found" });
+        throw new HTTPException(404, { message: "Category not found" })
       }
 
       const formattedMessage = formatEventMessage(input.fields)
@@ -461,7 +503,7 @@ export const categoryRouter = router({
           eventCategoryId: category.id,
           createdAt: new Date(), // Add createdAt field
         },
-      });
+      })
 
       // Check alert thresholds
       const alerts = await checkThresholds(event, category)
@@ -479,7 +521,7 @@ export const categoryRouter = router({
 
       // Execute actions in parallel
       await Promise.all(
-        actions.map(action => ActionExecutor.execute(action, event))
+        actions.map((action) => ActionExecutor.execute(action, event))
       )
 
       return c.json({ event, alerts })
@@ -514,21 +556,33 @@ export const categoryRouter = router({
     }),
 
   createIncidentAction: privateProcedure
-    .input(z.object({
-      categoryName: z.string(),
-      name: z.string().min(1, "Name is required"),
-      description: z.string().optional(),
-      actionType: z.enum(["DISCORD_NOTIFICATION", "WEBHOOK", "EMAIL", "RETRY_CHECK", "PAUSE_MONITORING"]),
-      conditions: z.record(z.object({
-        operator: z.enum(["equals", "contains", "gt", "lt"]),
-        value: z.union([z.string(), z.number()]),
-      })).optional(),
-      config: z.record(z.any()).optional(),
-      cooldownMinutes: z.number().min(0).default(0),
-      enabled: z.boolean().default(true),
-    }))
+    .input(
+      z.object({
+        categoryName: z.string(),
+        name: z.string().min(1, "Name is required"),
+        description: z.string().optional(),
+        actionType: z.enum([
+          "DISCORD_NOTIFICATION",
+          "WEBHOOK",
+          "EMAIL",
+          "RETRY_CHECK",
+          "PAUSE_MONITORING",
+        ]),
+        conditions: z
+          .record(
+            z.object({
+              operator: z.enum(["equals", "contains", "gt", "lt"]),
+              value: z.union([z.string(), z.number()]),
+            })
+          )
+          .optional(),
+        config: z.record(z.any()).optional(),
+        cooldownMinutes: z.number().min(0).default(0),
+        enabled: z.boolean().default(true),
+      })
+    )
     .mutation(async ({ c, ctx, input }) => {
-      const { user } = ctx;
+      const { user } = ctx
 
       const prisma = await getDb()
       const category = await prisma.eventCategory.findFirst({
@@ -536,10 +590,10 @@ export const categoryRouter = router({
           name: input.categoryName,
           userId: user.id,
         },
-      });
+      })
 
       if (!category) {
-        throw new HTTPException(404, { message: "Category not found" });
+        throw new HTTPException(404, { message: "Category not found" })
       }
 
       const action = await prisma.incidentAction.create({
@@ -555,9 +609,9 @@ export const categoryRouter = router({
           cooldownMinutes: input.cooldownMinutes,
           enabled: input.enabled,
         },
-      });
+      })
 
-      return c.json({ action });
+      return c.json({ action })
     }),
 
   updateIncidentAction: privateProcedure

@@ -1,39 +1,51 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Download, Loader2 } from "lucide-react";
-import { jsPDF } from "jspdf";
-import autoTable from 'jspdf-autotable';
-import { toast } from "sonner";
-import { SLADefinition } from "@/types/sla";
+} from "@/components/ui/dropdown-menu"
+import { Download, Loader2 } from "lucide-react"
+import { jsPDF } from "jspdf"
+import autoTable from "jspdf-autotable"
+import { toast } from "sonner"
+import { SLADefinition } from "@/types/sla"
 
 interface ExportSLAButtonProps {
-  slas: SLADefinition[];
+  slas: SLADefinition[]
 }
 
 export function ExportSLAButton({ slas }: ExportSLAButtonProps) {
-  const [isExporting, setIsExporting] = useState(false);
+  const [isExporting, setIsExporting] = useState(false)
 
   const exportToCSV = async () => {
     try {
-      setIsExporting(true);
+      setIsExporting(true)
       // Prepare CSV data
-      const headers = ["Name", "Category", "Target", "Current Uptime", "Average Uptime", "Time Window", "Last Updated"];
-      const rows = slas.map(sla => {
-        const currentUptime = sla.measurements[0]?.uptimePercent.toFixed(2) || "N/A";
-        const avgUptime = sla.measurements.length 
-          ? (sla.measurements.reduce((acc, m) => acc + m.uptimePercent, 0) / sla.measurements.length).toFixed(2)
-          : "N/A";
+      const headers = [
+        "Name",
+        "Category",
+        "Target",
+        "Current Uptime",
+        "Average Uptime",
+        "Time Window",
+        "Last Updated",
+      ]
+      const rows = slas.map((sla) => {
+        const currentUptime =
+          sla.measurements[0]?.uptimePercent.toFixed(2) || "N/A"
+        const avgUptime = sla.measurements.length
+          ? (
+              sla.measurements.reduce((acc, m) => acc + m.uptimePercent, 0) /
+              sla.measurements.length
+            ).toFixed(2)
+          : "N/A"
         const lastUpdated = sla.measurements[0]
           ? new Date(sla.measurements[0].endTime).toLocaleString()
-          : "N/A";
+          : "N/A"
 
         return [
           sla.name,
@@ -42,57 +54,69 @@ export function ExportSLAButton({ slas }: ExportSLAButtonProps) {
           `${currentUptime}%`,
           `${avgUptime}%`,
           sla.timeWindow,
-          lastUpdated
-        ];
-      });
+          lastUpdated,
+        ]
+      })
 
       // Convert to CSV string
       const csvContent = [
         headers.join(","),
-        ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
-      ].join("\n");
+        ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+      ].join("\n")
 
       // Create and download file
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      const url = URL.createObjectURL(blob);
-      link.setAttribute("href", url);
-      link.setAttribute("download", `sla_report_${new Date().toISOString().split('T')[0]}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      toast.success("CSV report exported successfully");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+      const link = document.createElement("a")
+      const url = URL.createObjectURL(blob)
+      link.setAttribute("href", url)
+      link.setAttribute(
+        "download",
+        `sla_report_${new Date().toISOString().split("T")[0]}.csv`
+      )
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      toast.success("CSV report exported successfully")
     } catch (error) {
-      console.error("Error exporting CSV:", error);
-      toast.error("Failed to export CSV report");
+      console.error("Error exporting CSV:", error)
+      toast.error("Failed to export CSV report")
     } finally {
-      setIsExporting(false);
+      setIsExporting(false)
     }
-  };
+  }
 
   const exportToPDF = async () => {
     try {
-      setIsExporting(true);
-      const doc = new jsPDF();
-      const pageWidth = doc.internal.pageSize.width;
+      setIsExporting(true)
+      const doc = new jsPDF()
+      const pageWidth = doc.internal.pageSize.width
 
       // Add title
-      doc.setFontSize(20);
-      doc.text("SLA Performance Report", pageWidth / 2, 20, { align: "center" });
-      
+      doc.setFontSize(20)
+      doc.text("SLA Performance Report", pageWidth / 2, 20, { align: "center" })
+
       // Add date
-      doc.setFontSize(12);
-      doc.text(`Generated on: ${new Date().toLocaleString()}`, pageWidth / 2, 30, { align: "center" });
+      doc.setFontSize(12)
+      doc.text(
+        `Generated on: ${new Date().toLocaleString()}`,
+        pageWidth / 2,
+        30,
+        { align: "center" }
+      )
 
       // Prepare table data
-      const tableData = slas.map(sla => {
-        const currentUptime = sla.measurements[0]?.uptimePercent.toFixed(2) || "N/A";
-        const avgUptime = sla.measurements.length 
-          ? (sla.measurements.reduce((acc, m) => acc + m.uptimePercent, 0) / sla.measurements.length).toFixed(2)
-          : "N/A";
+      const tableData = slas.map((sla) => {
+        const currentUptime =
+          sla.measurements[0]?.uptimePercent.toFixed(2) || "N/A"
+        const avgUptime = sla.measurements.length
+          ? (
+              sla.measurements.reduce((acc, m) => acc + m.uptimePercent, 0) /
+              sla.measurements.length
+            ).toFixed(2)
+          : "N/A"
         const lastUpdated = sla.measurements[0]
           ? new Date(sla.measurements[0].endTime).toLocaleString()
-          : "N/A";
+          : "N/A"
 
         return [
           `${sla.EventCategory?.emoji || "🎯"} ${sla.name}`,
@@ -101,31 +125,41 @@ export function ExportSLAButton({ slas }: ExportSLAButtonProps) {
           `${currentUptime}%`,
           `${avgUptime}%`,
           sla.timeWindow,
-          lastUpdated
-        ];
-      });
+          lastUpdated,
+        ]
+      })
 
       // Add table
       autoTable(doc, {
-        head: [["Name", "Category", "Target", "Current", "Average", "Window", "Last Updated"]],
+        head: [
+          [
+            "Name",
+            "Category",
+            "Target",
+            "Current",
+            "Average",
+            "Window",
+            "Last Updated",
+          ],
+        ],
         body: tableData,
         startY: 40,
         headStyles: { fillColor: [37, 99, 235] },
         alternateRowStyles: { fillColor: [245, 247, 250] },
         margin: { top: 40 },
         styles: { overflow: "linebreak" },
-      });
+      })
 
       // Save PDF
-      doc.save(`sla_report_${new Date().toISOString().split('T')[0]}.pdf`);
-      toast.success("PDF report exported successfully");
+      doc.save(`sla_report_${new Date().toISOString().split("T")[0]}.pdf`)
+      toast.success("PDF report exported successfully")
     } catch (error) {
-      console.error("Error exporting PDF:", error);
-      toast.error("Failed to export PDF report");
+      console.error("Error exporting PDF:", error)
+      toast.error("Failed to export PDF report")
     } finally {
-      setIsExporting(false);
+      setIsExporting(false)
     }
-  };
+  }
 
   return (
     <DropdownMenu>
@@ -140,19 +174,13 @@ export function ExportSLAButton({ slas }: ExportSLAButtonProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem 
-          onClick={exportToCSV}
-          disabled={isExporting}
-        >
+        <DropdownMenuItem onClick={exportToCSV} disabled={isExporting}>
           Export as CSV
         </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={exportToPDF}
-          disabled={isExporting}
-        >
+        <DropdownMenuItem onClick={exportToPDF} disabled={isExporting}>
           Export as PDF
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }
