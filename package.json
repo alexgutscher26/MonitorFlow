@@ -90,7 +90,7 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.3",
-    "vaul": "^1.1.0",
+    "vaul": "^1.1.1",
     "wrangler": "^3.80.4",
     "zod": "^3.23.8"
   },
