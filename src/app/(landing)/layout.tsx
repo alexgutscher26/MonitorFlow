@@ -1,15 +1,33 @@
-import { ReactNode } from "react"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { cn } from "@/lib/utils";
+import { Navbar } from "@/components/layout/navbar";
+import { ThemeProvider } from "@/components/layout/theme-provider";
+const inter = Inter({ subsets: ["latin"] });
 
-const Layout = ({ children }: { children: ReactNode }) => {
+export const metadata: Metadata = {
+  title: "MonitorFlow - Real-Time SaaS Monitoring",
+  description: "Get instant Discord notifications for your SaaS metrics. Track sales, users, and events in real-time with MonitorFlow.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <>
-      <Navbar />
-      {children}
-      <Footer />
-    </>
-  )
-}
+    <html lang="pt-br" suppressHydrationWarning>
+      <body className={cn("min-h-screen bg-background", inter.className)}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+        >
+          <Navbar />
 
-export default Layout
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}

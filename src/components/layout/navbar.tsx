@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { SignOutButton, useUser } from "@clerk/nextjs"
-import { ArrowRight } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
-import { Button, buttonVariants } from "./ui/button"
-import { MaxWidthWrapper } from "./max-width-wrapper"
-import { cn } from "../lib/utils"
+import { SignOutButton, useUser } from "@clerk/nextjs";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { MaxWidthWrapper } from "@/components/max-width-wrapper";
+import { cn } from "@/lib/utils";
 
 interface NavItem {
-  label: string
-  href: string
-  isExternal?: boolean
+  label: string;
+  href: string;
+  isExternal?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -32,32 +32,32 @@ const navItems: NavItem[] = [
     label: "Blog",
     href: "/blog",
   },
-]
+];
 
 export const Navbar = () => {
-  const { isSignedIn, user } = useUser()
-  const pathname = usePathname()
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { isSignedIn, user } = useUser();
+  const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0)
-    }
+      setIsScrolled(window.scrollY > 0);
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     // Close mobile menu when route changes
-    setIsMobileMenuOpen(false)
-  }, [pathname])
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   return (
     <nav
       className={cn(
-        "sticky inset-x-0 top-0 z-[100] h-16 w-full transition-all duration-300",
+        "sticky inset-x-0 top-0 z-[100] h-16 w-full transition-all duration-300 overflow-hidden",
         {
           "border-b bg-background/80 backdrop-blur-lg":
             isScrolled || isMobileMenuOpen,
@@ -65,8 +65,10 @@ export const Navbar = () => {
         }
       )}
     >
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808014_1px,transparent_1px),linear-gradient(to_bottom,#80808014_1px,transparent_1px)] bg-[size:24px_24px]" />
+      
       <MaxWidthWrapper>
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between relative">
           <Link
             href="/"
             className="flex items-center gap-2 font-semibold transition-colors"
@@ -145,5 +147,5 @@ export const Navbar = () => {
         </div>
       </MaxWidthWrapper>
     </nav>
-  )
-}
+  );
+};

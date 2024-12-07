@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",
+    "@devnomic/marquee": "^1.0.2",
     "@discordjs/rest": "^2.4.0",
     "@hookform/resolvers": "^3.9.1",
     "@microsoft/teams-js": "^2.31.1",
@@ -90,7 +91,7 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.3",
-    "vaul": "^1.1.0",
+    "vaul": "^1.1.1",
     "wrangler": "^3.80.4",
     "zod": "^3.23.8"
   },
@@ -98,7 +99,7 @@
     "@cloudflare/workers-types": "^4.20241202.0",
     "@shadcn/ui": "^0.0.4",
     "@types/node": "^20.16.11",
-    "@types/react": "^18.3.11",
+    "@types/react": "^18.3.13",
     "@types/react-dom": "^18",
     "@types/react-syntax-highlighter": "^15.5.13",
     "autoprefixer": "^10.4.20",
