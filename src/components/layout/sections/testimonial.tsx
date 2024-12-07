@@ -1,18 +1,24 @@
-"use client";
+"use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Star } from "lucide-react";
-import { motion } from "framer-motion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import { Star } from "lucide-react"
+import { motion } from "framer-motion"
 
 interface ReviewProps {
-  image: string;
-  name: string;
-  role: string;
-  company: string;
-  comment: string;
-  rating: number;
+  image: string
+  name: string
+  role: string
+  company: string
+  comment: string
+  rating: number
 }
 
 const reviewList: ReviewProps[] = [
@@ -61,12 +67,12 @@ const reviewList: ReviewProps[] = [
       "The ease of setup and powerful features make PingPanda stand out. We've caught potential issues before they impact users, and the historical data analysis is invaluable.",
     rating: 4.9,
   },
-];
+]
 
 export const TestimonialSection = () => {
   return (
     <section className="flex w-full flex-col items-center space-y-12 bg-slate-50/50 py-16 dark:bg-transparent md:py-24">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -98,18 +104,18 @@ export const TestimonialSection = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ 
+                transition={{
                   duration: 0.5,
-                  delay: index * 0.1 
+                  delay: index * 0.1,
                 }}
               >
                 <Card className="border-none bg-background/60 shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex gap-1 mb-4">
                       {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={`h-4 w-4 ${i < Math.floor(review.rating) ? 'fill-primary text-primary' : 'fill-muted text-muted'}`}
+                        <Star
+                          key={i}
+                          className={`h-4 w-4 ${i < Math.floor(review.rating) ? "fill-primary text-primary" : "fill-muted text-muted"}`}
                         />
                       ))}
                     </div>
@@ -119,11 +125,20 @@ export const TestimonialSection = () => {
                     <div className="flex items-center gap-4">
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={review.image} alt={review.name} />
-                        <AvatarFallback>{review.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        <AvatarFallback>
+                          {review.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="text-sm font-medium leading-none">{review.name}</p>
-                        <p className="text-sm text-muted-foreground">{review.role}</p>
+                        <p className="text-sm font-medium leading-none">
+                          {review.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {review.role}
+                        </p>
                         <p className="text-sm text-primary">{review.company}</p>
                       </div>
                     </div>
@@ -139,5 +154,5 @@ export const TestimonialSection = () => {
         </div>
       </Carousel>
     </section>
-  );
-};
+  )
+}
