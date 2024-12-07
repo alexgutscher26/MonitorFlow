@@ -68,7 +68,11 @@ const Logo = () => (
 
 const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   return (
-    <nav className="space-y-6 md:space-y-8 relative z-20 flex flex-col h-full" role="navigation" aria-label="Main navigation">
+    <nav
+      className="space-y-6 md:space-y-8 relative z-20 flex flex-col h-full"
+      role="navigation"
+      aria-label="Main navigation"
+    >
       {/* logo */}
       <div className="hidden sm:block">
         <Logo />
@@ -79,7 +83,11 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
         <ul role="list" className="space-y-6">
           {SIDEBAR_ITEMS.map(({ category, items }) => (
             <li key={category} className="space-y-2">
-              <p className="text-xs font-medium leading-6 text-gray-400 uppercase tracking-wider ml-4" role="heading" aria-level={2}>
+              <p
+                className="text-xs font-medium leading-6 text-gray-400 uppercase tracking-wider ml-4"
+                role="heading"
+                aria-level={2}
+              >
                 {category}
               </p>
               <div className="space-y-1">
@@ -97,7 +105,10 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
                     aria-label={item.description || item.text}
                   >
                     <span className="flex items-center justify-center size-6 rounded-md bg-white shadow-sm ring-1 ring-gray-900/5 transition-all duration-200 group-hover:shadow group-hover:ring-gray-900/10 group-hover:-rotate-6">
-                      <item.icon className="size-4 text-gray-600 transition-colors group-hover:text-gray-900" aria-hidden="true" />
+                      <item.icon
+                        className="size-4 text-gray-600 transition-colors group-hover:text-gray-900"
+                        aria-hidden="true"
+                      />
                     </span>
                     {item.text}
                   </Link>
@@ -109,7 +120,10 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
       </div>
 
       <div className="flex flex-col">
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6" role="separator" />
+        <div
+          className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6"
+          role="separator"
+        />
 
         <div className="relative rounded-lg bg-gray-50/50 p-4 ring-1 ring-gray-900/5">
           <UserButton
