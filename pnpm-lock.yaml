@@ -10,7 +10,7 @@ importers:
       "@clerk/nextjs":
         specifier: ^5.7.5
         version: 5.7.5(next@14.2.20(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      "@discordjs/rest":
+
         specifier: ^2.4.0
         version: 2.4.0
       "@hookform/resolvers":
@@ -519,69 +519,7 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  "@cloudflare/workers-shared@0.6.0":
-    resolution:
-      {
-        integrity: sha512-rfUCvb3hx4AsvdUZsxgk9lmgEnQehqV3jdtXLP/Xr0+P56n11T/0nXNMzmn7Nnv+IJFOV6X9NmFhuMz4sBPw7w==,
-      }
-    engines: { node: ">=16.7.0" }
 
-  "@cloudflare/workers-types@4.20241011.0":
-    resolution:
-      {
-        integrity: sha512-emwBnuFB/2lS1z6NXAeBqrSL8Xwnr7YpgdLuchOmgu/igqBsLLNPBb4Qmgh3neFWUe9wbzQyx030836YF3c3Xw==,
-      }
-
-  "@cspotcode/source-map-support@0.8.1":
-    resolution:
-      {
-        integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==,
-      }
-    engines: { node: ">=12" }
-
-  "@discordjs/collection@2.1.1":
-    resolution:
-      {
-        integrity: sha512-LiSusze9Tc7qF03sLCujF5iZp7K+vRNEDBZ86FT9aQAv3vxMLihUvKvpsCWiQ2DJq1tVckopKm1rxomgNUc9hg==,
-      }
-    engines: { node: ">=18" }
-
-  "@discordjs/rest@2.4.0":
-    resolution:
-      {
-        integrity: sha512-Xb2irDqNcq+O8F0/k/NaDp7+t091p+acb51iA4bCKfIn+WFWd6HrNvcsSbMMxIR9NjcMZS6NReTKygqiQN+ntw==,
-      }
-    engines: { node: ">=18" }
-
-  "@discordjs/util@1.1.1":
-    resolution:
-      {
-        integrity: sha512-eddz6UnOBEB1oITPinyrB2Pttej49M9FZQY8NxgEvc3tq6ZICZ19m70RsmzRdDHk80O9NoYN/25AqJl8vPVf/g==,
-      }
-    engines: { node: ">=18" }
-
-  "@esbuild-plugins/node-globals-polyfill@0.2.3":
-    resolution:
-      {
-        integrity: sha512-r3MIryXDeXDOZh7ih1l/yE9ZLORCd5e8vWg02azWRGj5SPTuoh69A2AIyn0Z31V/kHBfZ4HgWJ+OK3GTTwLmnw==,
-      }
-    peerDependencies:
-      esbuild: "*"
-
-  "@esbuild-plugins/node-modules-polyfill@0.2.2":
-    resolution:
-      {
-        integrity: sha512-LXV7QsWJxRuMYvKbiznh+U1ilIop3g2TeKRzUxOG5X3YITc8JyyTa90BmLwqqv0YnX4v32CSlG+vsziZp9dMvA==,
-      }
-    peerDependencies:
-      esbuild: "*"
-
-  "@esbuild/android-arm64@0.17.19":
-    resolution:
-      {
-        integrity: sha512-KBMWvEZooR7+kzY0BtbTQn0OAYY7CsiydT63pVEaPtVYF0hXbUaOyZog37DKxK7NF3XacBJOpYT4adIJh+avxA==,
-      }
-    engines: { node: ">=12" }
     cpu: [arm64]
     os: [android]
 
@@ -8046,7 +7984,7 @@ snapshots:
     dependencies:
       "@jridgewell/trace-mapping": 0.3.9
 
-  "@discordjs/collection@2.1.1": {}
+
 
   "@discordjs/rest@2.4.0":
     dependencies:

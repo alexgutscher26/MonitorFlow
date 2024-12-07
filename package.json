@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",
+    "@devnomic/marquee": "^1.0.2",
     "@discordjs/rest": "^2.4.0",
     "@hookform/resolvers": "^3.9.1",
     "@microsoft/teams-js": "^2.31.1",
