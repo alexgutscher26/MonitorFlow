@@ -1,4 +1,9 @@
 import { Resend } from "resend"
+<<<<<<< HEAD
+
+// Initialize Resend with API key from environment variable
+const resend = new Resend(process.env.RESEND_API_KEY)
+=======
 import { z } from "zod"
 import { rateLimit } from "@/utils/rate-limit"
 
@@ -21,6 +26,7 @@ const limiter = rateLimit({
 
 const MAX_RETRIES = 3
 const RETRY_DELAY = 1000 // 1 second
+>>>>>>> main
 
 export const sendEmail = async ({
   to,
@@ -32,6 +38,18 @@ export const sendEmail = async ({
   html: string
 }) => {
   try {
+<<<<<<< HEAD
+    const data = await resend.emails.send({
+      from: "PingPanda <notifications@pingpanda.dev>",
+      to,
+      subject,
+      html,
+    })
+
+    return { success: true, data }
+  } catch (error) {
+    console.error("Error sending email:", error)
+=======
     // Validate email parameters
     emailSchema.parse({ to, subject, html })
 
@@ -93,6 +111,7 @@ export const sendEmail = async ({
         timestamp: new Date().toISOString(),
       })
     }
+>>>>>>> main
     throw error
   }
 }
@@ -113,6 +132,10 @@ export const generateSLANotificationEmail = (
     RECOVERY: "#00FF00",
   }
 
+<<<<<<< HEAD
+  const color = typeColors[type]
+  const title = `${type} Alert for ${slaName}`
+=======
   const typeIcons = {
     WARNING: "⚠️",
     CRITICAL: "🚨",
@@ -122,6 +145,7 @@ export const generateSLANotificationEmail = (
   const color = typeColors[type]
   const icon = typeIcons[type]
   const title = `${icon} ${type} Alert for ${slaName}`
+>>>>>>> main
 
   return {
     subject: title,

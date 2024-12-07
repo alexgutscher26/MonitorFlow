@@ -1,6 +1,10 @@
 "use client"
 
+<<<<<<< HEAD
+import { useState } from "react"
+=======
 import { useState, useEffect } from "react"
+>>>>>>> main
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -27,7 +31,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { toast } from "sonner"
+<<<<<<< HEAD
+=======
 import { Loader2 } from "lucide-react"
+>>>>>>> main
 
 const thresholdSchema = z.object({
   warningThreshold: z
@@ -44,6 +51,9 @@ const thresholdSchema = z.object({
   webhookUrl: z.string().url().optional().or(z.literal("")),
 })
 
+<<<<<<< HEAD
+type ThresholdFormValues = z.infer<typeof thresholdSchema>
+=======
 interface ThresholdFormValues {
   warningThreshold: number
   criticalThreshold: number
@@ -52,11 +62,23 @@ interface ThresholdFormValues {
   webhookNotifications: boolean
   webhookUrl?: string
 }
+>>>>>>> main
 
 interface SLAThresholdConfigProps {
   slaId: string
   target: number
+<<<<<<< HEAD
+  initialThresholds?: {
+    warningThreshold: number
+    criticalThreshold: number
+    enableNotifications: boolean
+    emailNotifications: boolean
+    webhookNotifications: boolean
+    webhookUrl?: string
+  }
+=======
   initialThresholds?: Partial<ThresholdFormValues>
+>>>>>>> main
 }
 
 export function SLAThresholdConfig({
@@ -65,7 +87,10 @@ export function SLAThresholdConfig({
   initialThresholds,
 }: SLAThresholdConfigProps) {
   const [open, setOpen] = useState(false)
+<<<<<<< HEAD
+=======
   const [isSubmitting, setIsSubmitting] = useState(false)
+>>>>>>> main
 
   const form = useForm<ThresholdFormValues>({
     resolver: zodResolver(thresholdSchema),
@@ -78,6 +103,22 @@ export function SLAThresholdConfig({
       webhookUrl: initialThresholds?.webhookUrl ?? "",
     },
   })
+<<<<<<< HEAD
+
+  const onSubmit = async (data: ThresholdFormValues) => {
+    try {
+      // Validate thresholds relative to target
+      if (data.warningThreshold > target) {
+        toast.error("Warning threshold cannot be higher than the target")
+        return
+      }
+      if (data.criticalThreshold > data.warningThreshold) {
+        toast.error(
+          "Critical threshold cannot be higher than warning threshold"
+        )
+        return
+      }
+=======
 
   // Reset form when dialog closes
   useEffect(() => {
@@ -111,6 +152,7 @@ export function SLAThresholdConfig({
   const onSubmit = async (data: ThresholdFormValues) => {
     try {
       setIsSubmitting(true)
+>>>>>>> main
 
       // Update SLA thresholds
       const response = await fetch(`/api/sla/${slaId}`, {
@@ -131,14 +173,21 @@ export function SLAThresholdConfig({
       })
 
       if (!response.ok) {
+<<<<<<< HEAD
+        throw new Error("Failed to update thresholds")
+=======
         const errorData = await response.json().catch(() => ({}))
         throw new Error(errorData.message || "Failed to update thresholds")
+>>>>>>> main
       }
 
       toast.success("Alert thresholds updated successfully")
       setOpen(false)
     } catch (error) {
       console.error("Error updating thresholds:", error)
+<<<<<<< HEAD
+      toast.error("Failed to update alert thresholds")
+=======
       toast.error(
         error instanceof Error
           ? error.message
@@ -146,6 +195,7 @@ export function SLAThresholdConfig({
       )
     } finally {
       setIsSubmitting(false)
+>>>>>>> main
     }
   }
 
@@ -187,7 +237,10 @@ export function SLAThresholdConfig({
                       onChange={(e) =>
                         field.onChange(parseFloat(e.target.value))
                       }
+<<<<<<< HEAD
+=======
                       aria-describedby="warning-threshold-description"
+>>>>>>> main
                     />
                   </FormControl>
                   <FormDescription id="warning-threshold-description">
@@ -214,7 +267,10 @@ export function SLAThresholdConfig({
                       onChange={(e) =>
                         field.onChange(parseFloat(e.target.value))
                       }
+<<<<<<< HEAD
+=======
                       aria-describedby="critical-threshold-description"
+>>>>>>> main
                     />
                   </FormControl>
                   <FormDescription id="critical-threshold-description">
@@ -305,10 +361,15 @@ export function SLAThresholdConfig({
                         <FormLabel>Webhook URL</FormLabel>
                         <FormControl>
                           <Input
+<<<<<<< HEAD
+                            {...field}
+                            placeholder="https://your-webhook-url.com"
+=======
                             type="url"
                             placeholder="https://your-webhook-url.com"
                             {...field}
                             aria-describedby="webhook-url-description"
+>>>>>>> main
                           />
                         </FormControl>
                         <FormDescription id="webhook-url-description">

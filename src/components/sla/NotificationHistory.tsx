@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -16,51 +16,53 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Bell, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
-import { format } from "date-fns";
+} from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Bell, CheckCircle2, XCircle, AlertCircle } from "lucide-react"
+import { format } from "date-fns"
 
 interface Notification {
-  id: string;
-  slaId: string;
-  type: "WARNING" | "CRITICAL" | "RECOVERY";
-  message: string;
-  status: "PENDING" | "DELIVERED" | "FAILED";
-  createdAt: Date;
-  deliveredAt?: Date;
-  error?: string;
+  id: string
+  slaId: string
+  type: "WARNING" | "CRITICAL" | "RECOVERY"
+  message: string
+  status: "PENDING" | "DELIVERED" | "FAILED"
+  createdAt: Date
+  deliveredAt?: Date
+  error?: string
 }
 
 interface NotificationHistoryProps {
-  slaId: string;
+  slaId: string
 }
 
 export function NotificationHistory({ slaId }: NotificationHistoryProps) {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch(`/api/sla/${slaId}/notifications`);
+      const response = await fetch(`/api/sla/${slaId}/notifications`)
       if (!response.ok) {
-        throw new Error(await response.text() || "Failed to fetch notifications");
+        throw new Error(
+          (await response.text()) || "Failed to fetch notifications"
+        )
       }
-      const data = await response.json();
-      setNotifications(data);
+      const data = await response.json()
+      setNotifications(data)
     } catch (err) {
-      console.error("Error fetching notifications:", err);
-      setError(err instanceof Error ? err.message : "An error occurred");
+      console.error("Error fetching notifications:", err)
+      setError(err instanceof Error ? err.message : "An error occurred")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   // Fetch notifications on mount
   useEffect(() => {
-    fetchNotifications();
-  }, [fetchNotifications, slaId]);
+    fetchNotifications()
+  }, [fetchNotifications, slaId])
 
   const getStatusBadge = (status: Notification["status"]) => {
     switch (status) {
@@ -70,34 +72,34 @@ export function NotificationHistory({ slaId }: NotificationHistoryProps) {
             <CheckCircle2 className="h-3 w-3 mr-1" />
             Delivered
           </Badge>
-        );
+        )
       case "FAILED":
         return (
           <Badge variant="destructive">
             <XCircle className="h-3 w-3 mr-1" />
             Failed
           </Badge>
-        );
+        )
       default:
         return (
           <Badge variant="secondary">
             <AlertCircle className="h-3 w-3 mr-1" />
             Pending
           </Badge>
-        );
+        )
     }
-  };
+  }
 
   const getTypeIcon = (type: Notification["type"]) => {
     switch (type) {
       case "WARNING":
-        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
+        return <AlertCircle className="h-4 w-4 text-yellow-500" />
       case "CRITICAL":
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
+        return <AlertCircle className="h-4 w-4 text-red-500" />
       case "RECOVERY":
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+        return <CheckCircle2 className="h-4 w-4 text-green-500" />
     }
-  };
+  }
 
   if (loading) {
     return (
@@ -110,7 +112,7 @@ export function NotificationHistory({ slaId }: NotificationHistoryProps) {
           <CardDescription>Loading notifications...</CardDescription>
         </CardHeader>
       </Card>
-    );
+    )
   }
 
   if (error) {
@@ -124,7 +126,7 @@ export function NotificationHistory({ slaId }: NotificationHistoryProps) {
           <CardDescription className="text-red-500">{error}</CardDescription>
         </CardHeader>
       </Card>
-    );
+    )
   }
 
   return (
@@ -177,5 +179,5 @@ export function NotificationHistory({ slaId }: NotificationHistoryProps) {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-import { db } from "@/db";
-import { sla } from "@/db/schema";
-import { z } from "zod";
+import { NextResponse } from "next/server"
+import { auth } from "@clerk/nextjs/server"
+import { db } from "@/db"
+import { sla } from "@/db/schema"
+import { z } from "zod"
 
 const importSchema = z.object({
   name: z.string().min(1),
@@ -13,17 +13,17 @@ const importSchema = z.object({
   emailNotifications: z.boolean(),
   webhookNotifications: z.boolean(),
   webhookUrl: z.string().url().optional().nullable(),
-});
+})
 
 export async function POST(request: Request) {
   try {
-    const { userId } = auth();
+    const { userId } = auth()
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    const body = await request.json();
-    const validatedData = importSchema.parse(body);
+    const body = await request.json()
+    const validatedData = importSchema.parse(body)
 
     // Create new SLA in database
     const newSla = await db.insert(sla).values({
@@ -38,9 +38,12 @@ export async function POST(request: Request) {
       webhookUrl: validatedData.webhookUrl || null,
       createdAt: new Date(),
       updatedAt: new Date(),
-    });
+    })
 
-    return NextResponse.json({ message: "SLA imported successfully" }, { status: 201 });
+    return NextResponse.json(
+      { message: "SLA imported successfully" },
+      { status: 201 }
+    )
   } catch (err) {
     if (err instanceof z.ZodError) {
       return NextResponse.json(
@@ -49,7 +52,7 @@ export async function POST(request: Request) {
           errors: err.errors,
         },
         { status: 422 }
-      );
+      )
     }
 
     return NextResponse.json(
@@ -58,6 +61,6 @@ export async function POST(request: Request) {
         details: err instanceof Error ? err.message : "Unknown error occurred",
       },
       { status: 500 }
-    );
+    )
   }
 }

@@ -36,6 +36,7 @@ We take all security vulnerabilities seriously. If you discover a security issue
 ### Bug Bounty Program
 
 We currently do not offer a bug bounty program. However, we deeply appreciate the security research community's efforts and will:
+
 - Acknowledge security researchers in our security advisory page
 - Provide detailed credit in security advisories
 - Issue security researcher certificates for significant findings
@@ -45,24 +46,28 @@ We currently do not offer a bug bounty program. However, we deeply appreciate th
 When using our software, we recommend following these security best practices:
 
 ### Authentication & Access
+
 1. Always use strong, unique passwords
 2. Enable two-factor authentication (2FA)
 3. Regularly rotate API keys and access tokens
 4. Implement the principle of least privilege for all accounts
 
 ### System Security
+
 1. Keep all dependencies and packages up to date
 2. Always use the latest supported version
 3. Regularly update your operating system and security patches
 4. Use secure, encrypted connections (HTTPS/TLS)
 
 ### Monitoring & Auditing
+
 1. Enable and regularly review audit logs
 2. Monitor your application logs for suspicious activity
 3. Set up automated security alerts
 4. Conduct regular security assessments
 
 ### Data Protection
+
 1. Encrypt sensitive data at rest and in transit
 2. Regularly backup your data
 3. Implement proper data retention policies
@@ -71,12 +76,14 @@ When using our software, we recommend following these security best practices:
 ## Security Updates
 
 ### Update Process
+
 1. Security updates are released as soon as possible when a vulnerability is found
 2. Critical updates are fast-tracked and released out of band if necessary
 3. All security updates are clearly marked in release notes
 4. Detailed advisories are published for critical vulnerabilities
 
 ### Update Notifications
+
 - Subscribe to our security advisory mailing list
 - Follow our security announcements on GitHub
 - Enable automatic update notifications in your installation
@@ -84,6 +91,7 @@ When using our software, we recommend following these security best practices:
 ## Incident Response
 
 In case of a security incident:
+
 1. We will notify affected users within 24 hours of confirmation
 2. Provide detailed impact analysis and mitigation steps
 3. Issue emergency patches if required

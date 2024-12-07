@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+<<<<<<< HEAD
+  useFileSystemPublicRoutes: true,
+}
+=======
   images: {
     remotePatterns: [
       {
@@ -17,5 +21,6 @@ const nextConfig = {
     ],
   },
 };
+>>>>>>> main
 
 export default nextConfig;

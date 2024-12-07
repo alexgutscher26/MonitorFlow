@@ -1,6 +1,6 @@
-import { Prisma } from "@prisma/client";
-import { Redis } from "@upstash/redis/cloudflare";
-import superjson, { SuperJSONResult } from "superjson";
+import { Prisma } from "@prisma/client"
+import { Redis } from "@upstash/redis/cloudflare"
+import superjson, { SuperJSONResult } from "superjson"
 
 export type CacheArgs = { cache?: { id: string; ttl?: number } }
 

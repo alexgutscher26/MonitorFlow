@@ -11,6 +11,7 @@ Comprehensive role-based access control (RBAC) system providing granular permiss
 #### Default Roles
 
 - Super Admin
+
   - Full system access
   - Role management
   - System configuration
@@ -18,6 +19,7 @@ Comprehensive role-based access control (RBAC) system providing granular permiss
   - Security controls
 
 - Admin
+
   - User management
   - Content management
   - Settings configuration
@@ -25,6 +27,7 @@ Comprehensive role-based access control (RBAC) system providing granular permiss
   - Integration management
 
 - Manager
+
   - Team management
   - Project oversight
   - Resource allocation
@@ -32,6 +35,7 @@ Comprehensive role-based access control (RBAC) system providing granular permiss
   - Report access
 
 - User
+
   - Basic access
   - Personal workspace
   - Standard features

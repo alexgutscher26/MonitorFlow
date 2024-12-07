@@ -1,36 +1,36 @@
-"use client";
+"use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { formatDistanceToNow } from "date-fns";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { formatDistanceToNow } from "date-fns"
 
 interface SLACardProps {
   sla: {
-    name: string;
-    description?: string;
-    target: number;
-    timeWindow: string;
+    name: string
+    description?: string
+    target: number
+    timeWindow: string
     measurements: {
-      uptimePercent: number;
-      endTime: string;
-    }[];
-  };
+      uptimePercent: number
+      endTime: string
+    }[]
+  }
 }
 
 export function SLACard({ sla }: SLACardProps) {
-  const latestMeasurement = sla.measurements[0];
-  const uptimePercent = latestMeasurement?.uptimePercent ?? 100;
+  const latestMeasurement = sla.measurements[0]
+  const uptimePercent = latestMeasurement?.uptimePercent ?? 100
   const lastUpdated = latestMeasurement?.endTime
     ? formatDistanceToNow(new Date(latestMeasurement.endTime), {
         addSuffix: true,
       })
-    : "Never";
+    : "Never"
 
   const getStatusColor = (uptime: number, target: number) => {
-    if (uptime >= target) return "bg-green-500";
-    if (uptime >= target - 1) return "bg-yellow-500";
-    return "bg-red-500";
-  };
+    if (uptime >= target) return "bg-green-500"
+    if (uptime >= target - 1) return "bg-yellow-500"
+    return "bg-red-500"
+  }
 
   return (
     <Card>
@@ -45,7 +45,13 @@ export function SLACard({ sla }: SLACardProps) {
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
               <span>Current Uptime</span>
-              <span className={uptimePercent >= sla.target ? "text-green-500" : "text-red-500"}>
+              <span
+                className={
+                  uptimePercent >= sla.target
+                    ? "text-green-500"
+                    : "text-red-500"
+                }
+              >
                 {uptimePercent.toFixed(2)}%
               </span>
             </div>
@@ -64,5 +70,5 @@ export function SLACard({ sla }: SLACardProps) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

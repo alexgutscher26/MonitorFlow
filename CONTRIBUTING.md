@@ -42,6 +42,7 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 ## Development Setup
 
 1. Install dependencies:
+
    ```bash
    npm install
    # or
@@ -49,11 +50,13 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
    ```
 
 2. Set up your environment variables:
+
    ```bash
    cp .env.example .env.local
    ```
 
 3. Run database migrations:
+
    ```bash
    npx prisma migrate dev
    ```
