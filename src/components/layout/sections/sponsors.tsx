@@ -166,9 +166,7 @@ export function SponsorsSection() {
       </MaxWidthWrapper>
 
       <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8">
-        <p className="text-sm text-muted-foreground">
-          Trusted by teams at
-        </p>
+        <p className="text-sm text-muted-foreground">Trusted by teams at</p>
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
           {sponsorsSection.map((sponsor) => (
             <div
@@ -178,7 +176,10 @@ export function SponsorsSection() {
               <Image
                 src={sponsor.logo}
                 alt={sponsor.name}
-                className={cn("h-auto w-auto dark:brightness-0 dark:invert", sponsor.className)}
+                className={cn(
+                  "h-auto w-auto dark:brightness-0 dark:invert",
+                  sponsor.className
+                )}
                 width={120}
                 height={40}
               />
