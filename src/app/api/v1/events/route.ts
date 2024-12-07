@@ -2,16 +2,15 @@ import { FREE_QUOTA, PRO_QUOTA } from "@/config"
 import { db } from "@/db"
 import { DiscordClient } from "@/lib/discord-client"
 import { CATEGORY_NAME_VALIDATOR } from "@/lib/validators/category-validator"
+
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
-import { updateSLAMeasurements } from "@/lib/sla"
 
 const REQUEST_VALIDATOR = z
   .object({
     category: CATEGORY_NAME_VALIDATOR,
     fields: z.record(z.string().or(z.number()).or(z.boolean())).optional(),
     description: z.string().optional(),
-    status: z.enum(["up", "down"]).optional(),
   })
   .strict()
 
@@ -47,6 +46,15 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: "Invalid API key" }, { status: 401 })
     }
 
+    if (!user.discordId) {
+      return NextResponse.json(
+        {
+          message: "Please enter your discord ID in your account settings",
+        },
+        { status: 403 }
+      )
+    }
+
     // ACTUAL LOGIC
     const currentData = new Date()
     const currentMonth = currentData.getMonth() + 1
@@ -75,6 +83,10 @@ export const POST = async (req: NextRequest) => {
       )
     }
 
+    const discord = new DiscordClient(process.env.DISCORD_BOT_TOKEN)
+
+    const dmChannel = await discord.createDM(user.discordId)
+
     let requestData: unknown
 
     try {
@@ -91,7 +103,7 @@ export const POST = async (req: NextRequest) => {
     const validationResult = REQUEST_VALIDATOR.parse(requestData)
 
     const category = user.EventCategories.find(
-      (cat: { name: string }) => cat.name === validationResult.category
+      (cat) => cat.name === validationResult.category
     )
 
     if (!category) {
@@ -128,48 +140,44 @@ export const POST = async (req: NextRequest) => {
         name: category.name,
         formattedMessage: `${eventData.title}\n\n${eventData.description}`,
         userId: user.id,
-        fields: {
-          ...(validationResult.fields || {}),
-          status: validationResult.status || "up",
-        },
+        fields: validationResult.fields || {},
         eventCategoryId: category.id,
       },
     })
 
-    // Update quota first
-    await db.quota.upsert({
-      where: { userId: user.id, month: currentMonth, year: currentYear },
-      update: { count: { increment: 1 } },
-      create: {
-        userId: user.id,
-        month: currentMonth,
-        year: currentYear,
-        count: 1,
-      },
-    })
-
-    // Try to update SLA measurements
     try {
-      await updateSLAMeasurements()
-    } catch (err) {
-      console.error("Failed to update SLA measurements:", err)
-      // Don't fail the request if SLA update fails
-    }
+      await discord.sendEmbed(dmChannel.id, eventData)
 
-    // Try to send Discord notification
-    try {
-      if (process.env.DISCORD_BOT_TOKEN && user.discordId) {
-        const discord = new DiscordClient(process.env.DISCORD_BOT_TOKEN)
-        const dmChannel = await discord.createDM(user.discordId)
-        await discord.sendEmbed(dmChannel.id, eventData)
-        await db.event.update({
-          where: { id: event.id },
-          data: { deliveryStatus: "DELIVERED" },
-        })
-      }
+      await db.event.update({
+        where: { id: event.id },
+        data: { deliveryStatus: "DELIVERED" },
+      })
+
+      await db.quota.upsert({
+        where: { userId: user.id, month: currentMonth, year: currentYear },
+        update: { count: { increment: 1 } },
+        create: {
+          userId: user.id,
+          month: currentMonth,
+          year: currentYear,
+          count: 1,
+        },
+      })
     } catch (err) {
-      console.error("Discord notification failed:", err)
-      // Don't fail the request if Discord notification fails
+      await db.event.update({
+        where: { id: event.id },
+        data: { deliveryStatus: "FAILED" },
+      })
+
+      console.log(err)
+
+      return NextResponse.json(
+        {
+          message: "Error processing event",
+          eventId: event.id,
+        },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({
@@ -177,23 +185,14 @@ export const POST = async (req: NextRequest) => {
       eventId: event.id,
     })
   } catch (err) {
-    console.error("Error in event creation:", err)
+    console.error(err)
 
     if (err instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          message: "Validation error",
-          errors: err.errors,
-        },
-        { status: 422 }
-      )
+      return NextResponse.json({ message: err.message }, { status: 422 })
     }
 
     return NextResponse.json(
-      {
-        message: "Internal server error",
-        details: err instanceof Error ? err.message : "Unknown error occurred",
-      },
+      { message: "Internal server error" },
       { status: 500 }
     )
   }

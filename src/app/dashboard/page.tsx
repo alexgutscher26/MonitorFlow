@@ -1,5 +1,5 @@
 import { DashboardPage } from "@/components/dashboard-page"
-import { getDb } from "@/db"
+import { db } from "@/db"
 import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { DashboardPageContent } from "./dashboard-page-content"
@@ -19,11 +19,10 @@ const Page = async ({ searchParams }: PageProps) => {
   const auth = await currentUser()
 
   if (!auth) {
-    return redirect("/welcome")
+    redirect("/sign-in")
   }
 
-  const prisma = await getDb()
-  const user = await prisma.user.findUnique({
+  const user = await db.user.findUnique({
     where: { externalId: auth.id },
   })
 

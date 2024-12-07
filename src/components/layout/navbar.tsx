@@ -1,151 +1,81 @@
 "use client"
 
-import { SignOutButton, useUser } from "@clerk/nextjs"
-import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { MaxWidthWrapper } from "@/components/max-width-wrapper"
-import { cn } from "@/lib/utils"
+import { UserButton } from "@clerk/nextjs"
 
-interface NavItem {
-  label: string
-  href: string
-  isExternal?: boolean
-}
+import { cn } from "@/utils"
+import { buttonVariants } from "@/components/ui/button"
+import { Icons } from "@/components/icons"
 
-const navItems: NavItem[] = [
-  {
-    label: "Features",
-    href: "/features",
-  },
-  {
-    label: "Pricing",
-    href: "/pricing",
-  },
-  {
-    label: "Documentation",
-    href: "/docs",
-  },
-  {
-    label: "Blog",
-    href: "/blog",
-  },
-]
-
-export const Navbar = () => {
-  const { isSignedIn, user } = useUser()
+export function Navbar() {
   const pathname = usePathname()
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  useEffect(() => {
-    // Close mobile menu when route changes
-    setIsMobileMenuOpen(false)
-  }, [pathname])
+  const isOnDashboard = pathname?.startsWith("/dashboard")
 
   return (
-    <nav
-      className={cn(
-        "sticky inset-x-0 top-0 z-[100] h-16 w-full transition-all duration-300 overflow-hidden",
-        {
-          "border-b bg-background/80 backdrop-blur-lg":
-            isScrolled || isMobileMenuOpen,
-          "bg-background/0": !isScrolled && !isMobileMenuOpen,
-        }
-      )}
-    >
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808014_1px,transparent_1px),linear-gradient(to_bottom,#80808014_1px,transparent_1px)] bg-[size:24px_24px]" />
-
-      <MaxWidthWrapper>
-        <div className="flex h-16 items-center justify-between relative">
-          <Link
-            href="/"
-            className="flex items-center gap-2 font-semibold transition-colors"
-          >
-            <span className="text-2xl">🐼</span>
-            <span>
-              Monitor<span className="text-brand-700">Flow</span>
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 items-center">
+        <div className="mr-4 flex">
+          <Link href="/" className="mr-6 flex items-center space-x-2">
+            <Icons.logo className="h-6 w-6" />
+            <span className="hidden font-bold sm:inline-block">
+              PingPanda
             </span>
           </Link>
-
-          {/* Center navigation items */}
-          <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 gap-6 md:flex">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
-                  pathname === item.href && "text-foreground"
-                )}
-                {...(item.isExternal && {
-                  target: "_blank",
-                  rel: "noopener noreferrer",
-                })}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav className="flex items-center space-x-6 text-sm font-medium">
+            {!isOnDashboard && (
+              <>
+                <Link
+                  href="/features"
+                  className={cn(
+                    "transition-colors hover:text-foreground/80",
+                    pathname === "/features" ? "text-foreground" : "text-foreground/60"
+                  )}
+                >
+                  Features
+                </Link>
+                <Link
+                  href="/pricing"
+                  className={cn(
+                    "transition-colors hover:text-foreground/80",
+                    pathname === "/pricing" ? "text-foreground" : "text-foreground/60"
+                  )}
+                >
+                  Pricing
+                </Link>
+                <Link
+                  href="/docs"
+                  className={cn(
+                    "transition-colors hover:text-foreground/80",
+                    pathname === "/docs" ? "text-foreground" : "text-foreground/60"
+                  )}
+                >
+                  Docs
+                </Link>
+              </>
+            )}
           </nav>
-
-          <div className="flex items-center gap-4">
-            <div className="hidden items-center gap-4 md:flex">
-              {isSignedIn ? (
-                <>
-                  <SignOutButton>
-                    <Button size="sm" variant="ghost">
-                      Sign out
-                    </Button>
-                  </SignOutButton>
-
-                  <Link
-                    href="/dashboard"
-                    className={buttonVariants({
-                      size: "sm",
-                      className: "flex items-center gap-1.5",
-                    })}
-                  >
-                    Dashboard <ArrowRight className="size-4" />
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/sign-in"
-                    className={buttonVariants({
-                      size: "sm",
-                      variant: "ghost",
-                    })}
-                  >
-                    Sign in
-                  </Link>
-
-                  <Link
-                    href="/sign-up"
-                    className={buttonVariants({
-                      size: "sm",
-                      className: "flex items-center gap-1.5",
-                    })}
-                  >
-                    Get started <ArrowRight className="size-4" />
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
         </div>
-      </MaxWidthWrapper>
-    </nav>
+        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          <div className="w-full flex-1 md:w-auto md:flex-none">
+          </div>
+          <nav className="flex items-center">
+            {isOnDashboard ? (
+              <UserButton afterSignOutUrl="/" />
+            ) : (
+              <Link
+                href={isOnDashboard ? "/dashboard" : "/sign-in"}
+                className={cn(
+                  buttonVariants({ variant: "secondary", size: "sm" }),
+                  "px-4"
+                )}
+              >
+                {isOnDashboard ? "Dashboard" : "Sign In"}
+              </Link>
+            )}
+          </nav>
+        </div>
+      </div>
+    </header>
   )
 }

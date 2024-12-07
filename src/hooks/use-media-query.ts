@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 
-export const useMediaQuery = (_p0: string) => {
+export const useMediaQuery = () => {
   const [device, setDevice] = useState<"mobile" | "tablet" | "desktop" | null>(
     null
   )
 
-  const [dimensions] = useState<{
+  const [dimensions, setDimensions] = useState<{
     width: number
     height: number
   } | null>(null)

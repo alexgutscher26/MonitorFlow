@@ -18,24 +18,24 @@ const EVENT_CATEGORY_VALIDATOR = z.object({
   color: z
     .string()
     .min(1, "Color is required")
-    .regex(/^#[0-9A-F]{6}$/i, "Please select a valid color."),
-  emoji: z.string().emoji("Please select a valid emoji.").optional(),
+    .regex(/^#[0-9A-F]{6}$/i, "Invalid color format."),
+  emoji: z.string().emoji("Invalid emoji").optional(),
 })
 
 type EventCategoryForm = z.infer<typeof EVENT_CATEGORY_VALIDATOR>
 
 const COLOR_OPTIONS = [
-  { color: "#FF6B6B", label: "Bright Red" },
-  { color: "#4ECDC4", label: "Teal" },
-  { color: "#45B7D1", label: "Sky Blue" },
-  { color: "#FFA07A", label: "Light Salmon" },
-  { color: "#98D8C8", label: "Seafoam Green" },
-  { color: "#FDCB6E", label: "Mustard Yellow" },
-  { color: "#6C5CE7", label: "Soft Purple" },
-  { color: "#FF85A2", label: "Pink" },
-  { color: "#2ECC71", label: "Emerald Green" },
-  { color: "#E17055", label: "Terracotta" },
-] as const
+  "#FF6B6B", // bg-[#FF6B6B] ring-[#FF6B6B] Bright Red
+  "#4ECDC4", // bg-[#4ECDC4] ring-[#4ECDC4] Teal
+  "#45B7D1", // bg-[#45B7D1] ring-[#45B7D1] Sky Blue
+  "#FFA07A", // bg-[#FFA07A] ring-[#FFA07A] Light Salmon
+  "#98D8C8", // bg-[#98D8C8] ring-[#98D8C8] Seafoam Green
+  "#FDCB6E", // bg-[#FDCB6E] ring-[#FDCB6E] Mustard Yellow
+  "#6C5CE7", // bg-[#6C5CE7] ring-[#6C5CE7] Soft Purple
+  "#FF85A2", // bg-[#FF85A2] ring-[#FF85A2] Pink
+  "#2ECC71", // bg-[#2ECC71] ring-[#2ECC71] Emerald Green
+  "#E17055", // bg-[#E17055] ring-[#E17055] Terracotta
+]
 
 const EMOJI_OPTIONS = [
   { emoji: "💰", label: "Money (Sale)" },
@@ -50,19 +50,14 @@ const EMOJI_OPTIONS = [
   { emoji: "🔔", label: "Notification" },
 ]
 
-interface CreateEventCategoryModalProps {
+interface CreateEventCategoryModel extends PropsWithChildren {
   containerClassName?: string
-  children: React.ReactNode
-  onSuccess?: () => void
-  onError?: (error: Error) => void
 }
 
 export const CreateEventCategoryModal = ({
   children,
   containerClassName,
-  onSuccess,
-  onError,
-}: CreateEventCategoryModalProps) => {
+}: CreateEventCategoryModel) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
 
@@ -73,10 +68,6 @@ export const CreateEventCategoryModal = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-event-categories"] })
       setIsOpen(false)
-      onSuccess?.()
-    },
-    onError: (error: Error) => {
-      onError?.(error)
     },
   })
 
@@ -85,15 +76,9 @@ export const CreateEventCategoryModal = ({
     handleSubmit,
     watch,
     setValue,
-    reset,
-    formState: { errors, isDirty },
+    formState: { errors },
   } = useForm<EventCategoryForm>({
     resolver: zodResolver(EVENT_CATEGORY_VALIDATOR),
-    defaultValues: {
-      name: "",
-      color: COLOR_OPTIONS[0].color,
-      emoji: EMOJI_OPTIONS[0].emoji,
-    },
   })
 
   const color = watch("color")
@@ -103,27 +88,16 @@ export const CreateEventCategoryModal = ({
     createEventCategory(data)
   }
 
-  const handleClose = () => {
-    setIsOpen(false)
-    reset()
-  }
-
   return (
     <>
-      <div
-        className={cn("cursor-pointer", containerClassName)}
-        onClick={() => setIsOpen(true)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => e.key === "Enter" && setIsOpen(true)}
-      >
+      <div className={containerClassName} onClick={() => setIsOpen(true)}>
         {children}
       </div>
 
       <Modal
         className="max-w-xl p-8"
         showModal={isOpen}
-        setShowModal={handleClose}
+        setShowModal={setIsOpen}
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
@@ -137,59 +111,49 @@ export const CreateEventCategoryModal = ({
 
           <div className="space-y-5">
             <div>
-              <Label htmlFor="name">Name *</Label>
+              <Label htmlFor="name">Name</Label>
               <Input
                 autoFocus
                 id="name"
                 {...register("name")}
                 placeholder="e.g. user-signup"
-                className={cn(
-                  "w-full",
-                  errors.name && "border-red-500 focus-visible:ring-red-500"
-                )}
-                aria-invalid={!!errors.name}
-                aria-describedby={errors.name ? "name-error" : undefined}
+                className="w-full"
               />
-              {errors.name && (
-                <p id="name-error" className="mt-1 text-sm text-red-500">
+              {errors.name ? (
+                <p className="mt-1 text-sm text-red-500">
                   {errors.name.message}
                 </p>
-              )}
+              ) : null}
             </div>
 
             <div>
-              <Label>Color *</Label>
+              <Label>Color</Label>
               <div className="flex flex-wrap gap-3">
-                {COLOR_OPTIONS.map(({ color: premadeColor, label }) => (
+                {COLOR_OPTIONS.map((premadeColor) => (
                   <button
                     key={premadeColor}
                     type="button"
                     className={cn(
+                      `bg-[${premadeColor}]`,
                       "size-10 rounded-full ring-2 ring-offset-2 transition-all",
-                      "hover:scale-105 focus-visible:outline-none focus-visible:ring-brand-700",
                       color === premadeColor
                         ? "ring-brand-700 scale-110"
-                        : "ring-transparent"
+                        : "ring-transparent hover:scale-105"
                     )}
-                    style={{ backgroundColor: premadeColor }}
-                    onClick={() =>
-                      setValue("color", premadeColor, { shouldDirty: true })
-                    }
-                    title={label}
-                    aria-label={`Select ${label} color`}
-                    aria-pressed={color === premadeColor}
-                  />
+                    onClick={() => setValue("color", premadeColor)}
+                  ></button>
                 ))}
               </div>
-              {errors.color && (
+
+              {errors.color ? (
                 <p className="mt-1 text-sm text-red-500">
                   {errors.color.message}
                 </p>
-              )}
+              ) : null}
             </div>
 
             <div>
-              <Label>Emoji (Optional)</Label>
+              <Label>Emoji</Label>
               <div className="flex flex-wrap gap-3">
                 {EMOJI_OPTIONS.map(({ emoji, label }) => (
                   <button
@@ -197,27 +161,22 @@ export const CreateEventCategoryModal = ({
                     type="button"
                     className={cn(
                       "size-10 flex items-center justify-center text-xl rounded-md transition-all",
-                      "hover:bg-brand-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-700",
                       selectedEmoji === emoji
                         ? "bg-brand-100 ring-2 ring-brand-700 scale-110"
-                        : "bg-brand-100"
+                        : "bg-brand-100 hover:bg-brand-200"
                     )}
-                    onClick={() =>
-                      setValue("emoji", emoji, { shouldDirty: true })
-                    }
-                    title={label}
-                    aria-label={`Select ${label} emoji`}
-                    aria-pressed={selectedEmoji === emoji}
+                    onClick={() => setValue("emoji", emoji)}
                   >
                     {emoji}
                   </button>
                 ))}
               </div>
-              {errors.emoji && (
+
+              {errors.emoji ? (
                 <p className="mt-1 text-sm text-red-500">
                   {errors.emoji.message}
                 </p>
-              )}
+              ) : null}
             </div>
           </div>
 
@@ -225,17 +184,12 @@ export const CreateEventCategoryModal = ({
             <Button
               type="button"
               variant="outline"
-              onClick={handleClose}
-              disabled={isPending}
+              onClick={() => setIsOpen(false)}
             >
               Cancel
             </Button>
-            <Button
-              disabled={isPending || !isDirty}
-              type="submit"
-              aria-busy={isPending}
-            >
-              {isPending ? "Creating..." : "Create Category"}
+            <Button disabled={isPending} type="submit">
+              {isPending ? "Creating..." : "Create Category"}{" "}
             </Button>
           </div>
         </form>

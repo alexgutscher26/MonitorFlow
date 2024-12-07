@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card"
 import { client } from "@/lib/client"
-import { Plan } from "@/types/plan"
+import { Plan } from "@prisma/client"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { format } from "date-fns"
 import { BarChart } from "lucide-react"

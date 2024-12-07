@@ -16,60 +16,12 @@ enum Plan {
   PRO
 }
 
-enum Role {
-  SUPER_ADMIN
-  ADMIN
-  USER
-}
-
-enum AlertCondition {
-  GREATER_THAN
-  LESS_THAN
-  EQUALS
-  CONTAINS
-  NOT_CONTAINS
-}
-
-enum DeliveryStatus {
-  PENDING
-  DELIVERED
-  FAILED
-}
-
-enum ActionType {
-  DISCORD_NOTIFICATION
-  WEBHOOK
-  EMAIL
-  RETRY_CHECK
-  PAUSE_MONITORING
-}
-
-enum ActionStatus {
-  PENDING
-  IN_PROGRESS
-  COMPLETED
-  FAILED
-}
-
-enum NotificationType {
-  WARNING
-  CRITICAL
-  RECOVERY
-}
-
-enum NotificationStatus {
-  PENDING
-  DELIVERED
-  FAILED
-}
-
 model User {
   id         String  @id @default(cuid())
   externalId String? @unique
 
   quotaLimit Int
   plan       Plan @default(FREE)
-  role       Role @default(USER)
 
   email     String   @unique
   apiKey    String   @unique @default(cuid())
@@ -80,10 +32,6 @@ model User {
   EventCategories EventCategory[]
   events           Event[]
   Quota           Quota[]
-  permissions   UserPermission[]
-  IncidentActions IncidentAction[]
-  SLADefinitions  SLADefinition[]
-  FeatureFlags    FeatureFlag[]
 
   @@index([email, apiKey])
 }
@@ -100,28 +48,14 @@ model EventCategory {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   events     Event[]
-  alertThresholds AlertThreshold[]
-  incidentActions IncidentAction[]
-  SLADefinitions  SLADefinition[]
 
   @@unique([name, userId])
 }
 
-model AlertThreshold {
-  id          String        @id @default(cuid())
-  name        String
-  condition   AlertCondition
-  fieldPath   String        // JSON path to the field to monitor
-  threshold   String        // The threshold value to compare against
-  enabled     Boolean       @default(true)
-  
-  category    EventCategory @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-
-  @@unique([categoryId, name])
+enum DeliveryStatus {
+  PENDING
+  DELIVERED
+  FAILED
 }
 
 model Event {
@@ -133,7 +67,6 @@ model Event {
 
   name   String
   fields Json
-  status String @default("up")
 
   deliveryStatus DeliveryStatus @default(PENDING)
 
@@ -142,11 +75,6 @@ model Event {
 
   EventCategory   EventCategory? @relation(fields: [eventCategoryId], references: [id])
   eventCategoryId String?
-
-  incidentActionLogs IncidentActionLog[]
-  slaDefinition     SLADefinition? @relation(fields: [slaDefinitionId], references: [id])
-  slaDefinitionId   String?
-  slaMeasurement    SLAMeasurement?
 
   @@index([createdAt])
 }
@@ -161,157 +89,4 @@ model Quota {
   count Int @default(0)
 
   updatedAt DateTime @updatedAt
-}
-
-model UserPermission {
-  id          String   @id @default(cuid())
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  permission  String   // e.g., "manage_users", "view_events", etc.
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@unique([userId, permission])
-}
-
-model IncidentAction {
-  id          String      @id @default(cuid())
-  name        String
-  description String?
-  actionType  ActionType
-  enabled     Boolean     @default(true)
-  
-  // Configuration for the action (JSON)
-  config      Json
-  // Conditions that trigger this action (JSON)
-  conditions  Json
-  // Priority (lower number = higher priority)
-  priority    Int         @default(1)
-  // Rate limiting
-  cooldownMinutes Int     @default(0)
-  lastTriggered   DateTime?
-  
-  category    EventCategory @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  user        User        @relation(fields: [userId], references: [id])
-  userId      String
-  
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  actionLogs  IncidentActionLog[]
-  @@unique([categoryId, name])
-}
-
-model IncidentActionLog {
-  id          String       @id @default(cuid())
-  status      ActionStatus
-  result      String?
-  error       String?
-  
-  action      IncidentAction @relation(fields: [actionId], references: [id])
-  actionId    String
-  event       Event?      @relation(fields: [eventId], references: [id])
-  eventId     String?
-  
-  startedAt   DateTime    @default(now())
-  completedAt DateTime?
-  
-  @@index([actionId, status])
-  @@index([eventId])
-}
-
-model SLADefinition {
-  id                   String         @id @default(cuid())
-  userId               String
-  name                 String
-  description          String?
-  target               Float
-  timeWindow           String
-  category            Json?
-  warningThreshold    Float?
-  criticalThreshold   Float?
-  enableNotifications Boolean        @default(true)
-  emailNotifications  Boolean        @default(true)
-  webhookNotifications Boolean       @default(false)
-  webhookUrl          String?
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime       @updatedAt
-  measurements        SLAMeasurement[]
-  events              Event[]
-  user                User           @relation(fields: [userId], references: [id])
-  notifications       SLANotification[]
-  EventCategory       EventCategory[]
-  
-  @@unique([userId, name])
-}
-
-model SLANotification {
-  id              String            @id @default(cuid())
-  slaDefinitionId String
-  type            NotificationType
-  message         String
-  status          NotificationStatus @default(PENDING)
-  deliveredAt     DateTime?
-  error           String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  
-  slaDefinition   SLADefinition     @relation(fields: [slaDefinitionId], references: [id], onDelete: Cascade)
-
-  @@index([slaDefinitionId])
-  @@index([createdAt])
-}
-
-model SLAMeasurement {
-  id              String   @id @default(cuid())
-  startTime       DateTime
-  endTime         DateTime
-  uptimePercent   Float
-  downtimeMinutes Float
-  
-  slaDefinition   SLADefinition @relation(fields: [slaDefinitionId], references: [id])
-  slaDefinitionId String
-  event           Event?     @relation(fields: [eventId], references: [id])
-  eventId         String?    @unique
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  @@index([startTime, endTime])
-}
-
-model FeatureFlag {
-  id          String      @id @default(cuid())
-  key         String
-  name        String
-  description String?
-  type        String      @default("boolean")
-  value       Json?
-  environment String      @default("development")
-  isArchived  Boolean     @default(false)
-  expiresAt   DateTime?
-  
-  user        User        @relation(fields: [userId], references: [id])
-  userId      String
-  
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  auditLogs   FeatureFlagAuditLog[]
-  
-  @@unique([key, environment, userId])
-}
-
-model FeatureFlagAuditLog {
-  id          String      @id @default(cuid())
-  action      String
-  changes     Json
-  performedBy String
-  
-  flag        FeatureFlag @relation(fields: [flagId], references: [id])
-  flagId      String
-  
-  createdAt   DateTime    @default(now())
-  
-  @@index([flagId])
 }

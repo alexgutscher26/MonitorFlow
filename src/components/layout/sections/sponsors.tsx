@@ -12,11 +12,18 @@ import {
   Globe,
 } from "lucide-react"
 import { useEffect, useRef } from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils"
+import Image from "next/image"
 
 interface SponsorProps {
   icon: React.ElementType
   name: string
+}
+
+interface Sponsor {
+  name: string
+  logo: string
+  className?: string
 }
 
 const sponsors: SponsorProps[] = [
@@ -28,6 +35,29 @@ const sponsors: SponsorProps[] = [
   { icon: Cloud, name: "AWS" },
   { icon: Server, name: "Azure" },
   { icon: Globe, name: "Cloudflare" },
+]
+
+const sponsorsSection: Sponsor[] = [
+  {
+    name: "Vercel",
+    logo: "/sponsors/vercel.svg",
+    className: "h-5 sm:h-7",
+  },
+  {
+    name: "Netlify",
+    logo: "/sponsors/netlify.svg",
+    className: "h-5 sm:h-7",
+  },
+  {
+    name: "Railway",
+    logo: "/sponsors/railway.svg",
+    className: "h-5 sm:h-7",
+  },
+  {
+    name: "Planetscale",
+    logo: "/sponsors/planetscale.svg",
+    className: "h-5 sm:h-7",
+  },
 ]
 
 export function SponsorsSection() {
@@ -134,6 +164,28 @@ export function SponsorsSection() {
           </div>
         </div>
       </MaxWidthWrapper>
+
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8">
+        <p className="text-sm text-muted-foreground">
+          Trusted by teams at
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+          {sponsorsSection.map((sponsor) => (
+            <div
+              key={sponsor.name}
+              className="relative overflow-hidden opacity-50 transition-opacity hover:opacity-100"
+            >
+              <Image
+                src={sponsor.logo}
+                alt={sponsor.name}
+                className={cn("h-auto w-auto dark:brightness-0 dark:invert", sponsor.className)}
+                width={120}
+                height={40}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   )
 }

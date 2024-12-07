@@ -45,7 +45,7 @@ export const AccountSettings = ({
 
       <div className="pt-4">
         <Button onClick={() => mutate(discordId)} disabled={isPending}>
-          {isPending ? "Saving..." : "Save Changes"}
+            {isPending ? "Saving..." : "Save Changes"}
         </Button>
       </div>
     </Card>
