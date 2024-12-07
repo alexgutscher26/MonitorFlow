@@ -1,9 +1,6 @@
 "use client"
 
-<<<<<<< HEAD
-import { useState } from "react"
-=======
-import { useState, useEffect } from "react"
+
 >>>>>>> main
 import { Button } from "@/components/ui/button"
 import {
@@ -31,9 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { toast } from "sonner"
-<<<<<<< HEAD
-=======
-import { Loader2 } from "lucide-react"
+
 >>>>>>> main
 
 const thresholdSchema = z.object({
@@ -67,6 +62,9 @@ interface ThresholdFormValues {
 interface SLAThresholdConfigProps {
   slaId: string
   target: number
+<<<<<<< deepsource-transform-d7460103
+  initialThresholds?: Partial<ThresholdFormValues>
+=======
 <<<<<<< HEAD
   initialThresholds?: {
     warningThreshold: number
@@ -79,6 +77,7 @@ interface SLAThresholdConfigProps {
 =======
   initialThresholds?: Partial<ThresholdFormValues>
 >>>>>>> main
+>>>>>>> main
 }
 
 export function SLAThresholdConfig({
@@ -87,9 +86,13 @@ export function SLAThresholdConfig({
   initialThresholds,
 }: SLAThresholdConfigProps) {
   const [open, setOpen] = useState(false)
+<<<<<<< deepsource-transform-d7460103
+  const [isSubmitting, setIsSubmitting] = useState(false)
+=======
 <<<<<<< HEAD
 =======
   const [isSubmitting, setIsSubmitting] = useState(false)
+>>>>>>> main
 >>>>>>> main
 
   const form = useForm<ThresholdFormValues>({
@@ -103,6 +106,8 @@ export function SLAThresholdConfig({
       webhookUrl: initialThresholds?.webhookUrl ?? "",
     },
   })
+<<<<<<< deepsource-transform-d7460103
+=======
 <<<<<<< HEAD
 
   const onSubmit = async (data: ThresholdFormValues) => {
@@ -119,6 +124,7 @@ export function SLAThresholdConfig({
         return
       }
 =======
+>>>>>>> main
 
   // Reset form when dialog closes
   useEffect(() => {
@@ -152,6 +158,9 @@ export function SLAThresholdConfig({
   const onSubmit = async (data: ThresholdFormValues) => {
     try {
       setIsSubmitting(true)
+<<<<<<< deepsource-transform-d7460103
+=======
+>>>>>>> main
 >>>>>>> main
 
       // Update SLA thresholds
@@ -173,11 +182,16 @@ export function SLAThresholdConfig({
       })
 
       if (!response.ok) {
+<<<<<<< deepsource-transform-d7460103
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || "Failed to update thresholds")
+=======
 <<<<<<< HEAD
         throw new Error("Failed to update thresholds")
 =======
         const errorData = await response.json().catch(() => ({}))
         throw new Error(errorData.message || "Failed to update thresholds")
+>>>>>>> main
 >>>>>>> main
       }
 
@@ -185,9 +199,12 @@ export function SLAThresholdConfig({
       setOpen(false)
     } catch (error) {
       console.error("Error updating thresholds:", error)
+<<<<<<< deepsource-transform-d7460103
+=======
 <<<<<<< HEAD
       toast.error("Failed to update alert thresholds")
 =======
+>>>>>>> main
       toast.error(
         error instanceof Error
           ? error.message
@@ -195,6 +212,9 @@ export function SLAThresholdConfig({
       )
     } finally {
       setIsSubmitting(false)
+<<<<<<< deepsource-transform-d7460103
+=======
+>>>>>>> main
 >>>>>>> main
     }
   }
@@ -237,8 +257,11 @@ export function SLAThresholdConfig({
                       onChange={(e) =>
                         field.onChange(parseFloat(e.target.value))
                       }
+<<<<<<< deepsource-transform-d7460103
+=======
 <<<<<<< HEAD
 =======
+>>>>>>> main
                       aria-describedby="warning-threshold-description"
 >>>>>>> main
                     />
@@ -267,8 +290,11 @@ export function SLAThresholdConfig({
                       onChange={(e) =>
                         field.onChange(parseFloat(e.target.value))
                       }
+<<<<<<< deepsource-transform-d7460103
+=======
 <<<<<<< HEAD
 =======
+>>>>>>> main
                       aria-describedby="critical-threshold-description"
 >>>>>>> main
                     />
