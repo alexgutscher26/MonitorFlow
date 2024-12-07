@@ -1,6 +1,10 @@
 "use client"
 
+<<<<<<< HEAD
 import { useState } from "react"
+=======
+import { useState, useEffect } from "react"
+>>>>>>> main
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -27,6 +31,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { toast } from "sonner"
+<<<<<<< HEAD
+=======
+import { Loader2 } from "lucide-react"
+>>>>>>> main
 
 const thresholdSchema = z.object({
   warningThreshold: z
@@ -43,11 +51,23 @@ const thresholdSchema = z.object({
   webhookUrl: z.string().url().optional().or(z.literal("")),
 })
 
+<<<<<<< HEAD
 type ThresholdFormValues = z.infer<typeof thresholdSchema>
+=======
+interface ThresholdFormValues {
+  warningThreshold: number
+  criticalThreshold: number
+  enableNotifications: boolean
+  emailNotifications: boolean
+  webhookNotifications: boolean
+  webhookUrl?: string
+}
+>>>>>>> main
 
 interface SLAThresholdConfigProps {
   slaId: string
   target: number
+<<<<<<< HEAD
   initialThresholds?: {
     warningThreshold: number
     criticalThreshold: number
@@ -56,6 +76,9 @@ interface SLAThresholdConfigProps {
     webhookNotifications: boolean
     webhookUrl?: string
   }
+=======
+  initialThresholds?: Partial<ThresholdFormValues>
+>>>>>>> main
 }
 
 export function SLAThresholdConfig({
@@ -64,6 +87,10 @@ export function SLAThresholdConfig({
   initialThresholds,
 }: SLAThresholdConfigProps) {
   const [open, setOpen] = useState(false)
+<<<<<<< HEAD
+=======
+  const [isSubmitting, setIsSubmitting] = useState(false)
+>>>>>>> main
 
   const form = useForm<ThresholdFormValues>({
     resolver: zodResolver(thresholdSchema),
@@ -76,6 +103,7 @@ export function SLAThresholdConfig({
       webhookUrl: initialThresholds?.webhookUrl ?? "",
     },
   })
+<<<<<<< HEAD
 
   const onSubmit = async (data: ThresholdFormValues) => {
     try {
@@ -90,8 +118,43 @@ export function SLAThresholdConfig({
         )
         return
       }
+=======
 
-      // Update SLA thresholds using your existing API
+  // Reset form when dialog closes
+  useEffect(() => {
+    if (!open) {
+      form.reset()
+    }
+  }, [open, form])
+
+  // Watch values for dynamic validation
+  const warningThreshold = form.watch("warningThreshold")
+  const criticalThreshold = form.watch("criticalThreshold")
+  const webhookNotifications = form.watch("webhookNotifications")
+
+  // Validate thresholds whenever they change
+  useEffect(() => {
+    if (warningThreshold > target) {
+      form.setError("warningThreshold", {
+        type: "manual",
+        message: "Warning threshold cannot be higher than the target",
+      })
+    } else if (criticalThreshold > warningThreshold) {
+      form.setError("criticalThreshold", {
+        type: "manual",
+        message: "Critical threshold cannot be higher than warning threshold",
+      })
+    } else {
+      form.clearErrors(["warningThreshold", "criticalThreshold"])
+    }
+  }, [warningThreshold, criticalThreshold, target, form])
+
+  const onSubmit = async (data: ThresholdFormValues) => {
+    try {
+      setIsSubmitting(true)
+>>>>>>> main
+
+      // Update SLA thresholds
       const response = await fetch(`/api/sla/${slaId}`, {
         method: "PATCH",
         headers: {
@@ -110,22 +173,41 @@ export function SLAThresholdConfig({
       })
 
       if (!response.ok) {
+<<<<<<< HEAD
         throw new Error("Failed to update thresholds")
+=======
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || "Failed to update thresholds")
+>>>>>>> main
       }
 
       toast.success("Alert thresholds updated successfully")
       setOpen(false)
     } catch (error) {
       console.error("Error updating thresholds:", error)
+<<<<<<< HEAD
       toast.error("Failed to update alert thresholds")
+=======
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to update alert thresholds"
+      )
+    } finally {
+      setIsSubmitting(false)
+>>>>>>> main
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Settings2 className="h-4 w-4 mr-2" />
+        <Button
+          variant="outline"
+          size="sm"
+          aria-label="Configure Alert Settings"
+        >
+          <Settings2 className="h-4 w-4 mr-2" aria-hidden="true" />
           Alert Settings
         </Button>
       </DialogTrigger>
@@ -133,7 +215,8 @@ export function SLAThresholdConfig({
         <DialogHeader>
           <DialogTitle>Alert Thresholds</DialogTitle>
           <DialogDescription>
-            Configure when to receive alerts before SLA breaches occur.
+            Configure when to receive alerts before SLA breaches occur. Target
+            SLA is {target}%.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -148,14 +231,21 @@ export function SLAThresholdConfig({
                     <Input
                       type="number"
                       step="0.1"
+                      min="0"
+                      max={target}
                       {...field}
                       onChange={(e) =>
                         field.onChange(parseFloat(e.target.value))
                       }
+<<<<<<< HEAD
+=======
+                      aria-describedby="warning-threshold-description"
+>>>>>>> main
                     />
                   </FormControl>
-                  <FormDescription>
-                    Alert when uptime falls below this percentage
+                  <FormDescription id="warning-threshold-description">
+                    Alert when uptime falls below this percentage (must be below{" "}
+                    {target}%)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -171,14 +261,21 @@ export function SLAThresholdConfig({
                     <Input
                       type="number"
                       step="0.1"
+                      min="0"
+                      max={warningThreshold}
                       {...field}
                       onChange={(e) =>
                         field.onChange(parseFloat(e.target.value))
                       }
+<<<<<<< HEAD
+=======
+                      aria-describedby="critical-threshold-description"
+>>>>>>> main
                     />
                   </FormControl>
-                  <FormDescription>
-                    Alert when uptime falls below this critical level
+                  <FormDescription id="critical-threshold-description">
+                    Alert when uptime falls below this critical level (must be
+                    below {warningThreshold}%)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -201,6 +298,7 @@ export function SLAThresholdConfig({
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      aria-label="Enable notifications"
                     />
                   </FormControl>
                 </FormItem>
@@ -225,6 +323,7 @@ export function SLAThresholdConfig({
                         <Switch
                           checked={field.value}
                           onCheckedChange={field.onChange}
+                          aria-label="Enable email notifications"
                         />
                       </FormControl>
                     </FormItem>
@@ -247,12 +346,13 @@ export function SLAThresholdConfig({
                         <Switch
                           checked={field.value}
                           onCheckedChange={field.onChange}
+                          aria-label="Enable webhook notifications"
                         />
                       </FormControl>
                     </FormItem>
                   )}
                 />
-                {form.watch("webhookNotifications") && (
+                {webhookNotifications && (
                   <FormField
                     control={form.control}
                     name="webhookUrl"
@@ -261,12 +361,20 @@ export function SLAThresholdConfig({
                         <FormLabel>Webhook URL</FormLabel>
                         <FormControl>
                           <Input
+<<<<<<< HEAD
                             {...field}
                             placeholder="https://your-webhook-url.com"
+=======
+                            type="url"
+                            placeholder="https://your-webhook-url.com"
+                            {...field}
+                            aria-describedby="webhook-url-description"
+>>>>>>> main
                           />
                         </FormControl>
-                        <FormDescription>
-                          The URL where alert notifications will be sent
+                        <FormDescription id="webhook-url-description">
+                          Enter the URL where webhook notifications should be
+                          sent
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -276,7 +384,27 @@ export function SLAThresholdConfig({
               </>
             )}
             <DialogFooter>
-              <Button type="submit">Save Changes</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSubmitting || !form.formState.isValid}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

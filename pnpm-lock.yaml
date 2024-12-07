@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 lockfileVersion: "9.0"
 
 settings:
@@ -12782,3 +12783,5 @@ snapshots:
       stacktracey: 2.1.8
 
   zod@3.23.8: {}
+=======
+>>>>>>> main

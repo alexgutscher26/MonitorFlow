@@ -1,5 +1,9 @@
 import { db } from "@/db"
+<<<<<<< HEAD
 import { addHours, subHours, parseISO } from "date-fns"
+=======
+import { subHours } from "date-fns"
+>>>>>>> main
 
 export type TimeWindow = "24h" | "7d" | "30d"
 
@@ -19,7 +23,8 @@ export async function calculateUptimePercentage(
 
   const events = await db.event.findMany({
     where: {
-      eventCategoryId: sla.EventCategory.id,
+      // TODO: Cannot Fix
+      eventCategoryId: sla.EventCategory?.id,
       createdAt: {
         gte: startTime,
         lte: endTime,

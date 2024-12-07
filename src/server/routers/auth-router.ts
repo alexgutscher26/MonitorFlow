@@ -6,7 +6,7 @@ import { publicProcedure } from "../procedures"
 export const dynamic = "force-dynamic"
 
 export const authRouter = router({
-  getDatabaseSyncStatus: publicProcedure.query(async ({ c, ctx }) => {
+  getDatabaseSyncStatus: publicProcedure.query(async ({ c }) => {
     const auth = await currentUser()
 
     if (!auth) {

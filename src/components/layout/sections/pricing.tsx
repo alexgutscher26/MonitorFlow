@@ -1,14 +1,15 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Check, Zap } from "lucide-react"
-import { motion } from "framer-motion"
-import { MaxWidthWrapper } from "@/components/max-width-wrapper"
-import { useUser } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
-import { useMutation } from "@tanstack/react-query"
-import { client } from "@/lib/client"
+"use client";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Check, Zap } from "lucide-react";
+import { motion } from "framer-motion";
 
 enum PopularPlan {
   NO = 0,
@@ -16,13 +17,13 @@ enum PopularPlan {
 }
 
 interface PlanProps {
-  title: string
-  popular: PopularPlan
-  price: number
-  description: string
-  buttonText: string
-  benefitList: string[]
-  highlight?: string
+  title: string;
+  popular: PopularPlan;
+  price: number;
+  description: string;
+  buttonText: string;
+  benefitList: string[];
+  highlight?: string;
 }
 
 const plans: PlanProps[] = [
@@ -74,30 +75,10 @@ const plans: PlanProps[] = [
       "24/7 phone support",
     ],
   },
-]
+];
 
-const Page = () => {
-  const { user } = useUser()
-  const router = useRouter()
 
-  const { mutate: createCheckoutSession } = useMutation({
-    mutationFn: async () => {
-      const res = await client.payment.createCheckoutSession.$post()
-      return await res.json()
-    },
-    onSuccess: ({ url }) => {
-      if (url) router.push(url)
-    },
-  })
-
-  const handleGetAccess = () => {
-    if (user) {
-      createCheckoutSession()
-    } else {
-      router.push("/sign-in?intent=upgrade")
-    }
-  }
-
+export const PricingSection = () => {
   return (
     <section className="relative flex min-h-screen w-full items-center justify-center py-24 sm:py-32">
       <div className="absolute inset-0 bg-grid-white/25 [mask-image:radial-gradient(white,transparent_95%)]" />
@@ -171,7 +152,6 @@ const Page = () => {
                   <Button
                     variant={popular === PopularPlan.YES ? "default" : "outline"}
                     className="w-full"
-                    onClick={handleGetAccess}
                   >
                     {buttonText}
                   </Button>
@@ -180,9 +160,16 @@ const Page = () => {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="overflow-x-auto"
+        >
+
+        </motion.div>
       </div>
     </section>
-  )
-}
-
-export default Page
+  );
+};
