@@ -18,9 +18,7 @@ export function Navbar() {
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Icons.logo className="h-6 w-6" />
-            <span className="hidden font-bold sm:inline-block">
-              PingPanda
-            </span>
+            <span className="hidden font-bold sm:inline-block">PingPanda</span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             {!isOnDashboard && (
@@ -29,7 +27,9 @@ export function Navbar() {
                   href="/features"
                   className={cn(
                     "transition-colors hover:text-foreground/80",
-                    pathname === "/features" ? "text-foreground" : "text-foreground/60"
+                    pathname === "/features"
+                      ? "text-foreground"
+                      : "text-foreground/60"
                   )}
                 >
                   Features
@@ -38,7 +38,9 @@ export function Navbar() {
                   href="/pricing"
                   className={cn(
                     "transition-colors hover:text-foreground/80",
-                    pathname === "/pricing" ? "text-foreground" : "text-foreground/60"
+                    pathname === "/pricing"
+                      ? "text-foreground"
+                      : "text-foreground/60"
                   )}
                 >
                   Pricing
@@ -47,7 +49,9 @@ export function Navbar() {
                   href="/docs"
                   className={cn(
                     "transition-colors hover:text-foreground/80",
-                    pathname === "/docs" ? "text-foreground" : "text-foreground/60"
+                    pathname === "/docs"
+                      ? "text-foreground"
+                      : "text-foreground/60"
                   )}
                 >
                   Docs
@@ -57,8 +61,7 @@ export function Navbar() {
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <div className="w-full flex-1 md:w-auto md:flex-none">
-          </div>
+          <div className="w-full flex-1 md:w-auto md:flex-none"></div>
           <nav className="flex items-center">
             {isOnDashboard ? (
               <UserButton afterSignOutUrl="/" />

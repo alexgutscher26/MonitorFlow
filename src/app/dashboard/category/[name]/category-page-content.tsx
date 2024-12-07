@@ -178,7 +178,7 @@ export const CategoryPageContent = ({
     searchParams.set("limit", pagination.pageSize.toString())
     router.push(`?${searchParams.toString()}`, { scroll: false })
   }, [pagination, router])
-  
+
   /**
    * END OF WHAT I FORGOT IN THE VIDEO
    */
@@ -243,8 +243,8 @@ export const CategoryPageContent = ({
         activeTab === "today"
           ? sums.today
           : activeTab === "week"
-          ? sums.thisWeek
-          : sums.thisMonth
+            ? sums.thisWeek
+            : sums.thisMonth
 
       return (
         <Card key={field}>
@@ -261,8 +261,8 @@ export const CategoryPageContent = ({
               {activeTab === "today"
                 ? "today"
                 : activeTab === "week"
-                ? "this week"
-                : "this month"}
+                  ? "this week"
+                  : "this month"}
             </p>
           </div>
         </Card>
@@ -303,8 +303,8 @@ export const CategoryPageContent = ({
                   {activeTab === "today"
                     ? "today"
                     : activeTab === "week"
-                    ? "this week"
-                    : "this month"}
+                      ? "this week"
+                      : "this month"}
                 </p>
               </div>
             </Card>
