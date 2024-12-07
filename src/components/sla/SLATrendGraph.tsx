@@ -17,7 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+<<<<<<< HEAD
+import { useState } from "react"
+=======
 import { useState, useMemo, useCallback } from "react"
+>>>>>>> main
 
 interface SLAMeasurement {
   uptimePercent: number
@@ -28,8 +32,11 @@ interface SLATrendGraphProps {
   measurements: SLAMeasurement[]
   target: number
   title?: string
+<<<<<<< HEAD
+=======
   isLoading?: boolean
   error?: string
+>>>>>>> main
 }
 
 const timeRanges = {
@@ -45,6 +52,83 @@ export function SLATrendGraph({
   measurements,
   target,
   title = "Historical SLA Performance",
+<<<<<<< HEAD
+}: SLATrendGraphProps) {
+  const [timeRange, setTimeRange] = useState<TimeRange>("7d")
+
+  // Filter data based on selected time range
+  const filterDataByTimeRange = (data: SLAMeasurement[]) => {
+    if (timeRange === "all") return data
+
+    const now = new Date()
+    const days = parseInt(timeRange)
+    const cutoff = new Date(now.setDate(now.getDate() - days))
+
+    return data.filter((m) => new Date(m.endTime) >= cutoff)
+  }
+
+  // Format data for the chart
+  const filteredMeasurements = filterDataByTimeRange(measurements)
+  const data = filteredMeasurements
+    .map((m) => ({
+      time: new Date(m.endTime).toLocaleDateString(),
+      uptime: Number(m.uptimePercent.toFixed(2)),
+      date: new Date(m.endTime),
+    }))
+    .reverse()
+
+  // Calculate statistics
+  const currentUptime = data[data.length - 1]?.uptime ?? 0
+  const averageUptime =
+    data.reduce((acc, curr) => acc + curr.uptime, 0) / data.length
+  const minUptime = Math.min(...data.map((d) => d.uptime))
+  const maxUptime = Math.max(...data.map((d) => d.uptime))
+
+  // Custom tooltip
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const uptimeData = payload[0].payload
+      return (
+        <div className="rounded-lg border bg-background p-2 shadow-sm">
+          <div className="grid gap-2">
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-[0.70rem] uppercase text-muted-foreground">
+                {new Date(uptimeData.date).toLocaleDateString(undefined, {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </span>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-[0.70rem] uppercase text-muted-foreground">
+                Uptime
+              </span>
+              <span className="font-bold">{uptimeData.uptime}%</span>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-[0.70rem] uppercase text-muted-foreground">
+                Target
+              </span>
+              <span className="font-bold">{target}%</span>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-[0.70rem] uppercase text-muted-foreground">
+                Status
+              </span>
+              <span
+                className={`font-bold ${uptimeData.uptime >= target ? "text-green-500" : "text-red-500"}`}
+              >
+                {uptimeData.uptime >= target ? "Meeting SLA" : "Below Target"}
+              </span>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    return null
+=======
   isLoading = false,
   error,
 }: SLATrendGraphProps) {
@@ -173,6 +257,7 @@ export function SLATrendGraph({
         </CardContent>
       </Card>
     )
+>>>>>>> main
   }
 
   return (
@@ -254,8 +339,19 @@ export function SLATrendGraph({
             >
               <XAxis
                 dataKey="time"
+<<<<<<< HEAD
+                stroke="#888888"
+                fontSize={12}
+                tickFormatter={(time) =>
+                  new Date(time).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                  })
+                }
+=======
                 fontSize={12}
                 tick={{ fill: "currentColor" }}
+>>>>>>> main
               />
               <YAxis
                 fontSize={12}
