@@ -60,6 +60,27 @@ interface IncidentActionsProps {
   categoryName: string
 }
 
+<<<<<<< HEAD
+type IncidentAction = {
+  id: string
+  name: string
+  description: string | null
+  userId: string
+  createdAt: string
+  updatedAt: string
+  enabled: boolean
+  categoryId: string
+  actionType:
+    | "DISCORD_NOTIFICATION"
+    | "WEBHOOK"
+    | "EMAIL"
+    | "RETRY_CHECK"
+    | "PAUSE_MONITORING"
+  config: Record<string, any> | null
+  conditions: Record<string, any> | null
+  cooldownMinutes: number
+  lastTriggered: string | null
+=======
 const DEFAULT_NEW_ACTION: NewIncidentAction = {
   name: "",
   description: "",
@@ -68,6 +89,7 @@ const DEFAULT_NEW_ACTION: NewIncidentAction = {
   conditions: "{}",
   cooldownMinutes: "5",
   enabled: true,
+>>>>>>> main
 }
 
 export function IncidentActions({ categoryName }: IncidentActionsProps) {
@@ -222,6 +244,75 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
             }}
             className="space-y-4"
           >
+<<<<<<< HEAD
+            <div>
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                value={newAction.name}
+                onChange={(e) =>
+                  setNewAction({ ...newAction, name: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={newAction.description}
+                onChange={(e: { target: { value: any } }) =>
+                  setNewAction({ ...newAction, description: e.target.value })
+                }
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="actionType">Action Type</Label>
+              <Select
+                value={newAction.actionType}
+                onValueChange={(value) =>
+                  setNewAction({ ...newAction, actionType: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {actionTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="config">Configuration (JSON)</Label>
+              <Textarea
+                id="config"
+                value={newAction.config}
+                onChange={(e: { target: { value: any } }) =>
+                  setNewAction({ ...newAction, config: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="conditions">Conditions (JSON)</Label>
+              <Textarea
+                id="conditions"
+                value={newAction.conditions}
+                onChange={(e: { target: { value: any } }) =>
+                  setNewAction({ ...newAction, conditions: e.target.value })
+                }
+                required
+              />
+            </div>
+=======
             <div className="space-y-4">
               <div>
                 <Label htmlFor="name">Name</Label>
@@ -297,6 +388,7 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
                   required
                 />
               </div>
+>>>>>>> main
 
               <div>
                 <Label htmlFor="cooldown">Cooldown (minutes)</Label>
@@ -327,7 +419,21 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
               </div>
             </div>
 
+<<<<<<< HEAD
+            <div className="flex items-center space-x-2">
+              <Switch
+                checked={newAction.enabled}
+                onCheckedChange={(checked: any) =>
+                  setNewAction({ ...newAction, enabled: checked })
+                }
+              />
+              <Label>Enabled</Label>
+            </div>
+
+            <div className="flex justify-end space-x-2">
+=======
             <div className="flex justify-end space-x-2 pt-4">
+>>>>>>> main
               <Button
                 type="button"
                 variant="outline"
@@ -358,11 +464,62 @@ export function IncidentActions({ categoryName }: IncidentActionsProps) {
       )}
 
       <div className="grid gap-4">
+<<<<<<< HEAD
+        {actions?.map((action) => (
+          <Card key={action.id} className="p-4">
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="font-semibold">{action.name}</h3>
+                {action.description && (
+                  <p className="text-sm text-muted-foreground">
+                    {action.description}
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={action.enabled}
+                  onCheckedChange={(checked: any) =>
+                    toggleMutation.mutate({ id: action.id, enabled: checked })
+                  }
+                />
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => {
+                    if (
+                      confirm("Are you sure you want to delete this action?")
+                    ) {
+                      deleteMutation.mutate(action.id)
+                    }
+                  }}
+                >
+                  Delete
+                </Button>
+              </div>
+            </div>
+            <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+              <div>
+                <span className="font-medium">Type:</span>{" "}
+                {actionTypes.find((t) => t.value === action.actionType)?.label}
+              </div>
+              <div>
+                <span className="font-medium">Cooldown:</span>{" "}
+                {action.cooldownMinutes} minutes
+              </div>
+              <div>
+                <span className="font-medium">Last Triggered:</span>{" "}
+                {action.lastTriggered
+                  ? new Date(action.lastTriggered).toLocaleString()
+                  : "Never"}
+              </div>
+=======
         {isLoading ? (
           <Card className="p-6">
             <div className="flex items-center justify-center text-muted-foreground">
               <Loader2 className="mr-2 size-4 animate-spin" />
               Loading actions...
+>>>>>>> main
             </div>
           </Card>
         ) : actions?.length === 0 ? (
