@@ -1,48 +1,13 @@
 version = 1
 
 [[analyzers]]
-name = "javascript"
-enabled = true
-
-  [analyzers.meta]
-  environment = ["nodejs", "browser"]
-  plugins = ["react"]
-  style_guide = "standard"
-  dialect = "typescript"
-  module_system = "es-modules"
-  dependency_file_paths = [
-    "package.json",
-    "package-lock.json"
-  ]
-  skip_doc_coverage = [
-    "function-declaration",
-    "arrow-function-expression",
-    "method-definition"
-  ]
-  max_line_length = 100
-  target_version = "es2022"
-
-[[analyzers]]
 name = "test-coverage"
-enabled = true
 
 [[analyzers]]
 name = "secrets"
-enabled = true
 
 [[analyzers]]
 name = "docker"
-enabled = true
 
 [[transformers]]
 name = "prettier"
-enabled = true
-
-[exclude]
-paths = [
-    "node_modules/**",
-    ".next/**",
-    "dist/**",
-    "build/**",
-    "coverage/**"
-]
