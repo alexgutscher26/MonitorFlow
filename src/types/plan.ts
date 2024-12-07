@@ -1,4 +1,4 @@
 export enum Plan {
-  FREE = 'FREE',
-  PRO = 'PRO'
+  FREE = "FREE",
+  PRO = "PRO",
 }

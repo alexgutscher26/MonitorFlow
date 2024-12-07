@@ -129,8 +129,8 @@ export const POST = async (req: NextRequest) => {
         formattedMessage: `${eventData.title}\n\n${eventData.description}`,
         userId: user.id,
         fields: {
-          ...validationResult.fields || {},
-          status: validationResult.status || "up"
+          ...(validationResult.fields || {}),
+          status: validationResult.status || "up",
         },
         eventCategoryId: category.id,
       },
@@ -192,7 +192,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json(
       {
         message: "Internal server error",
-        details: err instanceof Error ? err.message : 'Unknown error occurred',
+        details: err instanceof Error ? err.message : "Unknown error occurred",
       },
       { status: 500 }
     )

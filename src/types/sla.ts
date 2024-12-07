@@ -1,5 +1,59 @@
 import { Plan } from "@prisma/client"
 
+<<<<<<< HEAD
+export interface SLADefinition {
+  id: string
+  userId: string
+  name: string
+  description: string | null
+  target: number
+  timeWindow: string
+  warningThreshold: number | null
+  criticalThreshold: number | null
+  enableNotifications: boolean
+  emailNotifications: boolean
+  webhookNotifications: boolean
+  webhookUrl: string | null
+  createdAt: Date
+  updatedAt: Date
+  measurements: SLAMeasurement[]
+  EventCategory: EventCategory | null
+  eventCategoryId: string | null
+}
+
+export interface EventCategory {
+  id: string
+  name: string
+  color: number
+  emoji: string | null
+  userId: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface SLAMeasurement {
+  id: string
+  slaDefinitionId: string
+  startTime: Date
+  endTime: Date
+  uptimePercent: number
+  downtimeMinutes: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface SLANotification {
+  id: string
+  slaDefinitionId: string
+  type: "WARNING" | "CRITICAL" | "RECOVERY"
+  message: string
+  status: "PENDING" | "DELIVERED" | "FAILED"
+  error: string | null
+  createdAt: Date
+  deliveredAt: Date | null
+}
+
+=======
 /**
  * Represents the notification type for SLA status changes
  */
@@ -21,6 +75,7 @@ export enum NotificationStatus {
 /**
  * Time range options for SLA measurements
  */
+>>>>>>> main
 export type TimeRange = "7d" | "30d" | "90d" | "all"
 
 /**
@@ -31,6 +86,17 @@ export const timeRanges: Record<TimeRange, string> = {
   "30d": "Last 30 days",
   "90d": "Last 90 days",
   all: "All time",
+<<<<<<< HEAD
+}
+
+export interface ThresholdFormValues {
+  warningThreshold: number
+  criticalThreshold: number
+  enableNotifications: boolean
+  emailNotifications: boolean
+  webhookNotifications: boolean
+  webhookUrl: string
+=======
 } as const
 
 /**
@@ -44,6 +110,7 @@ export interface EventCategory {
   userId: string
   createdAt: Date
   updatedAt: Date
+>>>>>>> main
 }
 
 /**
@@ -122,23 +189,33 @@ export interface SLACardProps {
 }
 
 export interface SLAStatusIndicatorProps {
+<<<<<<< HEAD
+  currentUptime: number
+=======
   /** Current uptime percentage (0-100) */
   currentUptime: number
   /** Target uptime percentage (0-100) */
+>>>>>>> main
   target: number
   className?: string
 }
 
 export interface SLATrendGraphProps {
   measurements: SLAMeasurement[]
+<<<<<<< HEAD
+=======
   /** Target uptime percentage (0-100) */
+>>>>>>> main
   target: number
   title?: string
 }
 
 export interface SLAThresholdConfigProps {
   slaId: string
+<<<<<<< HEAD
+=======
   /** Target uptime percentage (0-100) */
+>>>>>>> main
   target: number
   initialThresholds?: {
     warningThreshold: number
@@ -155,10 +232,17 @@ export interface NotificationHistoryProps {
 }
 
 export interface CreateSLADialogProps {
+<<<<<<< HEAD
+  categories: {
+    id: string
+    name: string
+  }[]
+=======
   categories: Array<{
     id: string
     name: string
   }>
+>>>>>>> main
   user: {
     plan: Plan
   }
@@ -176,6 +260,8 @@ export interface ExportSLAButtonProps {
 
 export interface ImportSLAButtonProps {
   onImportComplete?: () => void
+<<<<<<< HEAD
+=======
 }
 
 /**
@@ -213,4 +299,5 @@ export function validateSLADefinition(sla: SLADefinition): void {
       "Webhook URL is required when webhook notifications are enabled"
     )
   }
+>>>>>>> main
 }

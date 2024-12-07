@@ -6,6 +6,8 @@ interface IncidentActionsWrapperProps {
   categoryName: string
 }
 
-export function IncidentActionsWrapper({ categoryName }: IncidentActionsWrapperProps) {
+export function IncidentActionsWrapper({
+  categoryName,
+}: IncidentActionsWrapperProps) {
   return <IncidentActions categoryName={categoryName} />
 }

@@ -168,10 +168,17 @@ export class ActionExecutor {
   }
 
   private static async executePauseMonitoring(
+<<<<<<< HEAD
+    action: IncidentAction,
+    event: Event
+  ) {
+    // Implement monitoring pause logic here
+=======
     _action: IncidentAction,
     _event: Event
   ) {
     // TODO: Implement monitoring pause logic here
+>>>>>>> main
     return "Monitoring paused"
   }
 

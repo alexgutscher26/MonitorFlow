@@ -1,8 +1,10 @@
 Advanced Monitoring Features:
+
 <!-- Custom alert thresholds and conditions -->
 <!-- Incident response automation -->
 <!-- Historical data analysis and trends -->
 <!-- Uptime SLA tracking and reporting -->
+
 Custom monitoring intervals
 Notification Enhancements:
 Support for additional notification channels (Slack, Email, SMS, Microsoft Teams)
@@ -56,6 +58,4 @@ Priority support
 Extended data retention
 Advanced API access
 
-
-
-@Features-TO-add pick a  random feature to implament im lookng for somthing else we can add to pro plan and just as a note im using @config.tsfor  what the user gets in the pro plan.
+@Features-TO-add pick a random feature to implament im lookng for somthing else we can add to pro plan and just as a note im using @config.tsfor what the user gets in the pro plan.

@@ -1,6 +1,10 @@
-import { db } from "@/db";
-import { sendEmail, generateSLANotificationEmail } from "@/lib/email";
-import type { SLADefinition, SLANotification, NotificationType } from "@prisma/client";
+import { db } from "@/db"
+import { sendEmail, generateSLANotificationEmail } from "@/lib/email"
+import type {
+  SLADefinition,
+  SLANotification,
+  NotificationType,
+} from "@prisma/client"
 
 export class NotificationService {
   static async createNotification(
@@ -14,16 +18,19 @@ export class NotificationService {
         type,
         message,
       },
-    });
+    })
 
     // Handle different notification channels
     try {
       if (slaDefinition.emailNotifications) {
-        await this.sendEmailNotification(notification, slaDefinition);
+        await this.sendEmailNotification(notification, slaDefinition)
       }
 
       if (slaDefinition.webhookNotifications && slaDefinition.webhookUrl) {
-        await this.sendWebhookNotification(notification, slaDefinition.webhookUrl);
+        await this.sendWebhookNotification(
+          notification,
+          slaDefinition.webhookUrl
+        )
       }
 
       // Update notification status to delivered
@@ -33,32 +40,38 @@ export class NotificationService {
           status: "DELIVERED",
           deliveredAt: new Date(),
         },
-      });
+      })
     } catch (error) {
       // Update notification with error
       await db.sLANotification.update({
         where: { id: notification.id },
         data: {
           status: "FAILED",
-          error: error instanceof Error ? error.message : "Failed to send notification",
+          error:
+            error instanceof Error
+              ? error.message
+              : "Failed to send notification",
         },
-      });
+      })
 
-      throw error;
+      throw error
     }
 
-    return notification;
+    return notification
   }
 
-  private static async sendEmailNotification(notification: SLANotification, slaDefinition: SLADefinition) {
+  private static async sendEmailNotification(
+    notification: SLANotification,
+    slaDefinition: SLADefinition
+  ) {
     // Get user's email from the database
     const user = await db.user.findUnique({
       where: { id: slaDefinition.userId },
-      select: { email: true }
-    });
+      select: { email: true },
+    })
 
     if (!user?.email) {
-      throw new Error("User email not found");
+      throw new Error("User email not found")
     }
 
     // Generate email content
@@ -66,17 +79,20 @@ export class NotificationService {
       notification.type,
       notification.message,
       slaDefinition.name
-    );
+    )
 
     // Send the email
     await sendEmail({
       to: user.email,
       subject,
       html,
-    });
+    })
   }
 
-  private static async sendWebhookNotification(notification: SLANotification, webhookUrl: string) {
+  private static async sendWebhookNotification(
+    notification: SLANotification,
+    webhookUrl: string
+  ) {
     const response = await fetch(webhookUrl, {
       method: "POST",
       headers: {
@@ -87,10 +103,10 @@ export class NotificationService {
         message: notification.message,
         createdAt: notification.createdAt,
       }),
-    });
+    })
 
     if (!response.ok) {
-      throw new Error(`Webhook request failed with status ${response.status}`);
+      throw new Error(`Webhook request failed with status ${response.status}`)
     }
   }
 }
