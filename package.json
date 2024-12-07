@@ -99,7 +99,7 @@
     "@cloudflare/workers-types": "^4.20241011.0",
     "@shadcn/ui": "^0.0.4",
     "@types/node": "^20.16.11",
-    "@types/react": "^18.3.11",
+    "@types/react": "^18.3.13",
     "@types/react-dom": "^18",
     "@types/react-syntax-highlighter": "^15.5.13",
     "autoprefixer": "^10.4.20",
