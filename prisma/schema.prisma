@@ -68,6 +68,10 @@ model Event {
   name   String
   fields Json
 
+  priority           String  @default("medium")
+  priorityConfidence Float   @default(0.5)
+  priorityReasoning  String?
+
   deliveryStatus DeliveryStatus @default(PENDING)
 
   createdAt DateTime @default(now())

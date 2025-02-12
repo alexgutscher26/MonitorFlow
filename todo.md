@@ -22,7 +22,6 @@ Website uptime monitoring
 Server resource utilization tracking
 AI-Enhanced Features:
 AI-powered anomaly detection for unusual patterns
-Smart alerting with AI-based priority levels
 Natural language query interface for analytics
 AI customer sentiment analysis from feedback
 Predictive analytics for growth forecasting
