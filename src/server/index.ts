@@ -10,10 +10,8 @@ const app = new Hono().basePath("/api").use(cors())
 
 /**
  * This is the primary router for your server.
- *
- * All routers added in /server/routers should be manually added here.
  */
-const appRouter = app
+export const appRouter = app
   .route("/auth", authRouter)
   .route("/category", categoryRouter)
   .route("/payment", paymentRouter)

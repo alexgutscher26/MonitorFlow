@@ -29,7 +29,7 @@ export const bodyParsingMiddleware: MiddlewareHandler = async (c, next) => {
   const parsedBody: Record<string, unknown> = {}
 
   for (const [key, value] of Object.entries(rawBody)) {
-    parsedBody[key] = parseSuperJSON(value as any)
+    parsedBody[key] = parseSuperJSON(value as unknown)
   }
 
   c.set("parsedBody", parsedBody)

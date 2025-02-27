@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { AnchorHTMLAttributes } from "react"
 
-interface ShinyButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {}
+type ShinyButtonProps = AnchorHTMLAttributes<HTMLAnchorElement>
 
 export const ShinyButton = ({
   className,

@@ -4,7 +4,7 @@ import superjson, { SuperJSONResult } from "superjson";
 
 export type CacheArgs = { cache?: { id: string; ttl?: number } }
 
-function isSuperJSONResult(obj: any): obj is SuperJSONResult {
+function isSuperJSONResult(obj: unknown): obj is SuperJSONResult {
   return (
     typeof obj === "object" && obj !== null && "json" in obj && "meta" in obj
   )
@@ -31,15 +31,11 @@ export const cacheExtension = ({ redis }: { redis: Redis }) => {
             const cachedResult = await redis.get<string>(cache.id)
 
             if (cachedResult && isSuperJSONResult(cachedResult)) {
-              return superjson.deserialize<Prisma.Result<T, A, "findFirst">>(
-                cachedResult
-              )
+              return superjson.deserialize<Prisma.Result<T, A, "findFirst">>(cachedResult)
             }
           }
 
-          const result = await (ctx as any).$parent[ctx.$name as any].findFirst(
-            rest
-          )
+          const result = await ctx.$parent[ctx.$name].findFirst(rest)
 
           if (cache && result) {
             const serializedResult = superjson.stringify(result)
@@ -65,15 +61,11 @@ export const cacheExtension = ({ redis }: { redis: Redis }) => {
             const cachedResult = await redis.get<string>(cache.id)
 
             if (cachedResult && isSuperJSONResult(cachedResult)) {
-              return superjson.deserialize<Prisma.Result<T, A, "findUnique">>(
-                cachedResult
-              )
+              return superjson.deserialize<Prisma.Result<T, A, "findUnique">>(cachedResult)
             }
           }
 
-          const result = await (ctx as any).$parent[
-            ctx.$name as any
-          ].findUnique(rest)
+          const result = await ctx.$parent[ctx.$name].findUnique(rest)
 
           if (cache && result) {
             const serializedResult = superjson.stringify(result)
@@ -99,15 +91,11 @@ export const cacheExtension = ({ redis }: { redis: Redis }) => {
             const cachedResult = await redis.get<string>(cache.id)
 
             if (cachedResult && isSuperJSONResult(cachedResult)) {
-              return superjson.deserialize<Prisma.Result<T, A, "findMany">>(
-                cachedResult
-              )
+              return superjson.deserialize<Prisma.Result<T, A, "findMany">>(cachedResult)
             }
           }
 
-          const result = await (ctx as any).$parent[ctx.$name as any].findMany(
-            rest
-          )
+          const result = await ctx.$parent[ctx.$name].findMany(rest)
 
           if (cache && result) {
             const serializedResult = superjson.stringify(result)
@@ -133,9 +121,7 @@ export const cacheExtension = ({ redis }: { redis: Redis }) => {
             await redis.del(cache.id)
           }
 
-          const result = await (ctx as any).$parent[ctx.$name as any].create(
-            rest
-          )
+          const result = await ctx.$parent[ctx.$name].create(rest)
 
           return result
         },
@@ -151,9 +137,7 @@ export const cacheExtension = ({ redis }: { redis: Redis }) => {
             await redis.del(cache.id)
           }
 
-          const result = await (ctx as any).$parent[ctx.$name as any].update(
-            rest
-          )
+          const result = await ctx.$parent[ctx.$name].update(rest)
 
           return result
         },
@@ -169,9 +153,7 @@ export const cacheExtension = ({ redis }: { redis: Redis }) => {
             await redis.del(cache.id)
           }
 
-          const result = await (ctx as any).$parent[ctx.$name as any].delete(
-            rest
-          )
+          const result = await ctx.$parent[ctx.$name].delete(rest)
 
           return result
         },

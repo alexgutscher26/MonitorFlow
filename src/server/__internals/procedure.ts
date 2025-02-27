@@ -20,7 +20,7 @@ export type SuperJSONTypedResponse<
   U extends StatusCode = StatusCode
 > = TypedResponse<SuperJSONParsedType<T>, U, "json">
 
-export class Procedure<ctx = {}> {
+export class Procedure<ctx = Record<string, unknown>> {
   private readonly middlewares: Middleware<ctx>[] = []
 
   /**
@@ -62,7 +62,7 @@ export class Procedure<ctx = {}> {
       c: Context<{ Bindings: Bindings }>
     }) => Promise<Return>
   ): Procedure<ctx & T & Return> {
-    return new Procedure<ctx & T & Return>([...this.middlewares, fn as any])
+    return new Procedure<ctx & T & Return>([...this.middlewares, fn as Middleware<ctx>])
   }
 
   input = <Schema extends Record<string, unknown>>(
@@ -81,7 +81,7 @@ export class Procedure<ctx = {}> {
     ): QueryOperation<Schema, Output> => ({
       type: "query",
       schema,
-      handler: fn as any,
+      handler: fn as QueryOperation<Schema, Output>["handler"],
       middlewares: this.middlewares,
     }),
 
@@ -98,7 +98,7 @@ export class Procedure<ctx = {}> {
     ): MutationOperation<Schema, Output> => ({
       type: "mutation",
       schema,
-      handler: fn as any,
+      handler: fn as MutationOperation<Schema, Output>["handler"],
       middlewares: this.middlewares,
     }),
   })
@@ -115,10 +115,10 @@ export class Procedure<ctx = {}> {
     }) =>
       | SuperJSONTypedResponse<Output>
       | Promise<SuperJSONTypedResponse<Output>>
-  ): QueryOperation<{}, Output> {
+  ): QueryOperation<Record<string, unknown>, Output> {
     return {
       type: "query",
-      handler: fn as any,
+      handler: fn as QueryOperation<Record<string, unknown>, Output>["handler"],
       middlewares: this.middlewares,
     }
   }
@@ -133,10 +133,10 @@ export class Procedure<ctx = {}> {
       ctx: ctx
       c: Context<{ Bindings: Bindings }>
     }) => TypedResponse<Output> | Promise<TypedResponse<Output>>
-  ): MutationOperation<{}, Output> {
+  ): MutationOperation<Record<string, unknown>, Output> {
     return {
       type: "mutation",
-      handler: fn as any,
+      handler: fn as MutationOperation<Record<string, unknown>, Output>["handler"],
       middlewares: this.middlewares,
     }
   }

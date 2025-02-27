@@ -4,7 +4,7 @@ import { Bindings } from "../env"
 
 const baseProcedure = new Procedure()
 
-type MiddlewareFunction<T = {}, R = void> = (params: {
+type MiddlewareFunction<T = Record<string, unknown>, R = void> = (params: {
   ctx: T
   next: <B>(args: B) => Promise<B & T>
   c: Context<{ Bindings: Bindings }>
@@ -15,7 +15,7 @@ type MiddlewareFunction<T = {}, R = void> = (params: {
  */
 
 export const j = {
-  middleware: <T = {}, R = void>(
+  middleware: <T = Record<string, unknown>, R = void>(
     fn: MiddlewareFunction<T, R>
   ): MiddlewareFunction<T, R> => {
     return fn

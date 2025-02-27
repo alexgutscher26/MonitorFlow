@@ -90,7 +90,7 @@ export const POST = async (req: NextRequest) => {
 
     try {
       requestData = await req.json()
-    } catch (err) {
+    } catch {
       return NextResponse.json(
         {
           message: "Invalid JSON request body",

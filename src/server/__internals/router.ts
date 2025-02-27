@@ -11,10 +11,10 @@ type OperationType<I extends Record<string, unknown>, O> =
   | QueryOperation<I, O>
   | MutationOperation<I, O>
 
-export const router = <T extends Record<string, OperationType<any, any>>>(
+export const router = <T extends Record<string, OperationType<Record<string, unknown>, unknown>>>(
   obj: T
 ) => {
-  const route = new Hono<{ Bindings: Bindings; Variables: any }>().onError(
+  const route = new Hono<{ Bindings: Bindings; Variables: Record<string, unknown> }>().onError(
     (err, c) => {
       if (err instanceof HTTPException) {
         return c.json(
@@ -132,13 +132,13 @@ export const router = <T extends Record<string, OperationType<any, any>>>(
     }
   })
 
-  type InferInput<T> = T extends OperationType<infer I, any> ? I : {}
-  type InferOutput<T> = T extends OperationType<any, infer I> ? I : {}
+  type InferInput<T> = T extends OperationType<infer I, unknown> ? I : Record<string, unknown>
+  type InferOutput<T> = T extends OperationType<unknown, infer I> ? I : unknown
 
   return route as Hono<
     { Bindings: Bindings; Variables: Variables },
     {
-      [K in keyof T]: T[K] extends QueryOperation<any, any>
+      [K in keyof T]: T[K] extends QueryOperation<Record<string, unknown>, unknown>
         ? {
             $get: {
               input: InferInput<T[K]>

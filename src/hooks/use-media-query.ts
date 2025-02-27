@@ -5,11 +5,6 @@ export const useMediaQuery = () => {
     null
   )
 
-  const [dimensions, setDimensions] = useState<{
-    width: number
-    height: number
-  } | null>(null)
-
   useEffect(() => {
     const checkDevice = () => {
       if (window.matchMedia("(max-width: 640px)").matches) {
@@ -34,8 +29,6 @@ export const useMediaQuery = () => {
 
   return {
     device,
-    width: dimensions?.width,
-    height: dimensions?.height,
     isMobile: device === "mobile",
     isTablet: device === "tablet",
     isDesktop: device === "desktop",

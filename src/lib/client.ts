@@ -49,17 +49,17 @@ export const baseClient = hc<AppType>(getBaseUrl(), {
   },
 })["api"]
 
-function getHandler(obj: Object, ...keys: string[]) {
+function getHandler(obj: object, ...keys: string[]) {
   let current = obj
   for (const key of keys) {
     current = current[key as keyof typeof current]
   }
-  return current as Function
+  return current as (...args: unknown[]) => Promise<unknown>
 }
 
-function serializeWithSuperJSON(data: any): any {
+function serializeWithSuperJSON<T>(data: T): Record<string, unknown> {
   if (typeof data !== "object" || data === null) {
-    return data
+    return { value: data }
   }
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => [
@@ -73,29 +73,29 @@ function serializeWithSuperJSON(data: any): any {
  * This is an optional convenience proxy to pass data directly to your API
  * instead of using nested objects as hono does by default
  */
-function createProxy(target: any, path: string[] = []): any {
+function createProxy<T extends object>(target: T, path: string[] = []): T {
   return new Proxy(target, {
     get(target, prop, receiver) {
       if (typeof prop === "string") {
         const newPath = [...path, prop]
 
         if (prop === "$get") {
-          return async (...args: any[]) => {
+          return async <R>(query?: unknown): Promise<R> => {
             const executor = getHandler(baseClient, ...newPath)
-            const serializedQuery = serializeWithSuperJSON(args[0])
+            const serializedQuery = serializeWithSuperJSON(query)
             return executor({ query: serializedQuery })
           }
         }
 
         if (prop === "$post") {
-          return async (...args: any[]) => {
+          return async <R>(data?: unknown): Promise<R> => {
             const executor = getHandler(baseClient, ...newPath)
-            const serializedJson = serializeWithSuperJSON(args[0])
+            const serializedJson = serializeWithSuperJSON(data)
             return executor({ json: serializedJson })
           }
         }
 
-        return createProxy(target[prop], newPath)
+        return createProxy(target[prop as keyof T], newPath)
       }
       return Reflect.get(target, prop, receiver)
     },

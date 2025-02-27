@@ -1,4 +1,3 @@
-import { type User } from '@prisma/client';
 import { db } from '@/db';
 import { analyzePriority } from '@/lib/ai-priority';
 import { sendDiscordNotification } from './discord-service';
@@ -16,7 +15,7 @@ export type EventType =
 export type BaseEvent = {
   type: EventType;
   action: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   userId: string;
   customPriority?: 'critical' | 'high' | 'medium' | 'low';
   notificationPreferences?: {
@@ -229,7 +228,37 @@ async function getEventCategory(event: SaasEvent): Promise<string | null> {
   return category?.id ?? null;
 }
 
-function formatDiscordMessage(event: any, priorityAnalysis: any, notificationPreferences?: any): string {
+type PriorityAnalysis = {
+  level: 'critical' | 'high' | 'medium' | 'low';
+  confidence: number;
+  reasoning: string;
+};
+
+type NotificationPreferences = {
+  silent?: boolean;
+  mentionRoles?: string[];
+  threadCreation?: boolean;
+  customEmoji?: string;
+  customColor?: string;
+};
+
+type EventRecord = {
+  id: string;
+  name: string;
+  formattedMessage: string;
+  fields: Record<string, unknown>;
+  userId: string;
+  priority: string;
+  priorityConfidence: number;
+  priorityReasoning: string;
+  eventCategoryId: string | null;
+};
+
+function formatDiscordMessage(
+  event: EventRecord,
+  priorityAnalysis: PriorityAnalysis,
+  notificationPreferences?: NotificationPreferences
+): string {
   const priorityEmoji = {
     critical: '🔴',
     high: '🟠',

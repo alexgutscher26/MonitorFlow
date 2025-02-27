@@ -113,12 +113,12 @@ export const CategoryPageContent = ({
         },
       },
       ...(data?.events[0]
-        ? Object.keys(data.events[0].fields as object).map((field) => ({
+        ? Object.keys(data.events[0].fields as Record<string, unknown>).map((field) => ({
             accessorFn: (row: Event) =>
-              (row.fields as Record<string, any>)[field],
+              (row.fields as Record<string, unknown>)[field],
             header: field,
             cell: ({ row }: { row: Row<Event> }) =>
-              (row.original.fields as Record<string, any>)[field] || "-",
+              (row.original.fields as Record<string, unknown>)[field] || "-",
           }))
         : []),
       {

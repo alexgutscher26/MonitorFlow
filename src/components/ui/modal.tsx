@@ -28,7 +28,9 @@ export const Modal = ({
       return
     }
 
-    onClose && onClose()
+    if (onClose) {
+      onClose()
+    }
 
     if (setShowModal) {
       setShowModal(false)
@@ -43,7 +45,7 @@ export const Modal = ({
         open={setShowModal ? showModal : true}
         onOpenChange={(open) => {
           if (!open) {
-            closeModal({ dragged: true })
+            closeModal({ dragged: true });
           }
         }}
       >
