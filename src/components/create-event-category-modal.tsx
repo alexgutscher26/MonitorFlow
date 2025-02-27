@@ -54,6 +54,25 @@ interface CreateEventCategoryModel extends PropsWithChildren {
   containerClassName?: string
 }
 
+/**
+ * A modal component for creating a new event category.
+ *
+ * This component allows users to input details for a new event category, including its name, color, and emoji.
+ * It utilizes a form with validation and handles the submission of the event category creation request.
+ *
+ * @param {Object} props - The properties for the modal.
+ * @param {ReactNode} props.children - The content to be displayed within the modal trigger area.
+ * @param {string} props.containerClassName - Additional class names for styling the container.
+ *
+ * @returns {JSX.Element} The rendered modal component.
+ *
+ * @example
+ * <CreateEventCategoryModal containerClassName="my-class">
+ *   <span>Create New Category</span>
+ * </CreateEventCategoryModal>
+ *
+ * @throws {Error} Throws an error if the mutation fails during category creation.
+ */
 export const CreateEventCategoryModal = ({
   children,
   containerClassName,
