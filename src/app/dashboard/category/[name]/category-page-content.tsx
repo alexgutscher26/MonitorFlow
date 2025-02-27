@@ -40,6 +40,20 @@ interface CategoryPageContentProps {
   category: EventCategory
 }
 
+/**
+ * Renders the content for the category page, displaying events and their statistics.
+ *
+ * @param {Object} props - The properties for the component.
+ * @param {boolean} props.hasEvents - Indicates if there are events available.
+ * @param {Object} props.category - The category object containing category details.
+ *
+ * @returns {JSX.Element} The rendered category page content.
+ *
+ * @throws {Error} Throws an error if the category data cannot be fetched.
+ *
+ * @example
+ * <CategoryPageContent hasEvents={true} category={{ name: 'Sale' }} />
+ */
 export const CategoryPageContent = ({
   hasEvents: initialHasEvents,
   category,
