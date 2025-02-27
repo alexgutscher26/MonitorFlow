@@ -1,19 +1,57 @@
-# This workflow will improvise current file with AI genereated documentation and Create new PR
-
-name: Penify - Revolutionizing Documentation on GitHub
+name: Penify - AI Documentation Generator
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "develop"]
+    paths:
+      - '**.js'
+      - '**.jsx'
+      - '**.ts'
+      - '**.tsx'
+      - '**.py'
+      - '**.java'
+      - '**.go'
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to generate documentation for'
+        required: true
+        default: 'main'
+
+env:
+  SNORKELL_CLIENT_ID: ${{ secrets.SNORKELL_CLIENT_ID }}
+  SNORKELL_API_KEY: ${{ secrets.SNORKELL_API_KEY }}
 
 jobs:
-  Documentation:
+  generate-docs:
+    name: Generate Documentation
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
     steps:
-    - name: Penify DocGen Client
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Validate Environment
+      run: |
+        if [ -z "$SNORKELL_CLIENT_ID" ] || [ -z "$SNORKELL_API_KEY" ]; then
+          echo "Error: Required secrets are not set. Please configure SNORKELL_CLIENT_ID and SNORKELL_API_KEY"
+          exit 1
+        fi
+
+    - name: Generate Documentation
+      id: docgen
       uses: SingularityX-ai/snorkell-documentation-client@v1.0.0
       with:
-        client_id: ${{ secrets.SNORKELL_CLIENT_ID }}
-        api_key: ${{ secrets.SNORKELL_API_KEY }}
-        branch_name: "main"
+        client_id: ${{ env.SNORKELL_CLIENT_ID }}
+        api_key: ${{ env.SNORKELL_API_KEY }}
+        branch_name: ${{ github.event.inputs.branch || 'main' }}
+      continue-on-error: true
+
+    - name: Check Documentation Generation Status
+      if: steps.docgen.outcome != 'success'
+      run: |
+        echo "Documentation generation failed. Please check the logs for details."
+        exit 1
