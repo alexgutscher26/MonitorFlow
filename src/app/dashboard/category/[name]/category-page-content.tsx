@@ -73,7 +73,7 @@ export const CategoryPageContent = ({
       activeTab,
     ],
     queryFn: async () => {
-      const res = await client.category.getEventsByCategoryName.$get({
+      const res = await client.category.getEventsByCategoryName.get({
         name: category.name,
         page: pagination.pageIndex + 1,
         limit: pagination.pageSize,
@@ -200,7 +200,7 @@ export const CategoryPageContent = ({
     const weekStart = startOfWeek(now, { weekStartsOn: 0 })
     const monthStart = startOfMonth(now)
 
-    data.events.forEach((event) => {
+    data.events.forEach((event: Event) => {
       const eventDate = event.createdAt
 
       Object.entries(event.fields as object).forEach(([field, value]) => {

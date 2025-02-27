@@ -83,7 +83,7 @@ function createProxy<T extends object>(target: T, path: string[] = []): T {
           return async <R>(query?: unknown): Promise<R> => {
             const executor = getHandler(baseClient, ...newPath)
             const serializedQuery = serializeWithSuperJSON(query)
-            return executor({ query: serializedQuery })
+            return executor({ query: serializedQuery }) as Promise<R>
           }
         }
 
@@ -91,11 +91,11 @@ function createProxy<T extends object>(target: T, path: string[] = []): T {
           return async <R>(data?: unknown): Promise<R> => {
             const executor = getHandler(baseClient, ...newPath)
             const serializedJson = serializeWithSuperJSON(data)
-            return executor({ json: serializedJson })
+            return executor({ json: serializedJson }) as Promise<R>
           }
         }
 
-        return createProxy(target[prop as keyof T], newPath)
+        return createProxy(target[prop as keyof T] as object, newPath)
       }
       return Reflect.get(target, prop, receiver)
     },

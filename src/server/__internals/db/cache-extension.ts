@@ -35,7 +35,7 @@ export const cacheExtension = ({ redis }: { redis: Redis }) => {
             }
           }
 
-          const result = await ctx.$parent[ctx.$name].findFirst(rest)
+          const result = await (ctx.$parent as any)[ctx.$name].findFirst(rest)
 
           if (cache && result) {
             const serializedResult = superjson.stringify(result)

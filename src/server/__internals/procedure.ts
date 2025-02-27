@@ -62,7 +62,7 @@ export class Procedure<ctx = Record<string, unknown>> {
       c: Context<{ Bindings: Bindings }>
     }) => Promise<Return>
   ): Procedure<ctx & T & Return> {
-    return new Procedure<ctx & T & Return>([...this.middlewares, fn as Middleware<ctx>])
+    return new Procedure<ctx & T & Return>([...this.middlewares, fn as unknown as Middleware<ctx>])
   }
 
   input = <Schema extends Record<string, unknown>>(
@@ -81,8 +81,8 @@ export class Procedure<ctx = Record<string, unknown>> {
     ): QueryOperation<Schema, Output> => ({
       type: "query",
       schema,
-      handler: fn as QueryOperation<Schema, Output>["handler"],
-      middlewares: this.middlewares,
+      handler: fn as unknown as QueryOperation<Schema, Output>["handler"],
+      middlewares: this.middlewares as Middleware<unknown>[],
     }),
 
     mutation: <Output>(
@@ -98,8 +98,8 @@ export class Procedure<ctx = Record<string, unknown>> {
     ): MutationOperation<Schema, Output> => ({
       type: "mutation",
       schema,
-      handler: fn as MutationOperation<Schema, Output>["handler"],
-      middlewares: this.middlewares,
+      handler: fn as unknown as MutationOperation<Schema, Output>["handler"],
+      middlewares: this.middlewares as Middleware<unknown>[],
     }),
   })
 
@@ -119,7 +119,7 @@ export class Procedure<ctx = Record<string, unknown>> {
     return {
       type: "query",
       handler: fn as QueryOperation<Record<string, unknown>, Output>["handler"],
-      middlewares: this.middlewares,
+      middlewares: this.middlewares as Middleware<unknown>[],
     }
   }
 
@@ -136,8 +136,8 @@ export class Procedure<ctx = Record<string, unknown>> {
   ): MutationOperation<Record<string, unknown>, Output> {
     return {
       type: "mutation",
-      handler: fn as MutationOperation<Record<string, unknown>, Output>["handler"],
-      middlewares: this.middlewares,
+      handler: fn as unknown as MutationOperation<Record<string, unknown>, Output>["handler"],
+      middlewares: this.middlewares as Middleware<unknown>[],
     }
   }
 }

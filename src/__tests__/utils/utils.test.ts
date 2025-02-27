@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals'
+import { describe, test, expect } from '@jest/globals';
 
 describe('Basic Test Suite', () => {
   test('should pass', () => {

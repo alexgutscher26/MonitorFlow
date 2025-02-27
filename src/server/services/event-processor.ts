@@ -144,7 +144,7 @@ export async function processEvent(event: SaasEvent) {
     data: {
       name: title,
       formattedMessage: message,
-      fields: event.data,
+      fields: JSON.stringify(event.data),
       userId: event.userId,
       priority: priorityAnalysis.level,
       priorityConfidence: priorityAnalysis.confidence,

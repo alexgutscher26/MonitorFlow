@@ -52,7 +52,7 @@ export const router = <T extends Record<string, OperationType<Record<string, unk
           }
 
           const res = await middleware({ ctx, next: nextWrapper, c })
-          c.set("__middleware_output", { ...ctx, ...res })
+          c.set("__middleware_output", res ? { ...ctx, ...res } : ctx)
 
           await next()
         }
@@ -133,7 +133,7 @@ export const router = <T extends Record<string, OperationType<Record<string, unk
   })
 
   type InferInput<T> = T extends OperationType<infer I, unknown> ? I : Record<string, unknown>
-  type InferOutput<T> = T extends OperationType<unknown, infer I> ? I : unknown
+  type InferOutput<T> = T extends OperationType<Record<string, unknown>, infer I> ? I : unknown
 
   return route as Hono<
     { Bindings: Bindings; Variables: Variables },
