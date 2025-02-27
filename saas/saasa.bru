@@ -1,0 +1,28 @@
+meta {
+  name: Create Sale Event
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/api/v1/events
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer cm72fzjsr0001fhn862uzerhs
+}
+
+body:json {
+  {
+    "category": "sale",
+    "fields": {
+      "amount": 99.99,
+      "currency": "USD",
+      "productName": "Pro Plan",
+      "priority": "high"
+    }
+  }
+}
