@@ -1,4 +1,4 @@
-# PingPanda - A Modern Fullstack Event Monitoring SaaS
+# PingPanda
 
 PingPanda is a powerful event monitoring solution built with modern technologies, designed to help you track and monitor your SaaS application events in real-time through Discord integration.
 
@@ -60,36 +60,9 @@ pnpm prisma migrate dev
 pnpm dev
 ```
 
-## API Usage
+## Documentation
 
-Send events to PingPanda using our REST API:
-
-```typescript
-await fetch("http://your-domain.com/api/v1/events", {
-  method: "POST",
-  body: JSON.stringify({
-    category: "sale",
-    fields: {
-      plan: "PRO",
-      email: "user@example.com",
-      amount: 49.00
-    }
-  }),
-  headers: {
-    Authorization: "Bearer <YOUR_API_KEY>"
-  }
-})
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+For detailed documentation, visit our [Documentation Site](./mintlify-docs/README.md).
 
 ## Troubleshooting
 
