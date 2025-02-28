@@ -1,0 +1,36 @@
+name: Cache Cleanup
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Run weekly
+  workflow_dispatch:    # Allow manual trigger
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup
+        run: |
+          gh extension install actions/gh-actions-cache
+          
+          REPO=${{ github.repository }}
+          BRANCH="main"
+          
+          echo "Fetching list of cache key"
+          cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH | cut -f 1)
+          
+          ## Setting this to not fail the workflow while deleting cache keys.
+          set +e
+          echo "Deleting caches..."
+          for cacheKey in $cacheKeys
+          do
+              if [[ $cacheKey == *"nextjs"* && $(date -d "$(gh actions-cache list -R $REPO -B $BRANCH | grep $cacheKey | cut -f 3)" +%s) -lt $(date -d "7 days ago" +%s) ]]
+              then
+                  gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
+                  echo "Deleted $cacheKey"
+              fi
+          done
+          echo "Done"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
