@@ -13,6 +13,41 @@ const REQUEST_VALIDATOR = z
   })
   .strict()
 
+/**
+ * Handles the POST request for creating an event.
+ *
+ * This function processes incoming requests, validates authorization, checks user quotas,
+ * and sends event notifications via Discord. It also manages the creation and updating
+ * of event records in the database.
+ *
+ * @param {NextRequest} req - The incoming request object containing headers and body.
+ * @returns {Promise<NextResponse>} A promise that resolves to a NextResponse object.
+ *
+ * @throws {Error} Throws an error if there is an issue processing the event.
+ *
+ * @example
+ * // Example usage in an API route
+ * const response = await POST(req);
+ *
+ * @example
+ * // Example response on success
+ * {
+ *   message: "Event processed successfully",
+ *   eventId: "12345"
+ * }
+ *
+ * @example
+ * // Example response on unauthorized access
+ * {
+ *   message: "Unauthorized"
+ * }
+ *
+ * @example
+ * // Example response when quota is exceeded
+ * {
+ *   message: "Monthly quota reached. Please upgrade your plan for more events"
+ * }
+ */
 export const POST = async (req: NextRequest) => {
   try {
     const authHeader = req.headers.get("Authorization")
