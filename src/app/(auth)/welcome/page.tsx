@@ -8,25 +8,57 @@ import { client } from "@/lib/client"
 import { useQuery } from "@tanstack/react-query"
 import { LucideProps } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useRef, useEffect } from "react"
 
 const Page = () => {
   const router = useRouter()
+  const redirectInProgress = useRef(false)
 
-  const { data } = useQuery({
+  const { data, error } = useQuery({
     queryFn: async () => {
-      const res = await client.auth.getDatabaseSyncStatus.$get()
-      return await res.json()
+      try {
+        const res = await client.auth.getDatabaseSyncStatus.$get()
+        const data = await res.json()
+        if (data.error) {
+          throw new Error(data.error)
+        }
+        return data
+      } catch (error) {
+        console.error('Error fetching sync status:', error)
+        throw error instanceof Error ? error : new Error('Failed to sync with database')
+      }
     },
     queryKey: ["get-database-sync-status"],
     refetchInterval: (query) => {
       return query.state.data?.isSynced ? false : 1000
     },
+    retry: 3
   })
 
   useEffect(() => {
-    if (data?.isSynced) router.push("/dashboard")
+    if (data?.isSynced && !redirectInProgress.current) {
+      redirectInProgress.current = true
+      setTimeout(() => {
+        router.push("/dashboard")
+      }, 1000)
+    }
   }, [data, router])
+
+  if (error) {
+    return (
+      <div className="flex w-full flex-1 items-center justify-center px-4">
+        <div className="relative z-10 flex -translate-y-1/2 flex-col items-center gap-6 text-center">
+          <p className="text-red-600">{error instanceof Error ? error.message : 'An error occurred. Please try again.'}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex w-full flex-1 items-center justify-center px-4">
