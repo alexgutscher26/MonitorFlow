@@ -42,7 +42,7 @@ model EventCategory {
   color Int
   emoji String?
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   createdAt DateTime @default(now())
@@ -62,7 +62,7 @@ model Event {
   id               String @id @default(cuid())
   formattedMessage String
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   name   String
@@ -85,7 +85,7 @@ model Event {
 
 model Quota {
   id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
   year  Int
