@@ -1,0 +1,37 @@
+:root {
+  /* Default brand colors */
+  --brand-primary: #4ECDC4;
+  --brand-secondary: #FF6B6B;
+}
+
+/* Apply branding colors to UI elements */
+.brand-primary-bg {
+  background-color: var(--brand-primary);
+}
+
+.brand-secondary-bg {
+  background-color: var(--brand-secondary);
+}
+
+.brand-primary-text {
+  color: var(--brand-primary);
+}
+
+.brand-secondary-text {
+  color: var(--brand-secondary);
+}
+
+.brand-primary-border {
+  border-color: var(--brand-primary);
+}
+
+.brand-secondary-border {
+  border-color: var(--brand-secondary);
+}
+
+/* Logo styling */
+.brand-logo {
+  max-height: 50px;
+  max-width: 200px;
+  object-fit: contain;
+}

@@ -1,0 +1,54 @@
+---
+description: "Comprehensive development standards for Next.js project"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Package Management
+- Always use pnpm for dependency management
+- Run 'pnpm install' after adding new dependencies
+- Update lock files with each dependency change
+
+# Task Tracking
+- When completing a task, mark it with [x] in todo.md
+- Include the date when marking tasks complete
+- Add brief notes about implementation decisions
+
+# Code Quality
+- Add helpful comments explaining code functionality and decisions
+- Preserve existing comments unless the related code is rewritten/deleted
+- Follow consistent indentation (2 spaces)
+- Use descriptive variable/function names
+- Break complex functions into smaller, reusable pieces
+
+# TypeScript Practices
+- Use proper TypeScript typing for all variables and functions
+- Avoid using 'any' type when possible
+- Create interfaces/types for complex data structures
+
+# React Best Practices
+- Use functional components with hooks
+- Implement proper error boundaries
+- Extract reusable UI elements into components
+- Implement proper state management (React Context or state libraries)
+
+# Next.js Patterns
+- Follow the Next.js folder structure conventions
+- Use appropriate data fetching methods (getStaticProps, getServerSideProps)
+- Optimize images with next/image
+- Leverage Next.js routing system
+
+# Git Workflow
+- Write clear commit messages (format: "type: description")
+- Create feature branches for new functionality
+- Don't commit .env files or sensitive data
+
+# Testing
+- Write tests for critical functionality
+- Ensure tests pass before submitting code
+
+# Special Instructions
+- Lines containing "Do not touch this line Cursor" must remain unchanged
+
+# Project Context
+- This is a Next.js application (see package.json for details)

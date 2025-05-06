@@ -1,0 +1,141 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String           @id @default(cuid())
+  externalId          String?          @unique
+  quotaLimit          Int
+  email               String           @unique
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  apiKey              String           @unique @default(cuid())
+  discordId           String?
+  plan                Plan             @default(FREE)
+  brandCustomDomain   String?
+  brandLogo           String?
+  brandPrimaryColor   String?
+  brandSecondaryColor String?
+  role                Role             @default(VIEWER)
+  events              Event[]
+  EventCategories     EventCategory[]
+  Quota               Quota?
+  rolePermissions     RolePermission[]
+  consent             UserConsent?
+  auditLogs           AuditLog[]
+
+  @@index([email, apiKey])
+}
+
+model EventCategory {
+  id        String   @id @default(cuid())
+  name      String
+  color     Int
+  emoji     String?
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  events    Event[]
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([name, userId])
+}
+
+model Event {
+  id               String         @id @default(cuid())
+  formattedMessage String
+  userId           String
+  name             String
+  fields           Json
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  eventCategoryId  String?
+  deliveryStatus   DeliveryStatus @default(PENDING)
+  EventCategory    EventCategory? @relation(fields: [eventCategoryId], references: [id])
+  user             User           @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+}
+
+model Quota {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  year      Int
+  month     Int
+  count     Int      @default(0)
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model UserConsent {
+  id        String  @id @default(cuid())
+  userId    String  @unique
+  analytics Boolean @default(false)
+  marketing Boolean @default(false)
+  user      User    @relation(fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  action     String
+  resource   String
+  resourceId String?
+  details    Json?
+  ipAddress  String?
+  userAgent  String?
+  functional Boolean  @default(false)
+  necessary  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model Permission {
+  id              String           @id @default(cuid())
+  name            String           @unique
+  description     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  rolePermissions RolePermission[]
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  role         Role
+  permissionId String
+  userId       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+
+  @@unique([role, permissionId, userId])
+}
+
+enum Plan {
+  FREE
+  PRO
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum DeliveryStatus {
+  PENDING
+  DELIVERED
+  FAILED
+}
