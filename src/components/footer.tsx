@@ -23,12 +23,12 @@ const Footer = () => {
   
   const socialLinks = [
     { 
-      href: 'https://twitter.com/pingpanda', 
+      href: '', 
       label: 'Twitter',
       icon: <Twitter className="h-5 w-5" />
     },
     { 
-      href: 'https://github.com/pingpanda', 
+      href: '', 
       label: 'GitHub',
       icon: <Github className="h-5 w-5" />
     },
