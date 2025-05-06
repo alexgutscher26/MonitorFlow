@@ -3,7 +3,7 @@
 import { SignIn } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, HelpCircle, Shield } from "lucide-react";
+import { MoveRight, HelpCircle, Shield } from "lucide-react";
 
 /**
  * Enhanced Sign-in Page component with improved visual design
@@ -52,21 +52,21 @@ const Page = () => {
           <div className="mt-8 space-y-4 w-full max-w-md">
             <div className="flex items-center space-x-3">
               <div className="bg-white/20 p-2 rounded-full">
-                <ArrowRight size={20} className="text-white" />
+                <MoveRight size={20} className="text-white" />
               </div>
               <p className="text-white/90">Streamlined workflow management</p>
             </div>
             
             <div className="flex items-center space-x-3">
               <div className="bg-white/20 p-2 rounded-full">
-                <ArrowRight size={20} className="text-white" />
+                <MoveRight size={20} className="text-white" />
               </div>
               <p className="text-white/90">Real-time collaboration tools</p>
             </div>
             
             <div className="flex items-center space-x-3">
               <div className="bg-white/20 p-2 rounded-full">
-                <ArrowRight size={20} className="text-white" />
+                <MoveRight size={20} className="text-white" />
               </div>
               <p className="text-white/90">Advanced analytics dashboard</p>
             </div>

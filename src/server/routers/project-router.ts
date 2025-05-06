@@ -65,18 +65,12 @@ export const projectRouter = router({
           .string()
           .regex(/^#[0-9A-F]{6}$/i, "Invalid color format")
           .optional(),
-        customDomain: z
-          .string()
-          .regex(
-            /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/,
-            "Invalid domain format"
-          )
-          .optional(),
+      
       })
     )
     .mutation(async ({ c, ctx, input }) => {
       const { user } = ctx
-      const { logo, primaryColor, secondaryColor, customDomain } = input
+      const { logo, primaryColor, secondaryColor } = input
 
       await db.user.update({
         where: { id: user.id },
@@ -86,7 +80,7 @@ export const projectRouter = router({
           brandLogo: logo,
           brandPrimaryColor: primaryColor,
           brandSecondaryColor: secondaryColor,
-          brandCustomDomain: customDomain,
+    
         } as any,
       })
 
@@ -104,7 +98,7 @@ export const projectRouter = router({
         brandLogo: true,
         brandPrimaryColor: true,
         brandSecondaryColor: true,
-        brandCustomDomain: true,
+
       } as any,
     })
 
@@ -112,7 +106,7 @@ export const projectRouter = router({
       logo: userData?.brandLogo,
       primaryColor: userData?.brandPrimaryColor,
       secondaryColor: userData?.brandSecondaryColor,
-      customDomain: userData?.brandCustomDomain,
+
     })
   }),
 })

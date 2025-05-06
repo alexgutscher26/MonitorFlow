@@ -1,4 +1,4 @@
-import { clerkMiddleware } from "@clerk/nextjs/server"
+import { clerkMiddleware, type WithClerkState } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { db } from "@/db"
@@ -9,7 +9,9 @@ async function customDomainMiddleware(req: NextRequest) {
   
   // Skip for localhost or the main app domain
   if (hostname === 'localhost' || hostname.includes('pingpanda.io')) {
-    return clerkMiddleware()(req)
+    return clerkMiddleware()(req, async (event) => {
+      return null;
+    })
   }
   
   // Check if this is a custom domain
@@ -26,7 +28,9 @@ async function customDomainMiddleware(req: NextRequest) {
       requestHeaders.set('x-custom-domain-user-id', user.id)
       
       // Continue with the request
-      const response = await clerkMiddleware()(req)
+      const response = await clerkMiddleware()(req, async (event) => {
+        return null;
+      })
       
       // Clone the response and add the custom domain user ID header
       const responseHeaders = new Headers(response.headers)
@@ -44,7 +48,9 @@ async function customDomainMiddleware(req: NextRequest) {
   }
   
   // If no custom domain match or error, proceed with normal Clerk middleware
-  return clerkMiddleware()(req)
+  return clerkMiddleware()(req, async (event) => {
+    return null;
+  })
 }
 
 export default customDomainMiddleware

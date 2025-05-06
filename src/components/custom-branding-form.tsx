@@ -9,15 +9,10 @@ import { client } from "@/lib/client"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./ui/card"
 import { toast } from "sonner"
 import { useBranding } from "./branding-provider"
-import { AlertCircle, Upload, RefreshCw, Check, X } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
-import { DomainVerification } from "./domain-verification"
+import { UploadCloud } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
-import { Skeleton } from "./ui/skeleton"
 
 // Maximum file size for logo uploads (2MB)
 const MAX_FILE_SIZE = 2 * 1024 * 1024 
@@ -32,15 +27,7 @@ const BRANDING_VALIDATOR = z.object({
   secondaryColor: z
     .string()
     .regex(/^#[0-9A-F]{6}$/i, "Please enter a valid hex color code")
-    .optional(),
-  customDomain: z
-    .string()
-    .regex(
-      /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/,
-      "Please enter a valid domain (e.g., app.yourdomain.com)"
-    )
     .optional()
-    .or(z.literal("")),
 })
 
 type BrandingForm = z.infer<typeof BRANDING_VALIDATOR>
@@ -100,8 +87,7 @@ export const CustomBrandingForm = () => {
     defaultValues: {
       logo: "",
       primaryColor: "#4361EE",
-      secondaryColor: "#3F37C9",
-      customDomain: "",
+      secondaryColor: "#3F37C9"
     },
   })
 
@@ -111,8 +97,7 @@ export const CustomBrandingForm = () => {
       reset({
         logo: brandingData.logo || "",
         primaryColor: brandingData.primaryColor || "#4361EE",
-        secondaryColor: brandingData.secondaryColor || "#3F37C9",
-        customDomain: brandingData.customDomain || "",
+        secondaryColor: brandingData.secondaryColor || "#3F37C9"
       })
       
       if (brandingData.logo) {
@@ -123,12 +108,9 @@ export const CustomBrandingForm = () => {
 
   const primaryColor = watch("primaryColor")
   const secondaryColor = watch("secondaryColor")
-  const customDomain = watch("customDomain")
 
   const { mutate: updateBranding, isPending } = useMutation({
     mutationFn: async (data: BrandingForm) => {
-      // In a real implementation, you would handle the file upload here
-      // if there's a new logo file before submitting the form data
       const res = await client.project.updateBranding.$post(data)
       return await res.json()
     },
@@ -150,8 +132,7 @@ export const CustomBrandingForm = () => {
       reset({
         logo: brandingData.logo || "",
         primaryColor: brandingData.primaryColor || "#4361EE",
-        secondaryColor: brandingData.secondaryColor || "#3F37C9",
-        customDomain: brandingData.customDomain || "",
+        secondaryColor: brandingData.secondaryColor || "#3F37C9"
       })
       
       if (brandingData.logo) {
@@ -193,56 +174,60 @@ export const CustomBrandingForm = () => {
       reader.onload = (event) => {
         const result = event.target?.result as string
         setLogoPreview(result)
-        setValue("logo", result, { shouldDirty: true }) // In reality, this would be the URL from your storage service
+        setValue("logo", result, { shouldDirty: true })
       }
       reader.readAsDataURL(file)
     }
   }
 
-  const handleRemoveLogo = () => {
-    setLogoPreview(null)
-    setLogoFile(null)
-    setValue("logo", "", { shouldDirty: true })
-  }
-
-  const applyColorPalette = (primary: string, secondary: string) => {
-    setValue("primaryColor", primary, { shouldDirty: true })
-    setValue("secondaryColor", secondary, { shouldDirty: true })
-  }
-
-  const onSubmit = (data: BrandingForm) => {
-    updateBranding(data)
-  }
-
-  const renderContent = () => {
-    if (isLoading) {
-      return (
-        <div className="space-y-6 p-4">
-          <Skeleton className="h-8 w-1/3" />
-          <Skeleton className="h-32 w-full" />
-          <Skeleton className="h-32 w-full" />
-          <Skeleton className="h-10 w-1/4" />
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-medium">Branding Settings</h2>
+          <p className="text-sm text-gray-600">
+            Customize your application with your brand colors and logo.
+          </p>
         </div>
-      )
-    }
 
-    return (
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" aria-disabled={!isPro}>
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="design" disabled={!isPro}>Design</TabsTrigger>
-            <TabsTrigger value="domain" disabled={!isPro}>Domain</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="design" className="space-y-6 pt-4">
-            {/* Logo Upload */}
-            <div className={!isPro ? "opacity-60 pointer-events-none" : ""}>
-              <Label htmlFor="logo" className="text-sm font-medium mb-2 block">Logo</Label>
-              <div className="mt-2 flex items-center gap-4">
-                <div
-                  className="w-20 h-20 rounded-md border border-gray-200 flex items-center justify-center overflow-hidden bg-white"
-                  aria-label="Logo preview"
-                >
+        <div className="flex items-center gap-3">
+          {isDirty && (
+            <Button
+              variant="outline"
+              onClick={resetForm}
+              disabled={isPending}
+              className="text-sm"
+            >
+              Discard Changes
+            </Button>
+          )}
+
+          <Button
+            onClick={handleSubmit((data) => updateBranding(data))}
+            disabled={!isDirty || isPending}
+            className="text-sm"
+          >
+            {isPending ? "Saving..." : "Save Changes"}
+          </Button>
+        </div>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="design">Logo</TabsTrigger>
+          <TabsTrigger value="colors">Colors</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="design" className="space-y-6 pt-4">
+          {/* Logo Upload */}
+          <div>
+            <Label htmlFor="logo" className="text-sm font-medium mb-2 block">
+              Logo
+            </Label>
+
+            <div className="flex items-start gap-6">
+              <div className="flex-shrink-0">
+                <div className="w-32 h-32 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative group">
                   {logoPreview ? (
                     <img
                       src={logoPreview}
@@ -250,345 +235,146 @@ export const CustomBrandingForm = () => {
                       className="w-full h-full object-contain"
                     />
                   ) : (
-                    <span className="text-gray-400 text-sm">No logo</span>
+                    <div className="text-center p-4">
+                      <UploadCloud className="mx-auto h-8 w-8 text-gray-400" />
+                      <p className="mt-1 text-xs text-gray-500">Upload Logo</p>
+                    </div>
                   )}
-                </div>
-                <div className="flex-1">
-                  <div className="flex flex-wrap gap-2">
-                    <Input
-                      id="logo-upload"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleLogoChange}
-                      className="hidden"
-                      aria-label="Upload logo"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => document.getElementById("logo-upload")?.click()}
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Logo
-                    </Button>
-                    
-                    {logoPreview && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={handleRemoveLogo}
-                      >
-                        <X className="h-4 w-4 mr-2" />
-                        Remove
-                      </Button>
-                    )}
-                  </div>
-                  
-                  <p className="mt-2 text-xs text-gray-500">
-                    Recommended size: 512x512px. Max size: 2MB.
-                  </p>
-                  
-                  {logoError && (
-                    <p className="mt-1 text-xs text-red-500">
-                      {logoError}
+
+                  <input
+                    type="file"
+                    id="logo"
+                    accept="image/*"
+                    onChange={handleLogoChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+
+                  <div className="absolute inset-0 bg-black/50 items-center justify-center hidden group-hover:flex">
+                    <p className="text-white text-xs font-medium">
+                      Change Logo
                     </p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Color Palettes */}
-            <div className={!isPro ? "opacity-60 pointer-events-none" : ""}>
-              <Label className="text-sm font-medium mb-2 block">Color Palettes</Label>
-              <div className="mt-2 grid grid-cols-4 gap-3">
-                {COLOR_PALETTES.map((palette, index) => (
-                  <TooltipProvider key={index}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          className={`h-16 rounded-md overflow-hidden transition-all hover:scale-105 ${
-                            primaryColor === palette.primary && secondaryColor === palette.secondary
-                              ? "ring-2 ring-gray-900 scale-105"
-                              : ""
-                          }`}
-                          onClick={() => applyColorPalette(palette.primary, palette.secondary)}
-                          aria-label={`Color palette ${index + 1}`}
-                        >
-                          <div className="flex h-full">
-                            <div className="w-1/2 h-full" style={{ backgroundColor: palette.primary }}></div>
-                            <div className="w-1/2 h-full" style={{ backgroundColor: palette.secondary }}></div>
-                          </div>
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Primary: {palette.primary}</p>
-                        <p>Secondary: {palette.secondary}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ))}
-              </div>
-            </div>
-
-            {/* Custom Colors */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Primary Color */}
-              <div className={!isPro ? "opacity-60 pointer-events-none" : ""}>
-                <Label htmlFor="primaryColor" className="text-sm font-medium mb-2 block">Primary Color</Label>
-                <div className="flex items-center gap-3 mb-2">
-                  <div 
-                    className="w-10 h-10 rounded-md border border-gray-200"
-                    style={{ backgroundColor: primaryColor || "#FFFFFF" }}
-                    aria-hidden="true"
-                  ></div>
-                  <Input
-                    id="primaryColor"
-                    {...register("primaryColor")}
-                    placeholder="#4361EE"
-                    className="font-mono"
-                  />
-                </div>
-                
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {COLOR_OPTIONS.map((color) => (
-                    <TooltipProvider key={color}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            className={`w-8 h-8 rounded-full ring-2 ring-offset-2 transition-all ${
-                              primaryColor === color
-                                ? "ring-gray-900 scale-110"
-                                : "ring-transparent hover:scale-105"
-                            }`}
-                            style={{ backgroundColor: color }}
-                            onClick={() => setValue("primaryColor", color, { shouldDirty: true })}
-                            aria-label={`Set primary color to ${color}`}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>{color}</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ))}
-                  <div className="flex items-center">
-                    <Input
-                      type="color"
-                      value={primaryColor || "#FFFFFF"}
-                      onChange={(e) => setValue("primaryColor", e.target.value, { shouldDirty: true })}
-                      className="w-8 h-8 p-1 rounded-full overflow-hidden cursor-pointer"
-                      aria-label="Custom primary color picker"
-                    />
                   </div>
                 </div>
-                {errors.primaryColor && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.primaryColor.message}
-                  </p>
+
+                {logoError && (
+                  <p className="text-red-500 text-xs mt-2">{logoError}</p>
                 )}
               </div>
 
-              {/* Secondary Color */}
-              <div className={!isPro ? "opacity-60 pointer-events-none" : ""}>
-                <Label htmlFor="secondaryColor" className="text-sm font-medium mb-2 block">Secondary Color</Label>
-                <div className="flex items-center gap-3 mb-2">
-                  <div 
-                    className="w-10 h-10 rounded-md border border-gray-200"
-                    style={{ backgroundColor: secondaryColor || "#FFFFFF" }}
-                    aria-hidden="true"
-                  ></div>
-                  <Input
-                    id="secondaryColor"
-                    {...register("secondaryColor")}
-                    placeholder="#3F37C9"
-                    className="font-mono"
-                  />
-                </div>
-                
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {COLOR_OPTIONS.map((color) => (
-                    <TooltipProvider key={color}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            className={`w-8 h-8 rounded-full ring-2 ring-offset-2 transition-all ${
-                              secondaryColor === color
-                                ? "ring-gray-900 scale-110"
-                                : "ring-transparent hover:scale-105"
-                            }`}
-                            style={{ backgroundColor: color }}
-                            onClick={() => setValue("secondaryColor", color, { shouldDirty: true })}
-                            aria-label={`Set secondary color to ${color}`}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>{color}</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ))}
-                  <div className="flex items-center">
-                    <Input
-                      type="color"
-                      value={secondaryColor || "#FFFFFF"}
-                      onChange={(e) => setValue("secondaryColor", e.target.value, { shouldDirty: true })}
-                      className="w-8 h-8 p-1 rounded-full overflow-hidden cursor-pointer"
-                      aria-label="Custom secondary color picker"
-                    />
-                  </div>
-                </div>
-                {errors.secondaryColor && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.secondaryColor.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Preview Card */}
-            <div className={!isPro ? "opacity-60 pointer-events-none" : ""}>
-              <Label className="text-sm font-medium mb-2 block">Preview</Label>
-              <div className="border rounded-lg overflow-hidden">
-                <div 
-                  className="h-16 flex items-center px-4" 
-                  style={{ backgroundColor: primaryColor || "#4361EE" }}
-                >
-                  {logoPreview ? (
-                    <img 
-                      src={logoPreview} 
-                      alt="Logo" 
-                      className="h-8 object-contain bg-white rounded-md p-1"
-                    />
-                  ) : (
-                    <div className="text-white font-bold">Your App</div>
-                  )}
-                </div>
-                <div className="p-4 bg-white">
-                  <div className="w-full h-8 bg-gray-100 rounded-md mb-3"></div>
-                  <div className="w-3/4 h-4 bg-gray-100 rounded-md mb-2"></div>
-                  <div className="w-1/2 h-4 bg-gray-100 rounded-md mb-4"></div>
-                  <button
-                    className="px-4 py-2 rounded-md text-white"
-                    style={{ backgroundColor: secondaryColor || "#3F37C9" }}
-                    aria-hidden="true"
-                    type="button"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    Button Example
-                  </button>
+              <div className="flex-grow space-y-4">
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700">
+                    Logo Guidelines
+                  </h4>
+                  <ul className="mt-2 text-sm text-gray-600 space-y-2 list-disc pl-4">
+                    <li>Maximum file size: 2MB</li>
+                    <li>Recommended dimensions: 512x512 pixels</li>
+                    <li>File types: PNG, JPG, or SVG</li>
+                    <li>
+                      For best results, use a transparent background (PNG or SVG)
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="domain" className="space-y-6 pt-4">
-            {/* Custom Domain */}
-            <div className={!isPro ? "opacity-60 pointer-events-none" : ""}>
-              <Label htmlFor="customDomain" className="text-sm font-medium mb-2 block">Custom Domain</Label>
-              <Input
-                id="customDomain"
-                {...register("customDomain")}
-                placeholder="app.yourdomain.com"
-                className="mt-2"
-                aria-invalid={errors.customDomain ? "true" : "false"}
-              />
-              {errors.customDomain && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.customDomain.message}
-                </p>
-              )}
-              <p className="mt-2 text-xs text-gray-500">
-                Enter the domain you want to use for your application. You'll need to
-                configure DNS settings with your domain provider.
-              </p>
-            </div>
-            
-            {/* Domain Verification */}
-            {isPro && customDomain && (
-              <div className="mt-6">
-                <DomainVerification domain={customDomain} />
-              </div>
-            )}
-            
-            {!customDomain && isPro && (
-              <div className="bg-gray-50 rounded-lg p-6 text-center">
-                <h4 className="text-sm font-medium text-gray-700">No Custom Domain Set</h4>
-                <p className="text-xs text-gray-500 mt-2">
-                  Add a custom domain above to start the verification process.
-                </p>
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
-
-        <CardFooter className="px-0 pt-4 border-t flex flex-wrap gap-3 justify-between">
-          <div className="space-x-2">
-            <Button 
-              type="submit" 
-              disabled={isPending || !isPro || !isDirty}
-              className="relative"
-            >
-              {isPending ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Check className="h-4 w-4 mr-2" />
-                  Save Branding Settings
-                </>
-              )}
-            </Button>
-            
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={resetForm}
-              disabled={isPending || !isDirty || !isPro}
-            >
-              Discard Changes
-            </Button>
           </div>
-          
-          {!isPro && (
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="bg-amber-600 hover:bg-amber-700"
-              onClick={() => window.location.href = "/pricing"}
-            >
-              Upgrade to PRO
-            </Button>
-          )}
-        </CardFooter>
-      </form>
-    )
-  }
+        </TabsContent>
 
-  return (
-    <Card className="max-w-3xl w-full">
-      <CardHeader>
-        <CardTitle>Custom Branding</CardTitle>
-        <CardDescription>
-          Customize your application with your brand colors, logo, and domain.
-        </CardDescription>
-      </CardHeader>
+        <TabsContent value="colors" className="space-y-6 pt-4">
+          {/* Color Pickers */}
+          <div className="grid gap-6 max-w-md">
+            <div>
+              <Label
+                htmlFor="primaryColor"
+                className="text-sm font-medium mb-2 block"
+              >
+                Primary Color
+              </Label>
+              <div className="flex items-center gap-3">
+                <Input
+                  id="primaryColor"
+                  type="color"
+                  {...register("primaryColor")}
+                  className="w-20 h-10 p-1"
+                />
+                <Input
+                  type="text"
+                  value={primaryColor}
+                  onChange={(e) =>
+                    setValue("primaryColor", e.target.value, {
+                      shouldDirty: true,
+                    })
+                  }
+                  className="font-mono uppercase"
+                  maxLength={7}
+                />
+              </div>
+            </div>
 
-      <CardContent>
-        {!isPro && (
-          <Alert className="bg-amber-50 border-amber-200 mb-6">
-            <AlertCircle className="h-4 w-4 text-amber-600" />
-            <AlertTitle className="text-amber-800">PRO Plan Required</AlertTitle>
-            <AlertDescription className="text-amber-700">
-              Custom branding is a PRO feature. Upgrade your plan to customize your application's appearance.
-            </AlertDescription>
-          </Alert>
-        )}
+            <div>
+              <Label
+                htmlFor="secondaryColor"
+                className="text-sm font-medium mb-2 block"
+              >
+                Secondary Color
+              </Label>
+              <div className="flex items-center gap-3">
+                <Input
+                  id="secondaryColor"
+                  type="color"
+                  {...register("secondaryColor")}
+                  className="w-20 h-10 p-1"
+                />
+                <Input
+                  type="text"
+                  value={secondaryColor}
+                  onChange={(e) =>
+                    setValue("secondaryColor", e.target.value, {
+                      shouldDirty: true,
+                    })
+                  }
+                  className="font-mono uppercase"
+                  maxLength={7}
+                />
+              </div>
+            </div>
+          </div>
 
-        {renderContent()}
-      </CardContent>
-    </Card>
+          {/* Color Palettes */}
+          <div className="mt-8">
+            <h4 className="text-sm font-medium text-gray-700 mb-3">
+              Suggested Color Palettes
+            </h4>
+            <div className="grid grid-cols-2 gap-3 max-w-md">
+              {COLOR_PALETTES.map((palette, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setValue("primaryColor", palette.primary, {
+                      shouldDirty: true,
+                    })
+                    setValue("secondaryColor", palette.secondary, {
+                      shouldDirty: true,
+                    })
+                  }}
+                  className="p-3 rounded-lg border hover:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                >
+                  <div className="grid grid-cols-2 gap-2">
+                    <div
+                      className="h-8 rounded"
+                      style={{ backgroundColor: palette.primary }}
+                    />
+                    <div
+                      className="h-8 rounded"
+                      style={{ backgroundColor: palette.secondary }}
+                    />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
   )
 }

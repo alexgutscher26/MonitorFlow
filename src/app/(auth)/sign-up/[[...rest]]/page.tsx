@@ -3,7 +3,7 @@
 import { SignUp } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, HelpCircle, Shield, CheckCircle } from "lucide-react";
+import { MoveRight, HelpCircle, Shield, CheckCircle } from "lucide-react";
 
 /**
  * Enhanced Sign-up Page component with improved visual design
@@ -111,7 +111,7 @@ const Page = () => {
           {/* Benefits highlight */}
           <div className="mb-6 p-4 bg-green-50 border border-green-100 rounded-lg">
             <div className="flex items-center mb-2">
-              <ArrowRight size={18} className="text-green-500 mr-2 flex-shrink-0" />
+              <MoveRight size={18} className="text-green-500 mr-2 flex-shrink-0" />
               <p className="font-medium text-green-800">Quick setup process</p>
             </div>
             <p className="text-sm text-green-700 ml-6">
