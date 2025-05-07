@@ -82,7 +82,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240815.0",
+    "@cloudflare/workers-types": "^4.20250505.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
