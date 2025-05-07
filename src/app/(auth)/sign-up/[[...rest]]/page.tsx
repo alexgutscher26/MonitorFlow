@@ -49,7 +49,7 @@ const Page = () => {
               "MonitorFlow has transformed how our team collaborates. The onboarding was seamless, and we saw immediate productivity improvements."
             </p>
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-blue-500 rounded-full mr-3"></div>
+              <div className="w-8 h-8 bg-blue-500 rounded-full mr-3" />
               <div>
                 <p className="font-medium">Sarah Johnson</p>
                 <p className="text-sm text-white/70">Product Manager, TechCorp</p>
