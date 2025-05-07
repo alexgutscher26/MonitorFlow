@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { AuditService } from '@/server/services/audit-service';
 
+/**
+ * Handles GET requests to fetch and export audit logs.
+ *
+ * This function retrieves authentication details from the request, parses query parameters,
+ * and then either exports audit logs in CSV format or fetches them in JSON format based on the 'format' parameter.
+ * It handles various optional filters such as startDate, endDate, resource, action, limit, and offset.
+ * If an error occurs during processing, it logs the error and returns a 500 Internal Server Error response.
+ *
+ * @param request - The incoming NextRequest object containing query parameters and authentication details.
+ * @returns A JSON response with audit logs or a CSV file as an attachment based on the 'format' parameter.
+ */
 export async function GET(request: NextRequest) {
   try {
     const { userId } = auth();
