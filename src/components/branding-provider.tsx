@@ -4,7 +4,6 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { useQuery } from "@tanstack/react-query"
 import { client } from "@/lib/client"
 import { Plan } from "@prisma/client"
-import { headers } from "next/headers"
 
 type BrandingSettings = {
   logo: string | null

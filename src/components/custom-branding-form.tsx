@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, MouseEvent, ChangeEvent } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
@@ -38,8 +38,6 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
-import { errors } from "@upstash/redis/cloudflare"
-import { register } from "module"
 
 // Maximum file size for logo uploads (2MB)
 const MAX_FILE_SIZE = 2 * 1024 * 1024 
@@ -173,7 +171,7 @@ export const CustomBrandingForm = () => {
     }
   }
 
-  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     setLogoError(null)
     
@@ -270,16 +268,6 @@ export const CustomBrandingForm = () => {
               </Tooltip>
             </TooltipProvider>
           )}
-                    <RefreshCw className="h-4 w-4 mr-1" />
-                    Discard
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  Discard all changes
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
 
           {isPro ? (
             <Button
@@ -323,19 +311,6 @@ export const CustomBrandingForm = () => {
                 className: "bg-amber-600 hover:bg-amber-700"
               })}
             >
-              {isPending ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </>
-              )}
-            </Button>
-          ) : null}
               Upgrade to PRO
             </Link>
           </div>
@@ -384,19 +359,6 @@ export const CustomBrandingForm = () => {
                     onClick={removeLogo}
                     className="h-8 text-red-500 hover:text-red-600 hover:bg-red-50"
                   >
-              {isPending ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </>
-              )}
-            </Button>
-          ) : null}
                     <Trash2 className="h-4 w-4 mr-1" />
                     Remove
                   </Button>
@@ -412,19 +374,6 @@ export const CustomBrandingForm = () => {
                       backgroundColor: logoPreview ? 'white' : 'rgb(249 250 251)'
                     }}
                   >
-              {isPending ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </>
-              )}
-            </Button>
-          ) : null}
                     {logoPreview ? (
                       <img
                         src={logoPreview}
@@ -488,19 +437,6 @@ export const CustomBrandingForm = () => {
                     htmlFor="primaryColor"
                     className="text-sm font-medium mb-2 block"
                   >
-              {isPending ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </>
-              )}
-            </Button>
-          ) : null}
                     Primary Color
                   </Label>
                   <div className="flex items-center gap-3">
@@ -541,19 +477,6 @@ export const CustomBrandingForm = () => {
                     htmlFor="secondaryColor"
                     className="text-sm font-medium mb-2 block"
                   >
-              {isPending ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </>
-              )}
-            </Button>
-          ) : null}
                     Secondary Color
                   </Label>
                   <div className="flex items-center gap-3">
@@ -610,19 +533,6 @@ export const CustomBrandingForm = () => {
                       }}
                       className="p-3 rounded-lg border hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-all"
                     >
-              {isPending ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </>
-              )}
-            </Button>
-          ) : null}
                       <div className="grid grid-cols-2 gap-2">
                         <div
                           className="h-10 rounded"
@@ -662,28 +572,4 @@ export const CustomBrandingForm = () => {
       </AlertDialog>
     </Card>
   )
-}
-
-function setActiveTab(value: string): void {
-  throw new Error("Function not implemented.")
-}
-
-
-function removeLogo(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
-  throw new Error("Function not implemented.")
-}
-
-
-function handleLogoChange(event: ChangeEvent<HTMLInputElement>): void {
-  throw new Error("Function not implemented.")
-}
-
-
-function setValue(arg0: string, value: string, arg2: { shouldDirty: boolean }) {
-  throw new Error("Function not implemented.")
-}
-
-
-function resetForm(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
-  throw new Error("Function not implemented.")
 }
