@@ -59,5 +59,23 @@ declare module 'lucide-react' {
   export const ArrowUpDown: LucideIcon;
   export const BarChart2: LucideIcon;
   export const Database: LucideIcon;
-  // Add any other icons you're using in your project
+  export const Gem: LucideIcon;
+  export const Settings: LucideIcon;
+  export const Home: LucideIcon;
+  export const Key: LucideIcon;
+  export const X: LucideIcon;
+  export const Puzzle: LucideIcon;
+  export const ClipboardList: LucideIcon;
+  export const PlusIcon: LucideIcon;
+  export const AlertCircle: LucideIcon;
+  export const ChevronRight: LucideIcon;
+  export const ChevronLeft: LucideIcon;
+  export const ChevronDown: LucideIcon;
+  export const Upload: LucideIcon;
+  export const Save: LucideIcon;
+  export const Heart: LucideIcon;
+  export const Palette: LucideIcon;
+  export const User: LucideIcon;
+  export const Loader2: LucideIcon;
+   // Add any other icons you're using in your project
 }
