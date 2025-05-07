@@ -132,8 +132,8 @@ export const router = <T extends Record<string, OperationType<any, any>>>(
     }
   })
 
-  type InferInput<T> = T extends OperationType<infer I, any> ? I : {}
-  type InferOutput<T> = T extends OperationType<any, infer I> ? I : {}
+  type InferInput<T> = T extends OperationType<infer I, any> ? I : NonNullable<unknown>
+  type InferOutput<T> = T extends OperationType<any, infer I> ? I : NonNullable<unknown>
 
   return route as Hono<
     { Bindings: Bindings; Variables: Variables },
