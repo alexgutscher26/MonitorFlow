@@ -120,8 +120,8 @@ importers:
         specifier: ^11.11.9
         version: 11.11.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       hono:
-        specifier: ^4.5.5
-        version: 4.6.4
+        specifier: ^4.7.8
+        version: 4.7.8
       lucide-react:
         specifier: ^0.488.0
         version: 0.488.0(react@18.3.1)
@@ -2396,8 +2396,8 @@ packages:
   highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
 
-  hono@4.6.4:
-    resolution: {integrity: sha512-T5WqBkTOcIQblqBKB5mpzaH/A+dSpvVe938xZJCHOmOuYfF7DSwE/9/10+BMvwSPq9N/f6LiQ38HxrZSQOsXKw==}
+  hono@4.7.8:
+    resolution: {integrity: sha512-PCibtFdxa7/Ldud9yddl1G81GjYaeMYYTq4ywSaNsYbB1Lug4mwtOMJf2WXykL0pntYwmpRJeOI3NmoDgD+Jxw==}
     engines: {node: '>=16.9.0'}
 
   http-errors@1.7.3:
@@ -6225,7 +6225,7 @@ snapshots:
 
   highlight.js@10.7.3: {}
 
-  hono@4.6.4: {}
+  hono@4.7.8: {}
 
   http-errors@1.7.3:
     dependencies:
