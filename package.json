@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",
-    "@discordjs/rest": "^2.4.0",
+    "@discordjs/rest": "^2.5.0",
     "@formatjs/intl-localematcher": "^0.6.1",
     "@hookform/resolvers": "^3.9.0",
     "@mantine/core": "^7.17.7",
