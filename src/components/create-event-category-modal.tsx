@@ -141,7 +141,7 @@ export const CreateEventCategoryModal = ({
                         : "ring-transparent hover:scale-105"
                     )}
                     onClick={() => setValue("color", premadeColor)}
-                  ></button>
+                   />
                 ))}
               </div>
 

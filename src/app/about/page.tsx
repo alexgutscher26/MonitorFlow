@@ -200,7 +200,7 @@ export default function AboutPage() {
                   {companyTimeline.map((item, index) => (
                     <li key={index} className="mb-10 ml-6">
                       <span className="absolute flex items-center justify-center w-6 h-6 bg-indigo-100 rounded-full -left-3 ring-8 ring-white">
-                        <div className="w-3 h-3 bg-indigo-600 rounded-full"></div>
+                        <div className="w-3 h-3 bg-indigo-600 rounded-full" />
                       </span>
                       <h3 className="flex items-center mb-1 text-lg font-semibold text-gray-900">
                         {item.event}
