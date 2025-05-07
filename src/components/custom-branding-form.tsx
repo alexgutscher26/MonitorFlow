@@ -38,6 +38,7 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
+import { JsonValue } from "@prisma/client/runtime/library"
 
 // Maximum file size for logo uploads (2MB)
 const MAX_FILE_SIZE = 2 * 1024 * 1024 

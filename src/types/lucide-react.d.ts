@@ -76,5 +76,6 @@ declare module 'lucide-react' {
   export const Heart: LucideIcon;
   export const Palette: LucideIcon;
   export const User: LucideIcon;
+  export const Loader2: LucideIcon;
    // Add any other icons you're using in your project
 }

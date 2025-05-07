@@ -518,10 +518,12 @@ export function IntegrationConfigModal({ integration, isOpen, onClose }: Integra
     setError(null);
 
     // Clear any pending debounce timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
+    useEffect(() => {
+      const timerRef = debounceTimerRef.current;
+      return () => {
+        clearTimeout(timerRef);
+      };
+    });
     // Only validate without showing toast
     const error = validateField(field, value);
     if (error) {
@@ -731,4 +733,4 @@ export function IntegrationConfigModal({ integration, isOpen, onClose }: Integra
       </DialogContent>
     </Dialog>
   );
-} 
+}
