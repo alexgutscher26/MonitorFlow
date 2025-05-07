@@ -218,7 +218,7 @@ export const CategoryPageContent = ({
     const weekStart = startOfWeek(now, { weekStartsOn: 0 })
     const monthStart = startOfMonth(now)
 
-    data.events.forEach((event) => {
+    data.events.forEach((event: { createdAt: any; fields: object }) => {
       const eventDate = event.createdAt
 
       Object.entries(event.fields as object).forEach(([field, value]) => {
