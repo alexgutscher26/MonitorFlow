@@ -59,6 +59,7 @@ pnpm dev
 ## Acknowledgements
 
 - [Clerk](https://link.joshtriedcoding.com/clerk) for making this project possible
+[![CodeFactor](https://www.codefactor.io/repository/github/alexgutscher26/pingpanda-main/badge)](https://www.codefactor.io/repository/github/alexgutscher26/pingpanda-main)
 
 ## License
 
