@@ -11,6 +11,9 @@ import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CustomBrandingForm } from "@/components/custom-branding-form"
 
+/**
+ * Renders account settings with tabs for general and branding sections.
+ */
 export const AccountSettings = ({
   discordId: initialDiscordId,
 }: {
