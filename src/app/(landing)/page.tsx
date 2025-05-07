@@ -33,7 +33,7 @@ const Page = () => {
         <MaxWidthWrapper className="text-center">
           <div className="relative mx-auto text-center flex flex-col items-center gap-10">
             <div>
-              <Heading>
+              <Heading title={""} description={""}>
                 <span>Real-Time SaaS Insights,</span>
                 <br />
                 <span className="relative bg-gradient-to-r from-brand-700 to-brand-800 text-transparent bg-clip-text">
@@ -136,7 +136,7 @@ const Page = () => {
             <h2 className="text-center text-base/7 font-semibold text-brand-600">
               Intuitive Monitoring
             </h2>
-            <Heading>Stay ahead with real-time insights</Heading>
+            <Heading title={""} description={""}>Stay ahead with real-time insights</Heading>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3 lg:grid-rows-2">
@@ -287,7 +287,7 @@ const Page = () => {
             <h2 className="text-center text-base/7 font-semibold text-brand-600">
               Real-World Experiences
             </h2>
-            <Heading className="text-center">What our customers say</Heading>
+            <Heading className="text-center" title={""} description={""}>What our customers say</Heading>
           </div>
 
           <div className="mx-auto grid max-w-2xl grid-cols-1 px-4 lg:mx-0 lg:max-w-none lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-200">

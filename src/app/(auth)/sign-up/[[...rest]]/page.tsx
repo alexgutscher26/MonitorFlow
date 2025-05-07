@@ -5,16 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { MoveRight, HelpCircle, Shield, CheckCircle } from "lucide-react";
 
-/**
- * Enhanced Sign-up Page component with improved visual design
- * Features:
- * - Side-by-side layout with branding and sign-up form
- * - Responsive design with mobile optimization
- * - Interactive visual elements and icons
- * - Secure authentication messaging
- * - Benefits section highlighting platform advantages
- * - Maintains redirect logic to welcome page
- */
+
 const Page = () => {
   // Get URL parameters to handle any redirect parameters
   const searchParams = useSearchParams();
@@ -43,7 +34,7 @@ const Page = () => {
             <div className="text-blue-600 text-3xl font-bold">T</div>
           </div>
           
-          <h2 className="text-4xl font-bold mb-4 text-center">Join Trae Today</h2>
+          <h2 className="text-4xl font-bold mb-4 text-center">Join MonitorFlow Today</h2>
           
           <p className="text-center text-lg max-w-md opacity-90 mb-8">
             Start your journey with the most powerful project management platform.
@@ -52,7 +43,7 @@ const Page = () => {
           {/* Testimonial for social proof */}
           <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm mt-4 mb-8 max-w-md">
             <p className="italic text-white/90 mb-4">
-              "Trae has transformed how our team collaborates. The onboarding was seamless, and we saw immediate productivity improvements."
+              "MonitorFlow has transformed how our team collaborates. The onboarding was seamless, and we saw immediate productivity improvements."
             </p>
             <div className="flex items-center">
               <div className="w-8 h-8 bg-blue-500 rounded-full mr-3"></div>
@@ -97,7 +88,7 @@ const Page = () => {
             <div className="w-10 h-10 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold shadow-md">
               T
             </div>
-            <span className="text-2xl font-semibold text-gray-800">Trae</span>
+            <span className="text-2xl font-semibold text-gray-800">MonitorFlow</span>
           </Link>
         </div>
 
@@ -105,7 +96,7 @@ const Page = () => {
           {/* Enhanced header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Create your account</h1>
-            <p className="text-gray-600">Get started with Trae in just a few minutes</p>
+            <p className="text-gray-600">Get started with MonitorFlow in just a few minutes</p>
           </div>
           
           {/* Benefits highlight */}
@@ -159,7 +150,7 @@ const Page = () => {
         
         {/* Footer with enhanced styling */}
         <footer className="mt-auto pt-8 text-center">
-          <p className="text-sm text-gray-500">© {new Date().getFullYear()} Trae. All rights reserved.</p>
+          <p className="text-sm text-gray-500">© {new Date().getFullYear()} MonitorFlow. All rights reserved.</p>
           <div className="mt-2 flex justify-center space-x-4">
             <Link href="/terms" className="text-xs text-gray-400 hover:text-gray-600">Terms</Link>
             <Link href="/privacy" className="text-xs text-gray-400 hover:text-gray-600">Privacy</Link>

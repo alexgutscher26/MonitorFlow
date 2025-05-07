@@ -2,38 +2,3 @@ name = "MonitorFlow"
 main = "src/server/index.ts"
 compatibility_date = "2024-03-29"
 compatibility_flags = ["nodejs_compat"]
-
-# Add TypeScript configuration
-[build]
-command = "pnpm build"
-watch_dir = "src"
-
-# Add environment variables configuration
-[vars]
-NODE_ENV = "production"
-
-# Add development configuration
-[dev]
-port = 8787
-local_protocol = "http"
-
-# Add miniflare configuration for better local development
-[miniflare]
-host = "localhost"
-port = 8787
-watch = true
-
-# Add KV namespace configuration if you need to use KV storage
-# [kv_namespaces]
-# MY_KV = { binding = "MY_KV", id = "xxx" }
-
-# Add R2 bucket configuration if you need object storage
-# [[r2_buckets]]
-# binding = "MY_BUCKET"
-# bucket_name = "my-bucket"
-
-# Add deployment configuration
-[env.production]
-workers_dev = true
-route = ""  # Add your route pattern here if needed
-zone_id = "" # Add your zone ID if needed

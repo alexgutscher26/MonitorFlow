@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { analytics, marketing, functional, necessary } = body;
+    const { analytics, marketing } = body;
 
     // Update or create user consent preferences
     const consent = await db.userConsent.upsert({
@@ -19,14 +19,10 @@ export async function POST(req: Request) {
         userId,
         analytics,
         marketing,
-        functional,
-        necessary,
       },
       update: {
         analytics,
         marketing,
-        functional,
-        necessary,
       },
     });
 
@@ -51,8 +47,6 @@ export async function GET() {
     return NextResponse.json(consent || {
       analytics: false,
       marketing: false,
-      functional: false,
-      necessary: true,
     });
   } catch (error) {
     console.error('[USER_CONSENT_GET]', error);

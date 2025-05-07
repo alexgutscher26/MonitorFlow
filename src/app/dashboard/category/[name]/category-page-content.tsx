@@ -317,7 +317,7 @@ export const CategoryPageContent = ({
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div className="w-full flex flex-col gap-4">
-            <Heading className="text-3xl">Event overview</Heading>
+            <Heading className="text-3xl" title={""} description={""}>Event overview</Heading>
           </div>
         </div>
 

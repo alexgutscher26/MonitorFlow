@@ -18,7 +18,7 @@ const Page = () => {
     "10.000 real-time events per month",
     "10 event categories",
     "Advanced analytics and insights",
-    "White-labeling with custom domains",
+    "White-labeling",
     "Priority support",
   ]
 

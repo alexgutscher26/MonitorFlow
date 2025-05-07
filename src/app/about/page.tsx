@@ -93,7 +93,7 @@ export default function AboutPage() {
             <div className="mb-6 inline-block p-2 bg-indigo-50 rounded-full">
               <Image src="/brand-asset-wave.png" alt="PingPanda Logo" width={64} height={64} className="w-16 h-16" />
             </div>
-            <Heading className="mb-6">About PingPanda</Heading>
+            <Heading className="mb-6" title={''} description={''}>About MonitorFlow</Heading>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               We're on a mission to make application monitoring simple, reliable, and accessible to developers worldwide. Our platform helps teams identify and resolve issues before they impact users.
             </p>

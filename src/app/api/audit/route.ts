@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     if (format === 'csv') {
       const csv = await AuditService.exportAuditLogs(userId, 'csv');
-      return new NextResponse(csv, {
+      return new NextResponse(csv as BodyInit, {
         headers: {
           'Content-Type': 'text/csv',
           'Content-Disposition': 'attachment; filename=audit-logs.csv',

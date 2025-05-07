@@ -29,5 +29,35 @@ declare module 'lucide-react' {
   export const Sticker: LucideIcon;
   export const UserCircle: LucideIcon;
   export const Video: LucideIcon;
+  export const MoveRight: LucideIcon;
+  export const MoveLeft: LucideIcon;
+  export const MoveUp: LucideIcon;
+  export const MoveDown: LucideIcon;
+  export const Trash2: LucideIcon;
+  export const ArrowUp: LucideIcon;
+  export const ArrowDown: LucideIcon;
+  export const ArrowLeft: LucideIcon;
+  export const ArrowRight: LucideIcon;
+  export const ArrowUpRight: LucideIcon;
+  export const ArrowUpLeft: LucideIcon;
+  export const ArrowDownRight: LucideIcon;
+  export const Shield: LucideIcon;
+  export const CheckIcon: LucideIcon;
+  export const Check: LucideIcon;
+  export const Star: LucideIcon;
+  export const Github: LucideIcon;
+  export const Twitter: LucideIcon;
+  export const Mail: LucideIcon;
+  export const Monitor: LucideIcon;
+  export const Users: LucideIcon;
+  export const Globe: LucideIcon;
+  export const MessageSquare: LucideIcon;
+  export const MapPin: LucideIcon;
+  export const Send: LucideIcon;
+  export const BarChart: LucideIcon;
+  export const ClipboardIcon: LucideIcon;
+  export const ArrowUpDown: LucideIcon;
+  export const BarChart2: LucideIcon;
+  export const Database: LucideIcon;
   // Add any other icons you're using in your project
 }

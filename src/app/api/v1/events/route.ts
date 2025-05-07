@@ -47,7 +47,7 @@ export const POST = async (req: NextRequest) => {
     }
     const user = await db.user.findUnique({
       where: { apiKey: apiKey },
-      include: { eventCategories: true },
+      include: { EventCategories: true },
     })
 
     if (!user) {

@@ -26,10 +26,10 @@ export const AccountSettings = ({
   })
 
   return (
-    <Tabs defaultValue="general" className="w-full max-w-3xl">
+    <Tabs defaultValue="general" value="general" className="w-full max-w-3xl">
       <TabsList className="mb-6">
-        <TabsTrigger value="general">General</TabsTrigger>
-        <TabsTrigger value="branding">Branding</TabsTrigger>
+        <TabsTrigger asChild value="general"><div>General</div></TabsTrigger>
+        <TabsTrigger asChild value="branding"><div>Branding</div></TabsTrigger>
       </TabsList>
       
       <TabsContent value="general">

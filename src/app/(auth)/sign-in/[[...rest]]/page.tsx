@@ -5,15 +5,6 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { MoveRight, HelpCircle, Shield } from "lucide-react";
 
-/**
- * Enhanced Sign-in Page component with improved visual design
- * Features:
- * - Side-by-side layout with branding and sign-in form
- * - Responsive design with mobile optimization
- * - Interactive visual elements and icons
- * - Secure authentication messaging
- * - Maintains redirect logic based on intent parameter
- */
 const Page = () => {
   // Get URL parameters to handle redirect after authentication
   const searchParams = useSearchParams();
@@ -42,7 +33,7 @@ const Page = () => {
             <div className="text-blue-600 text-3xl font-bold">T</div>
           </div>
           
-          <h2 className="text-4xl font-bold mb-4 text-center">Welcome to Trae</h2>
+          <h2 className="text-4xl font-bold mb-4 text-center">Welcome to MonitorFlow</h2>
           
           <p className="text-center text-lg max-w-md opacity-90 mb-8">
             Your all-in-one platform for managing projects and teams effectively.
@@ -82,7 +73,7 @@ const Page = () => {
             <div className="w-10 h-10 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold shadow-md">
               T
             </div>
-            <span className="text-2xl font-semibold text-gray-800">Trae</span>
+            <span className="text-2xl font-semibold text-gray-800">MonitorFlow</span>
           </Link>
         </div>
 
@@ -115,7 +106,7 @@ const Page = () => {
               <span className="text-sm font-medium text-gray-700">Need assistance?</span>
             </div>
             <p className="text-sm text-gray-500">
-              We're here to help! <Link href="/support" className="text-blue-600 hover:underline font-medium">Contact support</Link>
+              We're here to help! <Link href="/contact" className="text-blue-600 hover:underline font-medium">Contact support</Link>
             </p>
           </div>
         </div>
