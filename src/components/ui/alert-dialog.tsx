@@ -45,6 +45,9 @@ const AlertDialogContent = React.forwardRef<
 ))
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName
 
+/**
+ * Renders a header for an alert dialog with customizable class names and properties.
+ */
 const AlertDialogHeader = ({
   className,
   ...props
@@ -59,6 +62,9 @@ const AlertDialogHeader = ({
 )
 AlertDialogHeader.displayName = "AlertDialogHeader"
 
+/**
+ * Renders an alert dialog footer with customizable class names and props.
+ */
 const AlertDialogFooter = ({
   className,
   ...props
