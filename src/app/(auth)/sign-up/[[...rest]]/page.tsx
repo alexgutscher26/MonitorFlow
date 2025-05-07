@@ -6,6 +6,9 @@ import Link from "next/link";
 import { MoveRight, HelpCircle, Shield, CheckCircle } from "lucide-react";
 
 
+/**
+ * A React functional component representing a page with a sign-up form and branding content.
+ */
 const Page = () => {
   // Get URL parameters to handle any redirect parameters
   const searchParams = useSearchParams();

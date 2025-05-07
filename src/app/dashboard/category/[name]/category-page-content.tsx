@@ -40,6 +40,24 @@ interface CategoryPageContentProps {
   category: EventCategory
 }
 
+/**
+ * Represents a component that displays an overview of events within a specific category.
+ * It includes tabs to filter events by today, this week, or this month,
+ * and a table to list the events with sorting and pagination features.
+ *
+ * @component EventOverview
+ * @param {Object} props - The properties passed to the component.
+ * @param {boolean} props.isFetching - Indicates if data is being fetched.
+ * @param {Object} props.category - The category for which events are being displayed.
+ * @param {Object} props.data - The data containing event information.
+ * @param {number} props.data.eventsCount - The total number of events.
+ * @param {Array} props.data.events - An array of event objects.
+ * @param {boolean} props.pollingData.hasEvents - Indicates if there are any events to display.
+ * @param {Function} props.setActiveTab - A function to set the active tab for filtering events.
+ * @param {string} props.activeTab - The currently active tab for filtering events.
+ *
+ * @returns {JSX.Element} - The rendered component with event overview and table.
+ */
 export const CategoryPageContent = ({
   hasEvents: initialHasEvents,
   category,

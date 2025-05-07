@@ -75,6 +75,9 @@ const DEFAULT_BRANDING = {
   logo: ""
 }
 
+/**
+ * Custom branding form component.
+ */
 export const CustomBrandingForm = () => {
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
   const [logoFile, setLogoFile] = useState<File | null>(null)
@@ -148,6 +151,16 @@ export const CustomBrandingForm = () => {
     }
   })
 
+  /**
+   * Resets the branding form to the values from brandingData or default values.
+   *
+   * This function first checks if `brandingData` is available. If it is, it resets
+   * the form fields such as logo, primaryColor, and secondaryColor using the data
+   * from `brandingData` or falls back to default values defined in `DEFAULT_BRANDING`.
+   * It also sets the logo preview based on whether a logo is present in `brandingData`,
+   * clears any uploaded logo file and error messages, closes the reset dialog, and
+   * displays an informational toast to indicate that changes have been discarded.
+   */
   const resetForm = () => {
     if (brandingData) {
       reset({
@@ -172,7 +185,7 @@ export const CustomBrandingForm = () => {
     }
   }
 
-  const handleLogoChange = (e: ChangeEvent<HTMLInputElement>) => {
+
     const file = e.target.files?.[0]
     setLogoError(null)
     
@@ -202,6 +215,9 @@ export const CustomBrandingForm = () => {
     }
   }
 
+  /**
+   * Resets logo-related state and form value.
+   */
   const removeLogo = () => {
     setLogoPreview(null)
     setLogoFile(null)
@@ -209,6 +225,9 @@ export const CustomBrandingForm = () => {
   }
 
   // Generate a preview button with the current colors
+  /**
+   * Component to display color preview buttons with primary and secondary options.
+   */
   const ColorPreviewButton = () => (
     <div className="flex flex-col items-center mt-4 space-y-2">
       <p className="text-sm text-gray-500">Preview</p>
@@ -573,4 +592,4 @@ export const CustomBrandingForm = () => {
       </AlertDialog>
     </Card>
   )
-}
+

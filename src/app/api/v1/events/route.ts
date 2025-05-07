@@ -23,6 +23,9 @@ const REQUEST_VALIDATOR = z
   })
   .strict()
 
+/**
+ * Handles POST requests to create and process events with user authentication and quota checks.
+ */
 export const POST = async (req: NextRequest) => {
   try {
     const authHeader = req.headers.get("Authorization")

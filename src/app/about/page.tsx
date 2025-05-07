@@ -80,6 +80,12 @@ const companyTimeline = [
   { year: '2024', event: 'Reached 10,000 active users and expanded team to 15 people' },
 ];
 
+/**
+ * Represents a functional React component that renders the main section of the PingPanda company website, including sections for about us, mission and values, team members, contact information, and more.
+ *
+ * @function Home
+ * @returns {JSX.Element} The JSX representation of the Home page.
+ */
 export default function AboutPage() {
   const [activeTab, setActiveTab] = useState('mission');
 

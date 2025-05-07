@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/db';
 
+/**
+ * Handles POST request to update or create user consent preferences.
+ */
 export async function POST(req: Request) {
   try {
     const { userId } = auth();
@@ -33,6 +36,9 @@ export async function POST(req: Request) {
   }
 }
 
+/**
+ * Retrieves user consent preferences or returns default settings if none exist.
+ */
 export async function GET() {
   try {
     const { userId } = auth();

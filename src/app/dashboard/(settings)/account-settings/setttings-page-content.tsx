@@ -22,6 +22,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CustomBrandingForm } from "@/components/custom-branding-form"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
+/**
+ * Renders account settings with tabs for general and branding sections.
+ */
 export const AccountSettings = ({
   discordId: initialDiscordId,
 }: {

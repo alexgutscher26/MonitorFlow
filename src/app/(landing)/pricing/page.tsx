@@ -10,6 +10,9 @@ import { useMutation } from "@tanstack/react-query"
 import { CheckIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 
+/**
+ * A React component representing a pricing page for PingPanda, offering lifetime access with various features.
+ */
 const Page = () => {
   const { user } = useUser()
   const router = useRouter()

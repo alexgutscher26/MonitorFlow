@@ -5,6 +5,9 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { MoveRight, HelpCircle, Shield } from "lucide-react";
 
+/**
+ * Represents a sign-in page with branding and authentication functionality.
+ */
 const Page = () => {
   // Get URL parameters to handle redirect after authentication
   const searchParams = useSearchParams();
