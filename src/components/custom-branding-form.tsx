@@ -227,7 +227,7 @@ export const CustomBrandingForm = () => {
     </div>
   )
 
-  const hasError = Object.keys(errors).length > 0 || !!logoError
+  const hasError = Object.keys(errors).length > 0 || Boolean(logoError)
 
   return (
     <Card className="w-full shadow-sm">
