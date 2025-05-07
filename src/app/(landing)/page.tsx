@@ -11,6 +11,13 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
 import { Icons } from "@/components/icons"
 import Footer from "@/components/footer"
 
+/**
+ * This is the main component of the application, representing the home page.
+ * It includes sections showcasing the product features, customer reviews,
+ * and a call to action button for users to sign up.
+ *
+ * @returns {JSX.Element} - The JSX representation of the Home component.
+ */
 const Page = () => {
   const codeSnippet = `await fetch("http://localhost:3000/api/v1/events", {
   method: "POST",
