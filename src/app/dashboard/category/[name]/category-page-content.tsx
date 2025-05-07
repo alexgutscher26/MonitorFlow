@@ -296,7 +296,7 @@ export const CategoryPageContent = ({
     <div className="space-y-6">
       <Tabs
         value={activeTab}
-        onValueChange={(value) => {
+        onValueChange={(value: string) => {
           setActiveTab(value as "today" | "week" | "month")
         }}
       >
