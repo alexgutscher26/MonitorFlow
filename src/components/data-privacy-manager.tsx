@@ -219,7 +219,7 @@ const DataPrivacyManager = () => {
                         id={`export-${type}`} 
                         checked={checked}
                         onCheckedChange={(checked: any) => 
-                          setExportDataTypes({...exportDataTypes, [type]: !!checked})
+                          setExportDataTypes({...exportDataTypes, [type]: Boolean(checked)})
                         }
                       />
                       <Label htmlFor={`export-${type}`} className="capitalize">
@@ -279,7 +279,7 @@ const DataPrivacyManager = () => {
                     <Checkbox 
                       id="confirm-delete" 
                       checked={confirmDelete}
-                      onCheckedChange={(checked: any) => setConfirmDelete(!!checked)}
+                      onCheckedChange={(checked: any) => setConfirmDelete(Boolean(checked))}
                     />
                     <Label htmlFor="confirm-delete" className="text-sm">
                       I understand that this action cannot be undone and all my data will be permanently deleted
