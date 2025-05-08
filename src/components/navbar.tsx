@@ -2,13 +2,11 @@
 
 import Link from "next/link"
 import { MaxWidthWrapper } from "./max-width-wrapper"
-import { SignOutButton } from "@clerk/nextjs"
+import { SignOutButton, useUser } from "@clerk/nextjs"
 import { Button, buttonVariants } from "./ui/button"
 import { ArrowRight } from "lucide-react"
 import { BrandedLogo } from "./branded-logo"
 import { useBranding } from "./branding-provider"
-
-import { useUser } from "@clerk/nextjs"
 
 export const Navbar = () => {
   const { user } = useUser()
