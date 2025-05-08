@@ -155,6 +155,16 @@ const DataPrivacyManager = () => {
     handlePreferencesUpdate({ [id]: value });
   };
 
+  const handlePreferenceChange = (id: string) => (value: boolean) => {
+    const updatedPreferences = { ...preferences, [id]: value };
+    setPreferences(updatedPreferences);
+    
+    // Save the preference immediately with error handling
+    void handlePreferencesUpdate({ [id]: value }).catch((error) => {
+      console.error('Failed to update preferences:', error);
+    });
+  };
+
   const handlePreferencesUpdate = async (preference: Record<string, boolean>) => {
     setLoading({...loading, preferences: true});
     
